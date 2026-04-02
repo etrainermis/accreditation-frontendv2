@@ -27,20 +27,27 @@ Build the frontend according to the approved design, keep the portals clearly se
 
 ## Getting Started
 
-### 1. Clone the repository
+### 1. Clone the repository into the current root folder
+
+Open or create your project folder first, then run:
 
 ```bash
-git clone <your-repository-url>
-cd accreditation-frontend-new
+git clone https://github.com/etrainermis/accreditation-frontendv2.git .
 ```
 
-### 2. Install dependencies
+The dot `.` means the repository will be cloned into the current folder.
+
+### 2. Confirm you are in the project root
+
+Run all commands from the repository root directory.
+
+### 3. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Create your own branch before starting work
+### 4. Create your own branch before starting work
 
 Every developer should work on their own branch.
 Use your name as the branch name.
@@ -51,12 +58,13 @@ Examples:
 git checkout -b emmanuel
 git checkout -b kelia
 git checkout -b tresor
+git checkout -b aaron
 ```
 
 Do not work directly on `main`.
 Do not work directly on `dev`.
 
-### 4. Start the project
+### 5. Start the project
 
 ```bash
 npm run dev
