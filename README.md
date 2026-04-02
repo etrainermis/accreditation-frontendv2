@@ -1,14 +1,24 @@
-# RTB Accreditation Platform Frontend
+# RTB Accreditation Frontend
 
-This repository is the collaborative frontend foundation for an RTB Accreditation platform built with Next.js App Router. It is intentionally frontend-only and organized around three separate role-based portals: Applicant, Evaluator, and Super Admin.
+This repository contains the frontend for the RTB Accreditation platform.
 
-The goal of this starter is to give frontend contributors a clean, scalable structure they can clone and build on immediately without inheriting template leftovers or backend assumptions.
+It is a shared codebase for three portals:
+
+- Applicant Portal
+- Evaluator Portal
+- Super Admin Portal
+
+The purpose of this repository is to give every frontend contributor a clean and organized starting point so implementation can begin immediately and stay consistent across the team.
+
+## Project Goal
+
+Build the frontend according to the approved design, keep the portals clearly separated by role, and collaborate through feature branches before merging into the shared development branch.
 
 ## Tech Stack
 
-- Next.js 16 App Router
+- Next.js App Router
 - TypeScript
-- Tailwind CSS 4
+- Tailwind CSS
 - Radix UI primitives
 - `lucide-react`
 - TanStack Query
@@ -17,105 +27,210 @@ The goal of this starter is to give frontend contributors a clean, scalable stru
 
 ## Getting Started
 
-1. Install dependencies with your package manager of choice.
-2. Start the development server.
-3. Open `http://localhost:3000`.
+### 1. Clone the repository
+
+```bash
+git clone <your-repository-url>
+cd accreditation-frontend-new
+```
+
+### 2. Install dependencies
 
 ```bash
 npm install
+```
+
+### 3. Create your own branch before starting work
+
+Every developer should work on their own branch.
+Use your name as the branch name.
+
+Examples:
+
+```bash
+git checkout -b emmanuel
+git checkout -b kelia
+git checkout -b tresor
+```
+
+Do not work directly on `main`.
+Do not work directly on `dev`.
+
+### 4. Start the project
+
+```bash
 npm run dev
 ```
 
-If your team uses another package manager, keep the lockfile strategy consistent before committing.
+Open:
 
-## Scripts
+```text
+http://localhost:3000
+```
 
-- `npm run dev`: Start the local Next.js dev server
-- `npm run build`: Create a production build
-- `npm run start`: Run the production server
-- `npm run lint`: Run ESLint across the repo
-- `npm run typecheck`: Run TypeScript without emitting files
+## Branching Workflow
 
-## Folder Structure Overview
+Use this flow for collaboration:
+
+1. Clone the project.
+2. Create your own personal branch using your name.
+3. Implement your assigned task in your own branch.
+4. Push your branch and open a merge request or pull request into `dev`.
+5. Review and merge changes into `dev` first.
+6. Move changes to `main` only after they are stable and approved from `dev`.
+
+In short:
+
+- Personal branches: day-to-day work
+- `dev`: integration branch
+- `main`: stable branch
+
+## Design Implementation Rule
+
+Frontend implementation should follow the design as it is.
+
+Use the shared Figma design link provided by the team as the main visual reference before building screens, components, spacing, layout, and flows.
+
+Do not guess new layouts when the design already exists.
+Do not redesign screens unless the team agrees on a change.
+
+## Available Portals
+
+### Applicant Portal
+
+Used for:
+
+- onboarding and registration
+- institution profile
+- applications
+- evaluation status visibility
+- certification outcome visibility
+
+### Evaluator Portal
+
+Used for:
+
+- assigned applications
+- reviews
+- due diligence
+- paper evaluation
+- findings and comments
+
+### Super Admin Portal
+
+Used for:
+
+- evaluator management
+- evaluator assignment
+- criteria management
+- monitoring progress
+- platform oversight
+
+## Codebase Structure
 
 ```text
 src/
   app/
-    (public)/
-    (applicant)/
-    (evaluator)/
-    (super-admin)/
   components/
-    ui/
-    layout/
-    navigation/
-    feedback/
-    forms/
-    tables/
-    charts/
   features/
-    auth/
-    applicant-profile/
-    applications/
-    evaluations/
-    evaluator-management/
-    criteria/
-    certificates/
   lib/
-    api/
-    auth/
-    permissions/
-    constants/
-    utils/
-    validations/
-    config/
   hooks/
   types/
   styles/
 ```
 
-## Portal Overview
+### `src/app`
 
-- `Applicant`: Login, institution profile, applications, status tracking, certification outcomes
-- `Evaluator`: Assigned applications, due diligence, paper evaluation, findings, comments
-- `Super Admin`: Evaluator management, evaluator assignment, criteria uploads, platform monitoring
+Contains all routes and portal entry points.
 
-Evaluator and Super Admin are intentionally separate portals. Shared UI is allowed, but route ownership and workflow logic should stay role-specific.
+This includes:
 
-## Collaboration Expectations
+- public routes such as login and onboarding
+- applicant routes
+- evaluator routes
+- super-admin routes
+- route layouts
 
-- Prefer server components by default
-- Add client components only for interactivity, browser APIs, providers, or client-only hooks
-- Keep business logic inside feature modules
-- Keep shared components generic and role-agnostic
-- Avoid backend-specific assumptions in the frontend foundation
-- Keep typed API helpers lightweight until contracts are confirmed
+### `src/components`
 
-## Naming Conventions
+Contains reusable UI and shared layout pieces.
 
-- Use kebab-case for folders and route segments
-- Use PascalCase for React component names
-- Keep feature directories singular by domain responsibility, not route duplication
-- Name shared components by purpose, not by portal
+This includes:
 
-Example: `PageContainer`, not `ApplicantPageContainer`
+- shared sidebar and topbar pieces
+- reusable UI building blocks
+- shared form wrappers
+- feedback and table placeholders
 
-## How To Add a New Page
+### `src/features`
 
-1. Add the route under the appropriate route group in `src/app`.
-2. Keep single-portal pages inside that portal's route subtree.
-3. Add feature-specific components in the related `src/features/<feature>` directory.
-4. Promote a component to `src/components` only after the reuse is real across features or portals.
-5. Update `src/lib/config/navigation.ts` if the page should appear in sidebar navigation.
-6. Add or update docs if the new page introduces a new convention.
+Contains feature-based business areas.
 
-## Documentation
+This is where portal-specific implementation should grow.
 
-- Architecture guidance: [docs/architecture.md](./docs/architecture.md)
-- Collaboration conventions: [docs/collaboration.md](./docs/collaboration.md)
+Examples:
 
-## Assumptions
+- auth
+- applications
+- evaluations
+- criteria
+- evaluator-management
+- certificates
 
-- Authentication, authorization, and API contracts are still evolving, so this repo ships with frontend-safe placeholders only
-- The three portals are distinct route surfaces even when they may later share some primitives
-- A future backend may expose `/api` routes or an external base URL, so the typed API layer is intentionally thin and replaceable
+### `src/lib`
+
+Contains project utilities and shared frontend logic.
+
+This includes:
+
+- API helpers
+- auth helpers
+- permissions
+- constants
+- config
+- validations
+- utility functions
+
+### `src/hooks`
+
+Contains reusable React hooks shared across features.
+
+### `src/types`
+
+Contains shared TypeScript types and interfaces.
+
+### `src/styles`
+
+Contains shared styling tokens and global style support.
+
+## Implementation Guidance For Contributors
+
+When you start work:
+
+1. Check the design first.
+2. Identify the correct portal.
+3. Work inside your own branch.
+4. Add code in the correct folder based on responsibility.
+5. Keep shared components minimal and reusable.
+6. Keep role-specific logic inside the correct portal or feature area.
+7. Merge into `dev` before anything goes to `main`.
+
+## Scripts
+
+- `npm run dev` - start development server
+- `npm run build` - build the project
+- `npm run start` - run production server
+- `npm run lint` - run linting
+- `npm run typecheck` - run TypeScript checks
+
+## Important Notes
+
+- This repository is frontend-focused.
+- Avoid backend assumptions unless the frontend needs a lightweight placeholder.
+- Keep the portals separate by role.
+- Keep implementation aligned with the Figma design.
+
+## Additional Docs
+
+- [docs/architecture.md](./docs/architecture.md)
+- [docs/collaboration.md](./docs/collaboration.md)
