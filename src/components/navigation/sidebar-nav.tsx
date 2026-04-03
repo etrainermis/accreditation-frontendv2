@@ -15,10 +15,10 @@ export function SidebarNav({ role }: { role: UserRole }) {
   return (
     <div className="flex h-full flex-col">
       <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="h-9 w-9 rounded-xl bg-blue-600/10" />
+        <div className="h-9 w-9 rounded-xl bg-[var(--primary-soft)]" />
         <div>
           <p className="text-sm font-semibold text-slate-800">RTB Accreditation</p>
-          <p className="text-xs text-blue-600">{config.shortLabel} Portal</p>
+          <p className="text-xs text-[var(--primary)]">{config.shortLabel} Portal</p>
         </div>
       </div>
 
@@ -33,7 +33,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
               className={cn(
                 "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors",
                 item.isActive
-                  ? "bg-blue-50 text-blue-600"
+                  ? "bg-[var(--primary-soft)] text-[var(--primary)]"
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-800",
               )}
             >

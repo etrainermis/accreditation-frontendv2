@@ -31,7 +31,7 @@ export default function SuperAdminDashboardPage() {
           <CardContent>
             <div className="grid h-52 grid-cols-8 items-end gap-3">
               {[45, 68, 30, 72, 40, 78, 60, 82].map((value, index) => (
-                <div key={index} className="rounded-t-xl bg-blue-500" style={{ height: `${value}%` }} />
+                <div key={index} className="rounded-t-xl bg-[var(--primary)]" style={{ height: `${value}%` }} />
               ))}
             </div>
           </CardContent>
@@ -43,9 +43,9 @@ export default function SuperAdminDashboardPage() {
             <CardDescription>Minimal list</CardDescription>
           </CardHeader>
           <CardContent className="space-y-3 text-sm text-slate-600">
-            <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-3">
+            <div className="flex items-center justify-between rounded-xl bg-[var(--primary-soft)] px-3 py-3">
               <span>Command+R</span>
-              <span>Pending</span>
+              <span className="text-[var(--primary)]">Pending</span>
             </div>
             <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-3">
               <span>Nova Institute</span>
