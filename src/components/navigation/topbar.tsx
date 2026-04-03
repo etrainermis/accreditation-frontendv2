@@ -2,8 +2,9 @@ import Link from "next/link";
 import { Bell, LogOut, MessageSquareMore } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import type { UserRole } from "@/types/auth";
 
-export function Topbar() {
+export function Topbar({ role }: { role: UserRole }) {
   return (
     <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
       <p className="text-sm font-medium text-blue-600">Dashboard</p>
