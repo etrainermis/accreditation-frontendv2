@@ -29,7 +29,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   return (
     <div className="space-y-8">
       <div className="space-y-3 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 text-slate-500">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 text-[var(--primary)]">
           {applicantOnboardingSteps.findIndex((item) => item.key === step) + 1}
         </div>
         <div>
@@ -43,7 +43,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <label key={field} className={`space-y-2 text-sm ${index === 0 ? "md:col-span-2" : ""}`}>
             <span className="font-medium text-slate-700">{field}</span>
             <input
-              className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-blue-500"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[var(--primary)]"
               placeholder={`Enter ${field.toLowerCase()}`}
             />
           </label>
@@ -66,7 +66,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
         <Link
           href={isLastStep ? "/applicant/dashboard" : `/applicant/onboarding/${nextStep.key}`}
-          className="rounded-xl bg-blue-600 px-6 py-3 text-sm font-medium text-white"
+          className="rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-medium text-white"
         >
           {isLastStep ? "Finish and enter portal" : "Continue"}
         </Link>

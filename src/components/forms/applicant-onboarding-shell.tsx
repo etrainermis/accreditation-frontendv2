@@ -15,7 +15,7 @@ export function ApplicantOnboardingShell({
         <div className="space-y-8">
           <div className="space-y-2">
             <p className="text-sm font-semibold text-slate-900">RTB Accreditation</p>
-            <Link href="/login" className="inline-flex text-sm text-blue-600">
+            <Link href="/login" className="inline-flex text-sm text-[var(--primary)]">
               Go back
             </Link>
           </div>
@@ -30,9 +30,9 @@ export function ApplicantOnboardingShell({
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-xl border text-sm font-semibold ${
                         isActive
-                          ? "border-blue-600 bg-blue-600 text-white"
+                          ? "border-[var(--primary)] bg-[var(--primary)] text-white"
                           : isComplete
-                            ? "border-blue-200 bg-blue-50 text-blue-700"
+                            ? "border-[var(--primary-soft-strong)] bg-[var(--primary-soft)] text-[var(--primary)]"
                             : "border-slate-200 bg-slate-50 text-slate-400"
                       }`}
                     >
