@@ -42,12 +42,12 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
   const [legalReps, setLegalReps] = useState<Record<string, string>[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
-  const [newRep, setNewRep] = useState({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
+  const [newRep, setNewRep] = useState<Record<string, string>>({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
   const [aboutText, setAboutText] = useState<Record<string, string>>(globalAboutText);
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
   const [staffList, setStaffList] = useState<Record<string, string | number>[]>(globalStaffList);
-  const [newStaff, setNewStaff] = useState({ qualification: "", position: "", status: "" });
+  const [newStaff, setNewStaff] = useState<Record<string, string>>({ qualification: "", position: "", status: "" });
   const [editingStaffIdx, setEditingStaffIdx] = useState<number | null>(null);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);

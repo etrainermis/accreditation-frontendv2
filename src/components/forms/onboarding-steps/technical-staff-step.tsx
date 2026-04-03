@@ -169,11 +169,11 @@ export function TechnicalStaffStep({
                       type="button"
                       onClick={() => {
                         setNewStaff({
-                          qualification: staff.qualification,
-                          position: staff.position,
-                          status: staff.status,
+                          qualification: String(staff.qualification),
+                          position: String(staff.position),
+                          status: String(staff.status),
                         });
-                        setStaffNumber(staff.number);
+                        setStaffNumber(typeof staff.number === 'number' ? staff.number : 0);
                         setEditingStaffIdx(idx);
                       }}
                       className="text-blue-600 hover:text-blue-700 transition-colors active:scale-95 cursor-pointer"
