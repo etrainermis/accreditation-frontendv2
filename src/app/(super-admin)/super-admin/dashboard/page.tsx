@@ -2,6 +2,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { PageContainer } from "@/components/layout/page-container";
 import { AlertTriangle, CheckCheck, NotepadText, ClipboardClock } from "lucide-react";
 import { StackedAnalyticsChart } from "@/components/dashboard/stacked-analytics-chart";
+import { ApplicationsByTradeChart } from "@/components/dashboard/applications-by-trade-chart";
+import { MostRequestedModules } from "@/components/dashboard/most-requested-modules";
+import { RecentApplicationsTable } from "@/components/dashboard/recent-applications-table";
 
 const stats = [
   { 
@@ -90,6 +93,13 @@ export default function SuperAdminDashboardPage() {
       </div>
 
       <StackedAnalyticsChart data={chartData} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
+        <ApplicationsByTradeChart />
+        <MostRequestedModules />
+      </div>
+
+      <RecentApplicationsTable />
     </PageContainer>
   );
 }
