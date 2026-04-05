@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 import { evaluatorEvaluationsBreadcrumbs, evaluatorEvaluationsHeader } from "@/features/evaluations";
 import type { UserRole } from "@/types/auth";
-import avatar from "@/app/evaluator/_components/assets/avatar.png";
+import avatar from "@/components/evaluator/assets/avatar.png";
 
 function NotificationIcon({ className }: { className?: string }) {
   return (

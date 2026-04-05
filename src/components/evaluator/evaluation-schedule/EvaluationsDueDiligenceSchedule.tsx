@@ -6,9 +6,9 @@ import { FileText, FolderOpen, CalendarCheck2, Search, CalendarDays, Filter, Che
 import Link from "next/link";
 import Image from "next/image";
 import svgPaths from "./icon-paths";
-import avatar from "@/app/evaluator/_components/assets/avatar.png";
-import avatar1 from "@/app/evaluator/_components/assets/avatar-2.png";
-import rtbLogo from "@/app/evaluator/_components/assets/rtb-logo.png";
+import avatar from "@/components/evaluator/assets/avatar.png";
+import avatar1 from "@/components/evaluator/assets/avatar-2.png";
+import rtbLogo from "@/components/evaluator/assets/rtb-logo.png";
 
 const imgAvatar = typeof avatar === "string" ? avatar : avatar.src;
 const imgAvatar1 = typeof avatar1 === "string" ? avatar1 : avatar1.src;

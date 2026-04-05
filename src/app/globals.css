@@ -37,3 +37,15 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Match legacy evaluator application detail screens to app-wide font */
+.evaluator-app-font-match,
+.evaluator-app-font-match * {
+  font-family: var(--font-manrope), sans-serif !important;
+}
+
+.application-details-page,
+.application-details-page * {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}

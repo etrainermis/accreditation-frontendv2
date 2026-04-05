@@ -7,8 +7,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import Image from "next/image";
-import avatar from "@/app/evaluator/_components/assets/avatar.png";
-import avatar4 from "@/app/evaluator/_components/assets/avatar-4.png";
+import avatar from "@/components/evaluator/assets/avatar.png";
+import avatar4 from "@/components/evaluator/assets/avatar-4.png";
 
 const attachments = [
   {
@@ -159,7 +159,7 @@ export default function EvaluationCriteriaPage() {
                     <td className="px-4 py-4">{file.updated}</td>
                     <td className="px-4 py-4 flex items-center gap-2">
                       <Image
-                        src={file.uploader.avatar ? file.uploader.avatar : "/evaluator/_components/assets/avatar.png"}
+                        src={file.uploader.avatar ? file.uploader.avatar : avatar}
                         alt={file.uploader.name}
                         width={28}
                         height={28}

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { LogOut, Settings, LifeBuoy } from "lucide-react";
-import rtbLogo from "@/app/evaluator/_components/assets/rtb-logo.png";
-import avatar from "@/app/evaluator/_components/assets/avatar.png";
+import rtbLogo from "@/components/evaluator/assets/rtb-logo.png";
+import avatar from "@/components/evaluator/assets/avatar.png";
 
 import { usePortalNavigation } from "@/hooks/use-portal-navigation";
 import { cn } from "@/lib/utils/cn";

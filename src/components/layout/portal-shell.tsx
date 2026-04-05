@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { SidebarNav } from "@/components/navigation/sidebar-nav";
 import { Topbar } from "@/components/navigation/topbar";
@@ -8,6 +9,13 @@ import type { UserRole } from "@/types/auth";
 
 export function PortalShell({ role, children }: { role: UserRole; children: React.ReactNode }) {
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const pathname = usePathname();
+  const hideSharedTopbar =
+    pathname?.startsWith("/evaluator/evaluations/applications/") ||
+    pathname?.startsWith("/evaluator/applications/");
+  const compactContent =
+    pathname?.startsWith("/evaluator/evaluations/applications/") ||
+    pathname?.startsWith("/evaluator/applications/");
 
   return (
     <div className="min-h-screen bg-white text-slate-900 md:grid md:grid-cols-[250px_1fr]">
@@ -30,8 +38,8 @@ export function PortalShell({ role, children }: { role: UserRole; children: Reac
       ) : null}
 
       <div className="flex min-h-screen min-w-0 flex-col">
-        <Topbar role={role} onMenuClick={() => setIsMobileNavOpen(true)} />
-        <main className="flex-1 min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10">{children}</main>
+        {!hideSharedTopbar ? <Topbar role={role} onMenuClick={() => setIsMobileNavOpen(true)} /> : null}
+        <main className={compactContent ? "flex-1 min-w-0 px-0 py-0" : "flex-1 min-w-0 px-4 py-6 sm:px-6 sm:py-8 lg:px-10 lg:py-10"}>{children}</main>
       </div>
     </div>
   );

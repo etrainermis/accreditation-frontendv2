@@ -1,15 +1,15 @@
 "use client";
 
 import { useState } from 'react';
-import EquipmentFacilities from '@/app/evaluator/_components/equipment-facilities/EquipmentFacilities';
-import CurriculumDoc from '@/app/evaluator/_components/curriculum-document/CurriculumDoc';
-import StaffAllocation from '@/app/evaluator/_components/staff-allocation/StaffAllocation';
-import DueDiligence from '@/app/evaluator/_components/due-diligence/DueDiligence';
-import { ProgressIndicator } from '@/app/evaluator/_components/interactive-components/ProgressIndicator';
-import { useKeyboardNavigation, KeyboardShortcutsInfo } from '@/app/evaluator/_components/interactive-components/KeyboardNavigation';
-import { WelcomeSplash, useWelcomeSplash } from '@/app/evaluator/_components/interactive-components/WelcomeSplash';
-import { Toast, useToast } from '@/app/evaluator/_components/interactive-components/Toast';
-import { HelpButton } from '@/app/evaluator/_components/interactive-components/HelpButton';
+import EquipmentFacilities from '@/components/evaluator/equipment-facilities/EquipmentFacilities';
+import CurriculumDoc from '@/components/evaluator/curriculum-document/CurriculumDoc';
+import StaffAllocation from '@/components/evaluator/staff-allocation/StaffAllocation';
+import DueDiligence from '@/components/evaluator/due-diligence/DueDiligence';
+import { ProgressIndicator } from '@/components/evaluator/interactive-components/ProgressIndicator';
+import { useKeyboardNavigation, KeyboardShortcutsInfo } from '@/components/evaluator/interactive-components/KeyboardNavigation';
+import { WelcomeSplash, useWelcomeSplash } from '@/components/evaluator/interactive-components/WelcomeSplash';
+import { Toast, useToast } from '@/components/evaluator/interactive-components/Toast';
+import { HelpButton } from '@/components/evaluator/interactive-components/HelpButton';
 
 type StepType = 'equipment' | 'curriculum' | 'staff' | 'due-diligence';
 

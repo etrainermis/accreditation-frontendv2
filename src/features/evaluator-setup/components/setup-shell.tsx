@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Key, User, ArrowLeft } from "lucide-react";
-import RTBLogo from "@/app/evaluator/_components/assets/rtb-logo.png";
+import RTBLogo from "@/components/evaluator/assets/rtb-logo.png";
 
 type SetupShellProps = {
   step: "profile" | "password";

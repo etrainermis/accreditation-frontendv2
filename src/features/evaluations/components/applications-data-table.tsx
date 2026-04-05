@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { AlertCircle, CheckCircle2, Clock, Eye, Filter, Search, Trash2, X } from "lucide-react";
 
-import avatar from "@/app/evaluator/_components/assets/avatar-2.png";
-import companyLogo from "@/app/evaluator/_components/assets/rtb-icon.png";
+import avatar from "@/components/evaluator/assets/avatar-2.png";
+import companyLogo from "@/components/evaluator/assets/rtb-icon.png";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -80,6 +81,7 @@ const applications = [
 
 export function ApplicationsDataTable() {
   const [search, setSearch] = useState("");
+  const router = useRouter();
 
   return (
     <div className="space-y-6">
@@ -130,7 +132,11 @@ export function ApplicationsDataTable() {
               </thead>
               <tbody className="divide-y divide-slate-50">
                 {applications.map((app) => (
-                  <tr key={app.id} className="group/row cursor-default transition-all hover:bg-blue-50/20">
+                  <tr 
+                    key={app.id} 
+                    className="group/row cursor-pointer transition-all hover:bg-blue-50/20"
+                    onClick={() => router.push(`/evaluator/evaluations/applications/${app.id}`)}
+                  >
                     <td className="px-6 py-6">
                       <div className="flex items-center justify-center">
                         <input type="checkbox" className="h-5 w-5 cursor-pointer rounded-lg border-2 border-slate-200 bg-white text-[#0A77FF] transition-all focus:ring-[#0A77FF]" />
@@ -218,9 +224,6 @@ export function ApplicationsDataTable() {
         </div>
       </Card>
 
-      <div className="flex justify-center py-4 text-center text-[10px] font-medium uppercase tracking-[0.26em] text-slate-300 opacity-70">
-        RTB Accreditation Board • All Data Integrity Verified
-      </div>
     </div>
   );
 }
