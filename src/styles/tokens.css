@@ -17,7 +17,8 @@
   --destructive: #ef4444;
   --ring: #0088ff;
   --radius: 1rem;
-  --sidebar: #ffffff;
-  --sidebar-foreground: #0f172a;
-  --sidebar-muted: #64748b;
+  --sidebar: oklch(0.27 0.03 252);
+  --sidebar-foreground: oklch(0.97 0.008 95);
+  --sidebar-muted: oklch(0.4 0.03 248);
+  --brand-blue: #0088FF;
 }
