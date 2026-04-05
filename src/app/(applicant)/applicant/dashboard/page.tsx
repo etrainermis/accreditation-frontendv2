@@ -1,10 +1,10 @@
-import { FileText, Clock, CheckCircle2, AlertTriangle, FilePlus2, Plus } from "lucide-react";
-import Link from "next/link";
+import { FileText, Clock, CheckCircle2, AlertTriangle, FilePlus2 } from "lucide-react";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 const stats = [
   {
     label: "Applications",
-    
+
     value: "2",
     icon: FileText,
     iconBg: "bg-blue-50",
@@ -39,20 +39,14 @@ export default function ApplicantDashboardPage() {
       {/* Welcome header + New Application button */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">
+          <h1 className="text-lg font-[500] text-[#101828]">
             Welcome, John
           </h1>
-          <p className="mt-0.5 text-[13px] text-slate-400">
+          <p className="mt-0.5 text-[12px] font-[300] text-[#475467]">
             View &amp; manage active orders and requests
           </p>
         </div>
-        <Link
-          href="/applicant/applications"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0A77FF]/90"
-        >
-          New Application
-          <Plus className="h-4 w-4" />
-        </Link>
+        <PrimaryButton label="New Application" href="/applicant/applications" />
       </div>
 
       {/* Stats cards */}
@@ -62,7 +56,7 @@ export default function ApplicantDashboardPage() {
           return (
             <div
               key={item.label}
-              className="rounded-2xl border border-slate-200 bg-white p-5"
+              className="rounded-2xl border border-transparent bg-white p-5 shadow-sm"
             >
               <div
                 className={`mb-3.5 flex h-10 w-10 items-center justify-center rounded-xl ${item.iconBg}`}
@@ -79,14 +73,14 @@ export default function ApplicantDashboardPage() {
       </div>
 
       {/* Empty state */}
-      <div className="relative flex min-h-[360px] flex-col items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-white px-6 py-16 text-center">
-        {/* Decorative concentric circles */}
-        <div className="absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-200/50" />
-        <div className="absolute left-1/2 top-1/2 h-[200px] w-[200px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-200/50" />
-        <div className="absolute left-1/2 top-1/2 h-[120px] w-[120px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-200/50" />
+      <div className="relative flex min-h-[420px] flex-col items-center justify-center overflow-hidden rounded-2xl bg-white px-6 pt-12 pb-16 text-center">
+        {/* Decorative concentric circles at the top */}
+        <div className="absolute left-1/2 top-0 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-100/80" />
+        <div className="absolute left-1/2 top-0 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-100/80" />
+        <div className="absolute left-1/2 top-0 h-[220px] w-[220px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-100/80" />
 
         {/* Document icon */}
-        <div className="relative z-10 mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="relative z-10 mb-6 mt-16 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-100">
           <FilePlus2 className="h-6 w-6 text-slate-400" />
         </div>
 
@@ -94,19 +88,15 @@ export default function ApplicantDashboardPage() {
         <h2 className="relative z-10 text-base font-semibold text-slate-900">
           No Applications Yet!
         </h2>
-        <p className="relative z-10 mb-6 mt-1.5 max-w-xs text-[13px] leading-5 text-slate-400">
+        <p className="relative z-10 mb-6 mt-1.5 max-w-xs text-[12px] leading-5 text-[#475467] font-[300]">
           You haven&apos;t started any applications. Explore opportunities and
           begin your first application to track your progress here.
         </p>
 
         {/* CTA */}
-        <Link
-          href="/applicant/applications"
-          className="relative z-10 inline-flex items-center gap-2 rounded-xl bg-[#0A77FF] px-6 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0A77FF]/90"
-        >
-          <Plus className="h-4 w-4" />
-          Start Application
-        </Link>
+        <div className="relative z-10 mt-2">
+          <PrimaryButton label="Start Application" href="/applicant/applications" />
+        </div>
       </div>
     </div>
   );

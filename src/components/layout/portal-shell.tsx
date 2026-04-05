@@ -4,7 +4,7 @@ import type { UserRole } from "@/types/auth";
 
 export function PortalShell({ role, children }: { role: UserRole; children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#F9FAFB] text-slate-900 md:grid md:grid-cols-[240px_1fr]">
+    <div className="min-h-screen bg-white text-slate-900 md:grid md:grid-cols-[240px_1fr]">
       {/* Sidebar */}
       <aside
         className="hidden md:flex md:flex-col"
