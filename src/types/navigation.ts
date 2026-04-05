@@ -8,6 +8,7 @@ export interface NavigationItem {
   description: string;
   icon: LucideIcon;
   match?: "exact" | "prefix";
+  activeMatchers?: string[];
 }
 
 export interface PortalNavigation {

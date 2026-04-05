@@ -19,6 +19,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/applicant",
     items: [
       { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: Gauge, match: "exact" },
+      { title: "Onboarding", href: "/applicant/onboarding", description: "", icon: ClipboardCheck },
       { title: "Applications", href: "/applicant/applications", description: "", icon: FileSpreadsheet },
       { title: "Evaluations", href: "/applicant/certificates", description: "", icon: FileCheck2 },
       { title: "Profile", href: "/applicant/profile", description: "", icon: User },
@@ -32,8 +33,21 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/evaluator",
     items: [
       { title: "Dashboard", href: "/evaluator/dashboard", description: "", icon: Gauge, match: "exact" },
-      { title: "Evaluations", href: "/evaluator/assignments", description: "", icon: ClipboardCheck },
-      { title: "Profile", href: "/evaluator/due-diligence", description: "", icon: User },
+      {
+        title: "Evaluations",
+        href: "/evaluator/evaluations/applications",
+        description: "",
+        icon: FileCheck2,
+        activeMatchers: [
+          "/evaluator/evaluations",
+          "/evaluator/evaluations/applications",
+          "/evaluator/paper-evaluation",
+          "/evaluator/due-diligence",
+          "/evaluator/applications",
+          "/evaluator/assignments",
+        ],
+      },
+      { title: "Profile", href: "/evaluator/setup/profile", description: "", icon: User },
       { title: "Notifications", href: "/evaluator/notifications", description: "", icon: Bell },
     ],
   },

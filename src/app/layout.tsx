@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Manrope, Geist } from "next/font/google";
+import { Geist, IBM_Plex_Mono, Manrope, Montserrat } from "next/font/google";
 
 import { AppProviders } from "@/components/layout/app-providers";
 import { appConfig } from "@/lib/config/app";
@@ -12,6 +12,12 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
+});
+
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
+  subsets: ["latin"],
+  weight: ["500"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -27,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(manrope.variable, ibmPlexMono.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html lang="en" className={cn(manrope.variable, montserrat.variable, ibmPlexMono.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body>
         <AppProviders>{children}</AppProviders>
       </body>
