@@ -7,6 +7,7 @@ import {
   ShieldAlert,
   User,
   UserCog,
+  Users,
 } from "lucide-react";
 
 import type { PortalNavigation } from "@/types/navigation";
@@ -19,7 +20,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/applicant",
     items: [
       { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: Home, match: "exact" },
-      { title: "Applications", href: "/applicant/applications", description: "", icon: FileSpreadsheet },
+      { title: "Applications", href: "/applicant/applications", description: "", icon: Users },
       { title: "Evaluations", href: "/applicant/certificates", description: "", icon: CalendarCheck },
       { title: "Profile", href: "/applicant/profile", description: "", icon: User },
       { title: "Notifications", href: "/applicant/notifications", description: "", icon: Bell },

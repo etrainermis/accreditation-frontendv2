@@ -39,11 +39,11 @@ export function Topbar({ role }: { role: UserRole }) {
         </button>
 
         {/* User avatar */}
-        <div className="h-9 w-9 overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-orange-100">
-          <div className="flex h-full w-full items-center justify-center text-sm font-medium text-slate-500">
-            JD
-          </div>
-        </div>
+        <img
+          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+          alt="User avatar"
+          className="h-9 w-9 shrink-0 object-cover rounded-full"
+        />
       </div>
     </header>
   );

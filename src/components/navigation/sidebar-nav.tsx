@@ -73,16 +73,14 @@ export function SidebarNav({ role }: { role: UserRole }) {
                   height: "20px",
                   strokeWidth: 1.75,
                   flexShrink: 0,
-                  color: item.isActive ? "#0A77FF" : "#344054",
                 }}
-                className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+                className={cn("transition-colors duration-150", item.isActive ? "text-[#0A77FF]" : "text-[#344054] group-hover:text-[#0A77FF]")}
               />
               <span
                 style={{
                   fontFamily: "'Nunito Sans', sans-serif",
                   fontSize: "14px",
                   fontWeight: 400,
-                  color:"#344054",
                   letterSpacing: "0.01em",
                 }}
               >
@@ -144,31 +142,12 @@ export function SidebarNav({ role }: { role: UserRole }) {
       <div className="flex items-center justify-between px-1 pt-3 pb-1">
         {/* Avatar + info */}
         <div className="flex items-center gap-2.5">
-          {/* Avatar circle with photo-like gradient */}
-          <div
-            style={{
-              width: "36px",
-              height: "36px",
-              borderRadius: "50%",
-              overflow: "hidden",
-              flexShrink: 0,
-              background: "linear-gradient(135deg, #f5d0a9 0%, #f0a070 40%, #c97040 100%)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "'Nunito Sans', sans-serif",
-                fontSize: "13px",
-                fontWeight: 700,
-                color: "#fff",
-              }}
-            >
-              OR
-            </span>
-          </div>
+          {/* Avatar image */}
+          <img
+            src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+            alt="Olivia Rhye"
+            className="h-9 w-9 shrink-0 object-cover rounded-full"
+          />
 
           {/* Name + email */}
           <div className="leading-tight">

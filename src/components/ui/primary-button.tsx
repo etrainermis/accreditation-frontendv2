@@ -14,6 +14,8 @@ interface PrimaryButtonProps {
   type?: "button" | "submit" | "reset";
   /** Set true to hide the leading + icon */
   hideIcon?: boolean;
+  /** Position of the icon relative to the text */
+  iconPosition?: "left" | "right";
 }
 
 export function PrimaryButton({
@@ -23,6 +25,7 @@ export function PrimaryButton({
   onClick,
   type = "button",
   hideIcon = false,
+  iconPosition = "left",
 }: PrimaryButtonProps) {
   const baseClasses = cn(
     "inline-flex items-center justify-center gap-2.5 rounded-[12px] px-6 py-2.5",
@@ -42,12 +45,17 @@ export function PrimaryButton({
 
   const inner = (
     <>
-      {!hideIcon && (
+      {!hideIcon && iconPosition === "left" && (
         <Plus
           style={{ width: "18px", height: "18px", strokeWidth: 2.25, flexShrink: 0, color: "#ffffff" }}
         />
       )}
-      <span style={{ color: "#ffffff", fontWeight:500 }}>{label}</span>
+      <span style={{ color: "#ffffff", fontWeight: 500 }}>{label}</span>
+      {!hideIcon && iconPosition === "right" && (
+        <Plus
+          style={{ width: "18px", height: "18px", strokeWidth: 2.25, flexShrink: 0, color: "#ffffff" }}
+        />
+      )}
     </>
   );
 
