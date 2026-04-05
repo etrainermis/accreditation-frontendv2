@@ -44,23 +44,23 @@ export function SidebarNav({ role }: { role: UserRole }) {
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-800",
               )}
             >
-              <Icon className={cn(item.isActive ? "text-[var(--primary)]":"text-[#84888C]","")} />
+              <Icon className={cn(item.isActive ? "text-[var(--primary)]":"text-[#84888C]","")} strokeWidth={1} />
               <span className={cn(item.isActive ? "text-[var(--primary)]":"text-[#353E49]")}>{item.title}</span>
             </Link>
           );
         })}
       </nav>
 
-      <div className="mt-auto space-y-1  pt-4">
+      <div className="mt-auto space-y-1  py-4">
             <button type="button" className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800">
-              <LifeBuoy className="text-[#667085]" />
+              <LifeBuoy className="text-[#667085]" strokeWidth={1} />
               <span className="text-[#344054]">Support</span>
             </button>
             <button type="button" className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800">
-              <Settings className="text-[#667085]" />
+              <Settings className="text-[#667085]" strokeWidth={1} />
               <span className="text-[#344054]">Settings</span>
             </button>
-        <div className="mt-4 flex border-t border-[#EAECF0] items-center gap-3  py-3">
+        <div className="sticky bottom-0 mt-4 bg-white border-t border-[#EAECF0] items-center gap-3 py-4 flex">
           <div className="h-10 w-10 flex-shrink-0 rounded-full bg-slate-100 flex items-center justify-center">
             <span className="text-xs font-semibold text-slate-600">OR</span>
           </div>
@@ -70,7 +70,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
           </div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <LogOut className="h-4 w-4 text-[#475467] cursor-pointer" />
+              <LogOut className="h-4 w-4 text-[#475467] cursor-pointer" strokeWidth={1} />
             </TooltipTrigger>
             <TooltipContent>
               <p>Log out</p>
