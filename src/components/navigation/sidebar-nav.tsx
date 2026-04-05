@@ -1,7 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
-import { LogOut, Settings, LifeBuoy } from "lucide-react";
+import { LogOut, Settings, HelpCircle } from "lucide-react";
 
 import { usePortalNavigation } from "@/hooks/use-portal-navigation";
 import { cn } from "@/lib/utils/cn";
@@ -14,21 +15,43 @@ export function SidebarNav({ role }: { role: UserRole }) {
 
   return (
     <div className="flex h-full flex-col">
-      {/* Logo / Brand */}
-      <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-[#0088ff]">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </div>
-        <div>
-          <p className="text-sm font-semibold text-slate-800">RTB Accreditation</p>
-          <p className="text-xs text-[#0088ff]">{config.shortLabel} Portal</p>
+      {/* ── Logo / Brand ── */}
+      <div className="mb-6 flex items-center gap-2.5 px-1">
+        <Image
+          src="/images/branding/rtb-logo.png"
+          alt="RTB Logo"
+          width={38}
+          height={38}
+          className="shrink-0 object-contain"
+        />
+        <div className="leading-tight">
+          <p
+            style={{
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontSize: "13px",
+              fontWeight: 700,
+              color: "#1a1a2e",
+              lineHeight: "1.3",
+            }}
+          >
+            RTB Accreditation
+          </p>
+          <p
+            style={{
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontSize: "11px",
+              fontWeight: 600,
+              color: "#0A77FF",
+              lineHeight: "1.3",
+            }}
+          >
+            {config.shortLabel} Portal
+          </p>
         </div>
       </div>
 
-      {/* Navigation items */}
-      <nav className="space-y-1">
+      {/* ── Primary navigation ── */}
+      <nav className="flex flex-col gap-0.5">
         {items.map((item) => {
           const Icon = item.icon;
 
@@ -37,53 +60,153 @@ export function SidebarNav({ role }: { role: UserRole }) {
               key={item.href}
               href={item.href as never}
               className={cn(
-                "flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-colors",
+                "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150",
                 item.isActive
-                  ? "bg-blue-50 text-[#0088ff]"
-                  : "text-slate-500 hover:bg-slate-50 hover:text-slate-700",
+                  ? "bg-[#EFF6FF] text-[#0A77FF]"
+                  : "text-[#344054] hover:bg-[#EFF6FF] hover:text-[#0A77FF]",
               )}
+              style={{ textDecoration: "none" }}
             >
-              <Icon className="h-[18px] w-[18px] shrink-0" />
-              <span>{item.title}</span>
+              <Icon
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  strokeWidth: 1.75,
+                  flexShrink: 0,
+                  color: item.isActive ? "#0A77FF" : "#344054",
+                }}
+                className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+              />
+              <span
+                style={{
+                  fontFamily: "'Nunito Sans', sans-serif",
+                  fontSize: "14px",
+                  fontWeight: 400,
+                  color:"#344054",
+                  letterSpacing: "0.01em",
+                }}
+              >
+                {item.title}
+              </span>
             </Link>
           );
         })}
       </nav>
 
-      {/* Bottom section */}
-      <div className="mt-auto space-y-1 border-t border-slate-100 pt-4">
+      {/* ── Spacer ── */}
+      <div className="flex-1" />
+
+      {/* ── Bottom utility links ── */}
+      <div className="mb-1 flex flex-col gap-0.5">
         <button
           type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
+          className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[#344054] transition-colors duration-150 hover:bg-[#EFF6FF] hover:text-[#0A77FF]"
         >
-          <LifeBuoy className="h-[18px] w-[18px]" />
-          <span>Support</span>
-        </button>
-        <button
-          type="button"
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-slate-500 transition-colors hover:bg-slate-50 hover:text-slate-700"
-        >
-          <Settings className="h-[18px] w-[18px]" />
-          <span>Settings</span>
+          <HelpCircle
+            style={{ width: "20px", height: "20px", strokeWidth: 1.75, flexShrink: 0 }}
+            className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+          />
+          <span
+            style={{
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontSize: "14px",
+              fontWeight: 400,
+            }}
+          >
+            Support
+          </span>
         </button>
 
-        {/* User profile card */}
-        <div className="mt-4 flex items-center justify-between rounded-xl px-3 py-3">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 overflow-hidden rounded-full bg-gradient-to-br from-blue-100 to-orange-100">
-              <div className="flex h-full w-full items-center justify-center text-xs font-medium text-slate-500">
-                OR
-              </div>
-            </div>
-            <div>
-              <p className="text-[13px] font-medium text-slate-800">Olivia Rhye</p>
-              <p className="text-[11px] text-slate-400">olivia@com...</p>
-            </div>
+        <button
+          type="button"
+          className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[#344054] transition-colors duration-150 hover:bg-[#EFF6FF] hover:text-[#0A77FF]"
+        >
+          <Settings
+            style={{ width: "20px", height: "20px", strokeWidth: 1.75, flexShrink: 0 }}
+            className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+          />
+          <span
+            style={{
+              fontFamily: "'Nunito Sans', sans-serif",
+              fontSize: "14px",
+              fontWeight: 400,
+            }}
+          >
+            Settings
+          </span>
+        </button>
+      </div>
+
+      {/* ── Divider ── */}
+      <div style={{ height: "1px", backgroundColor: "#E4E7EC", margin: "4px 0" }} />
+
+      {/* ── User profile card ── */}
+      <div className="flex items-center justify-between px-1 pt-3 pb-1">
+        {/* Avatar + info */}
+        <div className="flex items-center gap-2.5">
+          {/* Avatar circle with photo-like gradient */}
+          <div
+            style={{
+              width: "36px",
+              height: "36px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              flexShrink: 0,
+              background: "linear-gradient(135deg, #f5d0a9 0%, #f0a070 40%, #c97040 100%)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <span
+              style={{
+                fontFamily: "'Nunito Sans', sans-serif",
+                fontSize: "13px",
+                fontWeight: 700,
+                color: "#fff",
+              }}
+            >
+              OR
+            </span>
           </div>
-          <button type="button" className="text-slate-400 transition-colors hover:text-slate-600">
-            <LogOut className="h-4 w-4" />
-          </button>
+
+          {/* Name + email */}
+          <div className="leading-tight">
+            <p
+              style={{
+                fontFamily: "'Nunito Sans', sans-serif",
+                fontSize: "13px",
+                fontWeight: 600,
+                color: "#101828",
+                lineHeight: "1.4",
+              }}
+            >
+              Olivia Rhye
+            </p>
+            <p
+              style={{
+                fontFamily: "'Nunito Sans', sans-serif",
+                fontSize: "11px",
+                fontWeight: 400,
+                color: "#667085",
+                lineHeight: "1.4",
+              }}
+            >
+              olivia@com...
+            </p>
+          </div>
         </div>
+
+        {/* Logout arrow-right icon */}
+        <button
+          type="button"
+          className="text-[#98A2B3] transition-colors hover:text-[#667085]"
+          aria-label="Sign out"
+        >
+          <LogOut
+            style={{ width: "18px", height: "18px", strokeWidth: 1.75 }}
+          />
+        </button>
       </div>
     </div>
   );

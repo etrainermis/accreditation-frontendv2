@@ -4,6 +4,7 @@ import Link from "next/link";
 const stats = [
   {
     label: "Applications",
+    
     value: "2",
     icon: FileText,
     iconBg: "bg-blue-50",
@@ -47,7 +48,7 @@ export default function ApplicantDashboardPage() {
         </div>
         <Link
           href="/applicant/applications"
-          className="inline-flex items-center gap-2 rounded-xl bg-[#0088ff] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0077e6]"
+          className="inline-flex items-center gap-2 rounded-xl bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0A77FF]/90"
         >
           New Application
           <Plus className="h-4 w-4" />
@@ -101,7 +102,7 @@ export default function ApplicantDashboardPage() {
         {/* CTA */}
         <Link
           href="/applicant/applications"
-          className="relative z-10 inline-flex items-center gap-2 rounded-xl bg-[#0088ff] px-6 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0077e6]"
+          className="relative z-10 inline-flex items-center gap-2 rounded-xl bg-[#0A77FF] px-6 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-[#0A77FF]/90"
         >
           <Plus className="h-4 w-4" />
           Start Application
