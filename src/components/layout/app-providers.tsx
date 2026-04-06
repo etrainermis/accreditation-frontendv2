@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { PageHeaderProvider } from "@/lib/context/page-header-context";
 
 // Suppress the React 19 warning for next-themes script tag in development
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
@@ -32,7 +33,9 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <TooltipProvider>
-        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <PageHeaderProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </PageHeaderProvider>
       </TooltipProvider>
     </ThemeProvider>
   );

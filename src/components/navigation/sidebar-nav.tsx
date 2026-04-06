@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { LogOut, Settings, LifeBuoy } from "lucide-react";
 
 import { usePortalNavigation } from "@/hooks/use-portal-navigation";
@@ -22,7 +23,13 @@ export function SidebarNav({ role }: { role: UserRole }) {
   return (
     <div className="flex h-full flex-col">
       <div className="mb-8 flex items-center gap-3 px-2">
-        <div className="h-9 w-9 rounded-xl bg-[var(--primary-soft)]" />
+        <Image
+          src="/images/branding/rtb-logo.png"
+          alt="RTB Logo"
+          width={36}
+          height={36}
+          className="rounded-xl"
+        />
         <div>
           <p className="text-sm  text-[var(--app-text)]">RTB Accreditation</p>
           <p className="text-xs text-[var(--primary)]">{config.shortLabel} Portal</p>
@@ -51,7 +58,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
         })}
       </nav>
 
-      <div className="mt-auto space-y-1  py-4">
+      <div className="mt-auto space-y-1  pt-4">
             <button type="button" className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800">
               <LifeBuoy className="text-[#667085]" strokeWidth={1} />
               <span className="text-[#344054]">Support</span>

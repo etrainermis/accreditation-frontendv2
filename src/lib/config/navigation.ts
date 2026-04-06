@@ -1,4 +1,5 @@
 import {
+  BadgeCheck,
   Bell,
   ClipboardCheck,
   FileCheck2,
@@ -44,9 +45,9 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/super-admin",
     items: [
       { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: House, match: "exact" },
-      { title: "Evaluations", href: "/super-admin/evaluators", description: "", icon: UserCog },
-      { title: "Assignments", href: "/super-admin/assignments", description: "", icon: ClipboardCheck },
-      { title: "Criteria", href: "/super-admin/criteria", description: "", icon: ShieldAlert },
+      { title: "Evaluations", href: "/super-admin/evaluations/applications", description: "", icon: BadgeCheck },
+      { title: "Profile", href: "/super-admin/profile", description: "", icon: User },
+
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
     ],
   },

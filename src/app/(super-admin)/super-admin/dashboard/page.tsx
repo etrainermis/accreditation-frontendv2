@@ -1,36 +1,15 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { PageContainer } from "@/components/layout/page-container";
-import { AlertTriangle, CheckCheck, NotepadText, ClipboardClock } from "lucide-react";
 import { StackedAnalyticsChart } from "@/components/dashboard/stacked-analytics-chart";
 import { ApplicationsByTradeChart } from "@/components/dashboard/applications-by-trade-chart";
 import { MostRequestedModules } from "@/components/dashboard/most-requested-modules";
 import { RecentApplicationsTable } from "@/components/dashboard/recent-applications-table";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
 
 const stats = [
-  { 
-    label: "Applications", 
-    value: "24", 
-    icon: NotepadText, 
-    iconColor: "#0A77FF"
-  },
-  { 
-    label: "Pending", 
-    value: "8", 
-    icon: ClipboardClock, 
-    iconColor: "#FF8D28"
-  },
-  { 
-    label: "Evaluated", 
-    value: "5", 
-    icon: CheckCheck, 
-    iconColor: "#34C759"
-  },
-  { 
-    label: "Rejected", 
-    value: "11", 
-    icon: AlertTriangle, 
-    iconColor: "#FF383C"
-  },
+  { label: "Applications", value: "24" },
+  { label: "Pending", value: "8" },
+  { label: "Evaluated", value: "5" },
+  { label: "Rejected", value: "11" },
 ];
 const chartData = {
   "12 Months": [
@@ -70,27 +49,23 @@ const chartData = {
   })),
 };
 
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+
 export default function SuperAdminDashboardPage() {
   return (
-    <PageContainer role="super-admin" title="Welcome, John" description="View & manage active elders and requests">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-6">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <Card key={item.label} className="rounded-t-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up">
-              <CardContent className="p-5 flex flex-col gap-4">
-                <div className="w-fit p-2.5 rounded-sm border border-[#EAECF0] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)]">
-                  <Icon className="h-5 w-5" style={{ color: item.iconColor }} strokeWidth={1} />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-slate-500 font-medium">{item.label}</p>
-                  <p className="text-2xl font-bold text-slate-900">{item.value}</p>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
-      </div>
+    <PageContainer 
+      role="super-admin" 
+      title="Welcome, John" 
+      description="View & manage active elders and requests"
+      action={
+        <Button className="rounded-sm cursor-pointer px-4 py-3 text-sm font-medium">
+          Start New Evaluation
+          <Plus className="ml-2 h-4 w-4" />
+        </Button>
+      }
+    >
+      <StatsGrid items={stats} />
 
       <StackedAnalyticsChart data={chartData} />
 
