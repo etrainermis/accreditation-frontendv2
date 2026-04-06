@@ -32,7 +32,7 @@ export function StatsGrid({ items, className }: StatsGridProps) {
         return (
           <Card 
             key={item.label} 
-            className="rounded-t-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up"
+            className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up"
           >
             <CardContent className="p-5 flex flex-col gap-4">
               <div className="w-fit p-2.5 rounded-sm border border-[#EAECF0] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)]">

@@ -79,9 +79,9 @@ export function PortalBreadcrumbs() {
 
           return (
             <li key={rawPath} className="flex items-center gap-2">
-              {index > 0 && <ChevronRight className="h-4 w-4 text-slate-300" />}
+              {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
               {isLast ? (
-                <span className="font-medium text-[var(--primary)]">
+                <span className="font-medium bg-[#F9FAFB] p-2 rounded-sm text-[var(--primary)]">
                   {title}
                 </span>
               ) : (

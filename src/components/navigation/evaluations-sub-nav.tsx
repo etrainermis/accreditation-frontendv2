@@ -37,7 +37,7 @@ export function EvaluationsSubNav() {
   const pathname = usePathname();
 
   return (
-    <div className="flex items-center justify-between gap-2  pb-2 mb-6">
+    <div className="flex items-center justify-between gap-2 pb-2 mb-6">
       {navItems.map((item) => {
         const isActive = pathname === item.href;
         const Icon = item.icon;
@@ -47,17 +47,27 @@ export function EvaluationsSubNav() {
             key={item.href}
             href={item.href as never}
             className={cn(
-              "flex w-full items-center gap-2 px-4 py-2.5 rounded-sm transition-all duration-200 text-[var(--primary)]",
-              isActive 
-                ? "bg-[#F9FAFB]" 
-                : "hover:bg-slate-50 hover:text-slate-900"
+              "flex w-full items-center gap-2 px-4 py-2.5 rounded-sm transition-all duration-200",
+              isActive
+                ? "text-[var(--primary)] bg-[#F9FAFB]"
+                : "text-[#353E49]"
             )}
           >
-            <Icon 
-              className="h-4 w-4 text-[var(--primary)]" 
+            <Icon
+              className={cn(
+                "h-4 w-4",
+                isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+              )}
               strokeWidth={1}
             />
-            <span className="text-sm font-medium text-[var(--primary)]">{item.title}</span>
+            <span
+              className={cn(
+                "text-sm font-medium",
+                isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+              )}
+            >
+              {item.title}
+            </span>
           </Link>
         );
       })}

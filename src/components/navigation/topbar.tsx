@@ -11,6 +11,8 @@ import { PortalBreadcrumbs } from "./portal-breadcrumbs";
 
 import { cn } from "@/lib/utils/cn";
 
+import { Skeleton } from "@/components/ui/skeleton";
+
 export function Topbar({ role }: { role: UserRole }) {
   const { title, description, action } = usePageHeader();
   const [open, setOpen] = useState(false);
@@ -93,17 +95,27 @@ export function Topbar({ role }: { role: UserRole }) {
       </div>
 
       {/* Page Header Row (Integrated/Fused) with content-width border */}
-      {title && (
-        <div className="px-6">
-          <div className="flex items-center justify-between pb-5 pt-1 border-b border-[#EAECF0]">
-            <div>
-              <h1 className="text-lg text-[#101828]">{title}</h1>
-              {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
-            </div>
-            {action}
-          </div>
+      <div className="px-6">
+        <div className="flex items-center justify-between pb-5 pt-1 border-b border-[#EAECF0]">
+          {title ? (
+            <>
+              <div>
+                <h1 className="text-lg text-[#101828]">{title}</h1>
+                {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
+              </div>
+              {action}
+            </>
+          ) : (
+            <>
+              <div className="space-y-2">
+                <Skeleton className="h-6 w-[240px]" />
+                <Skeleton className="h-3 w-[320px]" />
+              </div>
+              <Skeleton className="h-9 w-[160px]" />
+            </>
+          )}
         </div>
-      )}
+      </div>
     </header>
   );
 }

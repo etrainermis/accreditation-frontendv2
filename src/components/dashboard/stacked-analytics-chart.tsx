@@ -36,7 +36,7 @@ export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
   const dynamicYAxis = Array.from({ length: 6 }, (_, i) => Math.round(maxValue * (1 - i / 5)));
 
   return (
-    <Card className="rounded-t-md border border-slate-200 bg-white shadow-none overflow-hidden text-[#101828] animate-slide-up">
+    <Card className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden text-[#101828] animate-slide-up">
       <div className="flex items-center justify-between px-6 py-4">
         <h3 className="text-base font-semibold">Applications Trend</h3>
         <MoreHorizontal className="h-5 w-5 text-slate-400 cursor-pointer" />

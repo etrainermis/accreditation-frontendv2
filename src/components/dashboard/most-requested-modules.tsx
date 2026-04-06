@@ -14,7 +14,7 @@ const modules = [
 
 export function MostRequestedModules() {
   return (
-    <Card className="rounded-t-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up h-full">
+    <Card className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up h-full">
       <CardContent className="h-full p-4 flex flex-col">
         <div className="flex items-start  justify-between ">
           <div className="space-y-1 w-full">

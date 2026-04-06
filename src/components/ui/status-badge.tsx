@@ -36,7 +36,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <div className={cn(
-      "inline-flex items-center border border-[#D0D5DD] gap-1.5 px-2 py-0.5 rounded-[3px] shadow-sm text-[11px] font-semibold",
+      "inline-flex items-center border border-[#D0D5DD] gap-1.5 px-2 py-0.5 rounded-[3px] shadow-sm text-[11px] ",
  
       config.text,
     )}>

@@ -1,10 +1,35 @@
+"use client";
+
+import React, { useState } from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { DataTable } from "@/components/ui/data-table";
+import { 
+  mockApplications, 
+  getApplicationColumns 
+} from "@/lib/utils/application-utils";
+
+const stats = [
+  { label: "Applications", value: 24 },
+  { label: "Pending", value: 8 },
+  { label: "Evaluated", value: 5 },
+  { label: "Rejected", value: 11 },
+];
+
+const columns = getApplicationColumns();
 
 export default function SuperAdminApplicationsPage() {
+  const [search, setSearch] = useState("");
+
+  const filteredData = mockApplications.filter(item => 
+    item.applicant.name.toLowerCase().includes(search.toLowerCase()) ||
+    item.applicant.email.toLowerCase().includes(search.toLowerCase()) ||
+    item.institution.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <PageContainer
       role="super-admin"
@@ -18,11 +43,18 @@ export default function SuperAdminApplicationsPage() {
       }
     >
       <EvaluationsSubNav />
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-        <CardContent className="flex min-h-[400px] flex-col items-center justify-center gap-4 p-8 text-center text-slate-500">
-          <p>Applications list and management will be implemented here.</p>
-        </CardContent>
-      </Card>
+      <StatsGrid items={stats} />
+      <DataTable 
+        data={filteredData} 
+        columns={columns} 
+        title="All Applications"
+        description="Manage applications by different institutions right here"
+        searchValue={search}
+        onSearchChange={setSearch}
+        showPagination={true}
+        currentPage={1}
+        totalPages={10}
+      />
     </PageContainer>
   );
 }
