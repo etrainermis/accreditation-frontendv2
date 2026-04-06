@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils/cn";
 import { portalNavigation } from "@/lib/config/navigation";
 import type { UserRole } from "@/types/auth";
 
-export function SidebarNav({ role }: { role: UserRole }) {
+export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMobile?: () => void }) {
   const items = usePortalNavigation(role);
   const config = portalNavigation[role];
 
@@ -59,6 +59,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
             <Link
               key={item.href}
               href={item.href as never}
+              onClick={() => onCloseMobile?.()}
               className={cn(
                 "group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors duration-150",
                 item.isActive
@@ -98,6 +99,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
       <div className="mb-1 flex flex-col gap-0.5">
         <button
           type="button"
+          onClick={() => onCloseMobile?.()}
           className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[#344054] transition-colors duration-150 hover:bg-[#EFF6FF] hover:text-[#0A77FF]"
         >
           <HelpCircle
@@ -117,6 +119,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
 
         <button
           type="button"
+          onClick={() => onCloseMobile?.()}
           className="group flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-[#344054] transition-colors duration-150 hover:bg-[#EFF6FF] hover:text-[#0A77FF]"
         >
           <Settings
