@@ -17,7 +17,12 @@ import {
   X,
   Pencil,
   Trash2,
-  FolderPlus
+  FolderPlus,
+  UserPlus,
+  ChevronDown,
+  CheckCheck,
+  CheckCircle2,
+  ChevronUp
 } from "lucide-react";
 
 const stepsList = [
@@ -91,6 +96,16 @@ export default function ApplicantApplicationsPage() {
   // Step 4 state
   const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
 
+  // Step 5 state
+  const [staffQualification, setStaffQualification] = useState("");
+  const [staffPosition, setStaffPosition] = useState("");
+  const [staffNumber, setStaffNumber] = useState(1);
+  const [staffStatus, setStaffStatus] = useState("");
+  const [allocations, setAllocations] = useState<Array<{ id: string; qualification: string; position: string; quantity: number; status: string }>>([]);
+
+  // Step 6 state
+  const [expandedReviewSection, setExpandedReviewSection] = useState<number | null>(null);
+
   // Handlers Step 1 -> 2
   const handleTradeContinue = () => {
     if (selectedTrade) setCurrentStep(2);
@@ -141,6 +156,26 @@ export default function ApplicantApplicationsPage() {
 
   const removeEquipment = (id: string) => {
     setEquipments(equipments.filter(eq => eq.id !== id));
+  };
+
+  const handleAddStaff = () => {
+    if (staffQualification && staffPosition && staffStatus) {
+      setAllocations([...allocations, {
+        id: Math.random().toString(),
+        qualification: staffQualification,
+        position: staffPosition,
+        quantity: staffNumber,
+        status: staffStatus
+      }]);
+      setStaffQualification("");
+      setStaffPosition("");
+      setStaffStatus("");
+      setStaffNumber(1);
+    }
+  };
+
+  const removeAllocation = (id: string) => {
+    setAllocations(allocations.filter(a => a.id !== id));
   };
 
   const handleCurriculumUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -676,6 +711,311 @@ export default function ApplicantApplicationsPage() {
                   >
                     Continue
                   </button>
+                </div>
+              </>
+            )}
+
+            {/* STEP 5: STAFF ALLOCATION */}
+            {currentStep === 5 && (
+              <>
+                {/* Step Header */}
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
+                    <Users className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-[17px] font-semibold text-slate-900">Staff Allocation</h2>
+                  <p className="mt-1.5 text-[13px] text-slate-500">
+                    Indicate staff availability by qualification and position.
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-col items-center">
+                  {/* Badges Row */}
+                  <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedTradeName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Hexagon className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedCompetencyName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-2 text-left">
+                  {/* Staff Form Box */}
+                  <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                    <div className="grid grid-cols-2 gap-5 mb-5">
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Qualification <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <select 
+                            className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                            value={staffQualification}
+                            onChange={(e) => setStaffQualification(e.target.value)}
+                          >
+                            <option value="" disabled>Select ..</option>
+                            <option value="Bachelor's Degree">Bachelor&apos;s Degree</option>
+                            <option value="Master's Degree">Master&apos;s Degree</option>
+                            <option value="PhD">PhD</option>
+                            <option value="Diploma">Diploma</option>
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 mt-[1px] top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" strokeWidth={1.5} />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Position <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <select 
+                            className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                            value={staffPosition}
+                            onChange={(e) => setStaffPosition(e.target.value)}
+                          >
+                            <option value="" disabled>Select ..</option>
+                            <option value="Instructor">Instructor</option>
+                            <option value="Teaching Assistant">Teaching Assistant</option>
+                            <option value="Lab Technician">Lab Technician</option>
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 mt-[1px] top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" strokeWidth={1.5} />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-5">
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Number <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <span className="w-8 text-[13px] font-medium outline-none ml-1">{staffNumber}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => setStaffNumber(s => s + 1)} className="rounded p-1 hover:bg-slate-100">
+                              <Plus className="h-4 w-4 text-slate-600" />
+                            </button>
+                            <button onClick={() => setStaffNumber(s => Math.max(1, s - 1))} className="rounded p-1 hover:bg-slate-100">
+                              <Minus className="h-4 w-4 text-slate-600" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Availability Status <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <select 
+                            className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                            value={staffStatus}
+                            onChange={(e) => setStaffStatus(e.target.value)}
+                          >
+                            <option value="" disabled>Select ..</option>
+                            <option value="Full-Time">Full-Time</option>
+                            <option value="Part-Time">Part-Time</option>
+                            <option value="Contract">Contract</option>
+                          </select>
+                          <ChevronDown className="pointer-events-none absolute right-3 mt-[1px] top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" strokeWidth={1.5} />
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleAddStaff}
+                    className="mb-8 flex items-center justify-center gap-2 rounded-lg bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blue-600 w-fit"
+                  >
+                    Add Staff
+                    <UserPlus className="h-4 w-4" />
+                  </button>
+
+                  {/* Render Staff Allocations */}
+                  {allocations.length > 0 && (
+                    <div className="mb-8 w-full flex flex-col gap-3">
+                      {allocations.map(alloc => (
+                        <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <p className="text-[13px] font-semibold text-slate-800">{alloc.position}</p>
+                              <p className="text-[12px] text-slate-500">{alloc.qualification} • {alloc.status}</p>
+                            </div>
+                            <button onClick={() => removeAllocation(alloc.id)} className="text-red-400 hover:text-red-600 transition-colors">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <p className="mt-2 text-[11px] font-medium text-slate-400 uppercase tracking-wide">Count: {alloc.quantity}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  <div className="mb-8 flex w-full gap-3">
+                    <button onClick={() => setCurrentStep(4)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-white bg-white w-full shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+                      Back
+                    </button>
+                    <button
+                      onClick={() => setCurrentStep(6)}
+                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6] w-full"
+                    >
+                      Continue
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* STEP 6: APPLICATION REVIEW */}
+            {currentStep === 6 && (
+              <>
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
+                    <CheckCheck className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-[17px] font-semibold text-slate-900">Application Review</h2>
+                  <p className="mt-1.5 text-[13px] text-slate-500">
+                    Review all information provided before submitting your application for evaluation.
+                  </p>
+                </div>
+
+                <div className="mt-6 flex w-full gap-3 mb-8">
+                  <button onClick={() => setCurrentStep(5)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50 bg-white">
+                    Back
+                  </button>
+                  <button className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]">
+                    Submit Application
+                  </button>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  {[
+                    { id: 1, title: "Trade Selection Completed", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor." },
+                    { id: 2, title: "Competencies Selected", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor." },
+                    { id: 3, title: "Equipment and Facilities Added with Proofs", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor." },
+                    { id: 4, title: "Curriculum Documents", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor." },
+                    { id: 5, title: "Staff Allocation", desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor." },
+                  ].map((section) => {
+                    const isExpanded = expandedReviewSection === section.id;
+                    return (
+                      <div key={section.id} className="rounded-xl border border-slate-200 bg-white overflow-hidden transition-all duration-200 shadow-sm">
+                        <button
+                          onClick={() => setExpandedReviewSection(isExpanded ? null : section.id)}
+                          className="flex w-full items-center justify-between p-4"
+                        >
+                          <div className="flex gap-4">
+                            <div className="flex items-center justify-center rounded-full bg-emerald-50 h-9 w-9 ring-1 ring-emerald-100">
+                              <CheckCircle2 className="h-5 w-5 text-emerald-500" strokeWidth={1.5} />
+                            </div>
+                            <div className="flex flex-col items-start px-2">
+                              <p className="text-[14px] font-semibold text-slate-700">{section.title}</p>
+                              <p className="text-[12px] text-slate-400 mt-0.5 line-clamp-1 text-left">{section.desc}</p>
+                            </div>
+                          </div>
+                          <div className="pl-4">
+                            {isExpanded ? (
+                              <ChevronUp className="h-5 w-5 text-slate-400" strokeWidth={1.5} />
+                            ) : (
+                              <ChevronDown className="h-5 w-5 text-slate-400" strokeWidth={1.5} />
+                            )}
+                          </div>
+                        </button>
+                        
+                        {isExpanded && (
+                          <div className="border-t border-slate-100 bg-slate-50/50 p-5 p-6">
+                            {section.id === 1 && (
+                              <div>
+                                <p className="text-[12px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Selected Trade</p>
+                                <p className="text-[14px] text-slate-800 font-medium">{selectedTradeName}</p>
+                              </div>
+                            )}
+                            {section.id === 2 && (
+                              <div>
+                                <p className="text-[12px] font-semibold text-slate-500 uppercase tracking-wider mb-2">Selected Competency</p>
+                                <p className="text-[14px] text-slate-800 font-medium">{selectedCompetencyName}</p>
+                              </div>
+                            )}
+                            {section.id === 3 && (
+                              <div>
+                                <p className="text-[12px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Allocated Equipment</p>
+                                {equipments.length === 0 ? (
+                                  <p className="text-[13px] text-slate-400 italic">No equipment added.</p>
+                                ) : (
+                                  <ul className="space-y-4">
+                                    {equipments.map(eq => (
+                                      <li key={eq.id} className="flex items-center gap-3">
+                                        <div className="h-10 w-14 shrink-0 overflow-hidden rounded bg-slate-200">
+                                          {eq.proof ? (
+                                            <img src={eq.proof} alt="" className="h-full w-full object-cover" />
+                                          ) : null}
+                                        </div>
+                                        <div>
+                                          <p className="text-[13px] font-medium text-slate-700">{eq.name}</p>
+                                          <p className="text-[12px] text-slate-500">Qty: {eq.quantity}</p>
+                                        </div>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                            {section.id === 4 && (
+                              <div>
+                                <p className="text-[12px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Curriculum Documents</p>
+                                {curriculumDocs.length === 0 ? (
+                                  <p className="text-[13px] text-slate-400 italic">No curriculum documents uploaded.</p>
+                                ) : (
+                                  <ul className="space-y-2">
+                                    {curriculumDocs.map(doc => (
+                                      <li key={doc.id} className="flex justify-between items-center text-[13px] bg-white border border-slate-100 p-2.5 rounded-lg">
+                                        <span className="font-medium text-slate-700">{doc.name}</span>
+                                        <span className="text-slate-400 text-[11px]">{doc.size}</span>
+                                      </li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            )}
+                            {section.id === 5 && (
+                              <div>
+                                <p className="text-[12px] font-semibold text-slate-500 uppercase tracking-wider mb-3">Staff Allocations</p>
+                                {allocations.length === 0 ? (
+                                  <p className="text-[13px] text-slate-400 italic">No staff members allocated.</p>
+                                ) : (
+                                  <div className="grid grid-cols-2 gap-3">
+                                    {allocations.map(alloc => (
+                                      <div key={alloc.id} className="bg-white border border-slate-100 p-3 rounded-lg">
+                                        <p className="text-[13px] font-semibold text-slate-800">{alloc.position}</p>
+                                        <p className="text-[12px] text-slate-500 mt-0.5">{alloc.qualification}</p>
+                                        <p className="text-[11px] text-slate-400 uppercase tracking-wider mt-2 bg-slate-50 w-fit px-1.5 py-0.5 rounded">{alloc.status} • {alloc.quantity}</p>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </>
             )}
