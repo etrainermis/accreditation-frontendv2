@@ -74,14 +74,14 @@ export function SidebarNav({ role }: { role: UserRole }) {
                   strokeWidth: 1.75,
                   flexShrink: 0,
                 }}
-                className={cn("transition-colors duration-150", item.isActive ? "text-[#0A77FF]" : "text-[#344054] group-hover:text-[#0A77FF]")}
+                className="transition-colors duration-150"
               />
               <span
                 style={{
                   fontFamily: "'Nunito Sans', sans-serif",
                   fontSize: "14px",
-                  fontWeight: 400,
-                  letterSpacing: "0.01em",
+                  fontWeight: 100,
+                  letterSpacing: "0.02em",
                 }}
               >
                 {item.title}
@@ -102,7 +102,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
         >
           <HelpCircle
             style={{ width: "20px", height: "20px", strokeWidth: 1.75, flexShrink: 0 }}
-            className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+            className="transition-colors duration-150"
           />
           <span
             style={{
@@ -121,7 +121,7 @@ export function SidebarNav({ role }: { role: UserRole }) {
         >
           <Settings
             style={{ width: "20px", height: "20px", strokeWidth: 1.75, flexShrink: 0 }}
-            className="transition-colors duration-150 group-hover:text-[#0A77FF]"
+            className="transition-colors duration-150"
           />
           <span
             style={{
