@@ -41,7 +41,7 @@ export default function ApplicantDashboardPage() {
   return (
     <div className="flex flex-1 flex-col space-y-4">
       {/* Welcome header + New Application button */}
-      <div className="flex items-start justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
         <div>
           <h1 className="text-[16px] font-[500] text-[#101828]">
             Welcome, John
@@ -56,7 +56,7 @@ export default function ApplicantDashboardPage() {
       <div className="h-[1px] w-full shrink-0 bg-slate-100" />
 
       {/* Stats cards */}
-      <div className="grid grid-cols-4 gap-4 shrink-0">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 shrink-0">
         {stats.map((item) => {
           const Icon = item.icon;
           return (
@@ -79,7 +79,7 @@ export default function ApplicantDashboardPage() {
       </div>
 
       {/* Main Content Layout */}
-      <div className="grid grid-cols-[1.1fr_1fr] gap-6 pt-4 items-start pb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-6 pt-4 items-start pb-8">
         {/* Left Column: Your Applications */}
         <div className="flex flex-col">
           <h2 className="text-[13px] font-semibold text-slate-900">Your Applications</h2>
@@ -88,17 +88,17 @@ export default function ApplicantDashboardPage() {
           <div className="flex flex-col gap-3">
             {/* Card 1 (Active) */}
             <div className="rounded-xl border border-[#0A77FF] bg-white p-4 shadow-[0_2px_8px_rgba(10,119,255,0.08)] relative overflow-hidden">
-               <div className="flex justify-between items-start">
-                 <div className="pr-4">
+               <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 sm:gap-0">
+                 <div className="pr-4 w-full">
                    <h3 className="text-[13px] font-semibold text-slate-800 mb-1.5">Javascript Short Course Application</h3>
-                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed max-w-[95%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
-                   <div className="flex items-center gap-2">
+                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed w-full">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
+                   <div className="flex flex-wrap items-center gap-2">
                      <span className="text-[10px] font-medium text-[#0A77FF]">Software Engineering & Embedded S...</span>
                      <ChevronRight className="h-3 w-3 text-slate-300" strokeWidth={2} />
                      <span className="text-[10px] font-medium text-[#0A77FF]">JavaScript</span>
                    </div>
                  </div>
-                 <div className="flex flex-col items-end gap-2.5 shrink-0">
+                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2.5 shrink-0">
                    <div className="flex items-center gap-1.5 rounded-md border border-green-200 bg-white px-2 py-1 shadow-sm">
                      <Check className="h-3 w-3 text-green-500" strokeWidth={3} />
                      <span className="text-[10px] font-semibold text-green-500 uppercase tracking-wide">Evaluated</span>
@@ -110,17 +110,17 @@ export default function ApplicantDashboardPage() {
 
             {/* Card 2 (Inactive) */}
             <div className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors shadow-sm cursor-pointer">
-               <div className="flex justify-between items-start">
-                 <div className="pr-4">
+               <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 sm:gap-0">
+                 <div className="pr-4 w-full">
                    <h3 className="text-[13px] font-semibold text-slate-800 mb-1.5">Software Engineering Short Course Application</h3>
-                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed max-w-[95%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
-                   <div className="flex items-center gap-2">
+                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed w-full">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
+                   <div className="flex flex-wrap items-center gap-2">
                      <span className="text-[10px] font-medium text-[#0A77FF]">Software Engineering & Embedded S...</span>
                      <ChevronRight className="h-3 w-3 text-slate-300" strokeWidth={2} />
                      <span className="text-[10px] font-medium text-[#0A77FF]">JavaScript</span>
                    </div>
                  </div>
-                 <div className="flex flex-col items-end gap-2.5 shrink-0">
+                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2.5 shrink-0">
                    <div className="flex items-center gap-1.5 rounded-md border border-green-200 bg-white px-2 py-1 shadow-sm">
                      <Check className="h-3 w-3 text-green-500" strokeWidth={3} />
                      <span className="text-[10px] font-semibold text-green-500 uppercase tracking-wide">Evaluated</span>
@@ -132,17 +132,17 @@ export default function ApplicantDashboardPage() {
 
             {/* Card 3 (Inactive) */}
             <div className="rounded-xl border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors shadow-sm cursor-pointer">
-               <div className="flex justify-between items-start">
-                 <div className="pr-4">
+               <div className="flex flex-col sm:flex-row justify-between sm:items-start gap-4 sm:gap-0">
+                 <div className="pr-4 w-full">
                    <h3 className="text-[13px] font-semibold text-slate-800 mb-1.5">Software Engineering Short Course Application</h3>
-                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed max-w-[95%]">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
-                   <div className="flex items-center gap-2">
+                   <p className="text-[11px] text-slate-400 mb-3 leading-relaxed w-full">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
+                   <div className="flex flex-wrap items-center gap-2">
                      <span className="text-[10px] font-medium text-[#0A77FF]">Software Engineering & Embedded S...</span>
                      <ChevronRight className="h-3 w-3 text-slate-300" strokeWidth={2} />
                      <span className="text-[10px] font-medium text-[#0A77FF]">JavaScript</span>
                    </div>
                  </div>
-                 <div className="flex flex-col items-end gap-2.5 shrink-0">
+                 <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start w-full sm:w-auto gap-2.5 shrink-0">
                    <div className="flex items-center gap-1.5 rounded-md border border-green-200 bg-white px-2 py-1 shadow-sm">
                      <Check className="h-3 w-3 text-green-500" strokeWidth={3} />
                      <span className="text-[10px] font-semibold text-green-500 uppercase tracking-wide">Evaluated</span>
