@@ -411,19 +411,25 @@ export default function ApplicationDetailsPage() {
                     {instTab === "About" && (
                       <div className="space-y-6 animate-in fade-in duration-300">
                         <Field label="Mission">
-                          <textarea className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" disabled>
-                            I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development.
-                          </textarea>
+                          <textarea 
+                            className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" 
+                            disabled
+                            defaultValue="I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development."
+                          />
                         </Field>
                         <Field label="Vision">
-                          <textarea className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" disabled>
-                            I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development.
-                          </textarea>
+                          <textarea 
+                            className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" 
+                            disabled
+                            defaultValue="I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development."
+                          />
                         </Field>
                         <Field label="Objects">
-                          <textarea className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" disabled>
-                            I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development.
-                          </textarea>
+                          <textarea 
+                            className="w-full h-32 px-5 py-4 border border-[#D0D5DD] rounded-2xl bg-[#F9FAFB] text-[#101828] font-bold resize-none leading-relaxed shadow-sm opacity-90" 
+                            disabled
+                            defaultValue="I am a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development."
+                          />
                         </Field>
                       </div>
                     )}
