@@ -58,23 +58,11 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
         </div>
         
         <div className="flex items-center gap-3">
-          {/* Chat icon with badge */}
-          <button
-            type="button"
-            className="group relative rounded-full border border-slate-200 p-2 text-slate-400 transition-colors hover:text-slate-600 hidden sm:block"
-          >
-            <MessageSquareMore className="h-[18px] w-[18px]" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-[#0088ff] text-[10px] font-medium text-white">
-              2
-            </span>
+          <button type="button" className="rounded-[5px] cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
+            <MessageSquareMore className="h-4 w-4" />
           </button>
-
-          {/* Notification bell */}
-          <button
-            type="button"
-            className="rounded-full border border-slate-200 p-2 text-slate-400 transition-colors hover:text-slate-600"
-          >
-            <Bell className="h-[18px] w-[18px]" />
+          <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
+            <Bell className="h-4 w-4" />
           </button>
           
           <div 
@@ -83,13 +71,12 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             onMouseEnter={handleOpen}
             onMouseLeave={handleClose}
           >
-            {/* User avatar / image */}
-            <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-              alt="User avatar"
-              className="h-9 w-9 shrink-0 object-cover rounded-full cursor-pointer border border-slate-100"
+            <div 
+              className="h-9 w-9 rounded-full bg-[var(--primary-soft)] cursor-pointer outline-none border border-slate-100 flex items-center justify-center overflow-hidden"
               onClick={() => setOpen(!open)}
-            />
+            >
+              <User className="h-5 w-5 text-[var(--primary)]" />
+            </div>
 
             {open && (
               <div 
