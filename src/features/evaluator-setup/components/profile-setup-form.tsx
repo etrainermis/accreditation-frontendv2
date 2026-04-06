@@ -34,7 +34,7 @@ export function ProfileSetupForm() {
     event.preventDefault();
     setSubmitted(true);
     if (!isFormValid) return;
-    router.push("/evaluator/setup/password");
+    router.push("/evaluator/dashboard");
   };
 
   return (

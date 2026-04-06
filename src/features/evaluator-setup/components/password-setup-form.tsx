@@ -26,7 +26,7 @@ export function PasswordSetupForm() {
     event.preventDefault();
     setSubmitted(true);
     if (isFormValid) {
-      router.push("/evaluator/dashboard");
+      router.push("/evaluator/setup/profile");
     }
   };
 
