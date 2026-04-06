@@ -6,7 +6,7 @@
   --card: #ffffff;
   --card-foreground: #0f172a;
   --border: #e2e8f0;
-  --primary: #0A77FF;
+  --primary: #0088ff;
   --primary-foreground: #ffffff;
   --primary-soft: rgba(0, 136, 255, 0.08);
   --primary-soft-strong: rgba(0, 136, 255, 0.14);
@@ -15,11 +15,11 @@
   --accent: #eef7ff;
   --accent-foreground: #0f172a;
   --destructive: #ef4444;
-  --ring: #0A77FF;
+  --ring: #0088ff;
   --radius: 1rem;
-  --sidebar: oklch(0.27 0.03 252);
-  --sidebar-foreground: oklch(0.97 0.008 95);
-  --sidebar-muted: oklch(0.4 0.03 248);
-  --brand-blue: #0A77FF;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0f172a;
+  --sidebar-muted: #64748b;
+  --brand-blue: #0088ff;
   --app-text: #353E49;
 }
