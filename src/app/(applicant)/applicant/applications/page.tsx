@@ -10,7 +10,14 @@ import {
   FileText, 
   Users, 
   Plus,
-  Check
+  Check,
+  ChevronRight,
+  Minus,
+  UploadCloud,
+  X,
+  Pencil,
+  Trash2,
+  FolderPlus
 } from "lucide-react";
 
 const stepsList = [
@@ -56,7 +63,7 @@ const trades = [
   { id: "7", name: "HVAC" },
 ];
 
-const competencies = [
+const competenciesList = [
   { id: "1", name: "JavaScript" },
   { id: "2", name: "Fundamentals Of Programming Using C" },
   { id: "3", name: "Masonry" },
@@ -74,6 +81,13 @@ export default function ApplicantApplicationsPage() {
   const [tradeSearch, setTradeSearch] = useState("");
   const [competencySearch, setCompetencySearch] = useState("");
 
+  // Step 3 state
+  const [equipmentName, setEquipmentName] = useState("");
+  const [equipmentNumber, setEquipmentNumber] = useState(1);
+  const [equipmentProof, setEquipmentProof] = useState<string | null>(null);
+  const [equipmentProofName, setEquipmentProofName] = useState<string | null>(null);
+  const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; proof: string | null }>>([]);
+
   const handleTradeContinue = () => {
     if (selectedTrade) setCurrentStep(2);
   };
@@ -82,7 +96,39 @@ export default function ApplicantApplicationsPage() {
     setCurrentStep(1);
   };
 
+  const handleCompetencyContinue = () => {
+    if (selectedCompetency) setCurrentStep(3);
+  };
+
+  const handleEquipmentBack = () => {
+    setCurrentStep(2);
+  };
+
+  const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setEquipmentProofName(file.name);
+      setEquipmentProof(URL.createObjectURL(file));
+      e.target.value = '';
+    }
+  };
+
+  const handleAddEquipment = () => {
+    if (equipmentName.trim() && equipmentNumber > 0) {
+      setEquipments([...equipments, { id: Math.random().toString(), name: equipmentName, quantity: equipmentNumber, proof: equipmentProof }]);
+      setEquipmentName("");
+      setEquipmentNumber(1);
+      setEquipmentProof(null);
+      setEquipmentProofName(null);
+    }
+  };
+
+  const removeEquipment = (id: string) => {
+    setEquipments(equipments.filter(eq => eq.id !== id));
+  };
+
   const selectedTradeName = trades.find(t => t.id === selectedTrade)?.name || "Unknown";
+  const selectedCompetencyName = competenciesList.find(c => c.id === selectedCompetency)?.name || "Unknown";
 
   return (
     <div className="flex h-full flex-col">
@@ -105,7 +151,7 @@ export default function ApplicantApplicationsPage() {
       <div className="mb-4 h-[1px] w-full shrink-0 bg-slate-100" />
 
       {/* Main Container */}
-      <div className="flex flex-1 overflow-hidden rounded-2xl bg-white border border-slate-100">
+      <div className="flex flex-1 overflow-hidden rounded-2xl border border-slate-100 bg-white">
         {/* Wizard Sidebar */}
         <div className="w-[300px] shrink-0 bg-[#FAFAFA] p-8">
           <h2 className="mb-10 text-[15px] font-semibold text-slate-700">
@@ -119,7 +165,7 @@ export default function ApplicantApplicationsPage() {
           {/* Stepper */}
           <div className="relative">
             {/* Vertical Line */}
-            <div className="absolute bottom-[20px] left-[23px] top-[20px] w-[#E4E7EC] border-l border-slate-200" />
+            <div className="absolute bottom-[20px] left-[23px] top-[20px] border-l border-slate-200 w-[#E4E7EC]" />
             
             <div className="flex flex-col gap-10">
               {stepsList.map((step) => {
@@ -128,14 +174,14 @@ export default function ApplicantApplicationsPage() {
                 
                 return (
                   <div key={step.id} className="relative z-10 flex gap-4">
-                    <div className={`flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[14px] bg-white text-slate-400 transition-colors ${isActive ? "ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]" : "ring-1 ring-slate-100"}`}>
+                    <div className={`flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[14px] bg-white text-slate-400 transition-colors ${isActive ? "shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200" : "ring-1 ring-slate-100"}`}>
                       <Icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
                     </div>
                     <div className="flex flex-col justify-center pt-0.5">
                       <p className={`text-[13px] transition-colors ${isActive ? "font-semibold text-slate-900" : "font-medium text-slate-400"}`}>
                         {step.title}
                       </p>
-                      <p className={`mt-0.5 text-[11px] leading-[1.6] transition-opacity text-slate-400 ${isActive ? "" : "opacity-60"}`}>
+                      <p className={`mt-0.5 text-[11px] leading-[1.6] text-slate-400 transition-opacity ${isActive ? "" : "opacity-60"}`}>
                         {step.subtitle}
                       </p>
                     </div>
@@ -155,7 +201,7 @@ export default function ApplicantApplicationsPage() {
               <>
                 {/* Step Header */}
                 <div className="flex flex-col items-center text-center">
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                     <Blocks className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-[17px] font-semibold text-slate-900">Trade Selection</h2>
@@ -193,7 +239,7 @@ export default function ApplicantApplicationsPage() {
                         >
                           <div className="flex items-center gap-3">
                             <Blocks className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
-                            <span className="text-[12px] font-medium text-slate-600 line-clamp-1">{trade.name}</span>
+                            <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{trade.name}</span>
                           </div>
                           <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${isSelected ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-300 bg-white"}`}>
                             {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
@@ -225,7 +271,7 @@ export default function ApplicantApplicationsPage() {
               <>
                 {/* Step Header */}
                 <div className="flex flex-col items-center text-center">
-                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white ring-1 ring-slate-200 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                     <Hexagon className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                   </div>
                   <h2 className="text-[17px] font-semibold text-slate-900">Competencies</h2>
@@ -234,12 +280,12 @@ export default function ApplicantApplicationsPage() {
                   </p>
                 </div>
 
-                <div className="mt-8 flex flex-col items-center">
+                <div className="col-span-full mt-8 flex flex-col items-center">
                   {/* Selected Trade Badge */}
                   <div className="mb-8 flex w-fit min-w-[140px] items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
                     <div className="flex items-center gap-2">
                       <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
-                      <span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedTradeName}</span>
+                      <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedTradeName}</span>
                     </div>
                     <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
                       <Check className="h-3 w-3 text-white" strokeWidth={3} />
@@ -266,7 +312,7 @@ export default function ApplicantApplicationsPage() {
 
                   {/* Radio Grid for Competencies */}
                   <div className="mb-10 grid grid-cols-2 gap-3">
-                    {competencies.map((comp) => {
+                    {competenciesList.map((comp) => {
                       const isSelected = selectedCompetency === comp.id;
                       return (
                         <div 
@@ -276,7 +322,7 @@ export default function ApplicantApplicationsPage() {
                         >
                           <div className="flex items-center gap-3">
                             <Hexagon className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
-                            <span className="text-[12px] font-medium text-slate-600 line-clamp-1">{comp.name}</span>
+                            <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{comp.name}</span>
                           </div>
                           <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${isSelected ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-300 bg-white"}`}>
                             {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
@@ -292,11 +338,168 @@ export default function ApplicantApplicationsPage() {
                       Back
                     </button>
                     <button 
+                      onClick={handleCompetencyContinue}
+                      disabled={!selectedCompetency}
                       className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedCompetency ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
                     >
                       Continue
                     </button>
                   </div>
+                </div>
+              </>
+            )}
+
+            {/* STEP 3: EQUIPMENT AND FACILITIES */}
+            {currentStep === 3 && (
+              <>
+                {/* Step Header */}
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
+                    <Briefcase className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-[17px] font-semibold text-slate-900">Equipment and Facilities</h2>
+                  <p className="mt-1.5 text-[13px] text-slate-500">
+                    List the available equipment and upload supporting proof.
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-col items-center">
+                  {/* Badges Row */}
+                  <div className="mb-8 flex items-center justify-center gap-4">
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedTradeName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Hexagon className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedCompetencyName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-2 text-left">
+                  {/* Equipment Form Box */}
+                  <div className="rounded-2xl border border-slate-200 p-6 bg-white shadow-sm mb-5">
+                    
+                    {/* Top Row: Name */}
+                    <div className="mb-5">
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                        Equipment Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Select ..."
+                        value={equipmentName}
+                        onChange={(e) => setEquipmentName(e.target.value)}
+                        className="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                      />
+                    </div>
+                    
+                    {/* Bottom Row: Number & Proof */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Number <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
+                          <div className="flex items-center gap-2">
+                            <Briefcase className="h-3.5 w-3.5 text-slate-400" />
+                            <span className="text-[13px] font-medium w-8 outline-none">{equipmentNumber}</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <button onClick={() => setEquipmentNumber(prev => prev + 1)} className="p-1 hover:bg-slate-100 rounded">
+                              <Plus className="h-4 w-4 text-slate-600" />
+                            </button>
+                            <button onClick={() => setEquipmentNumber(prev => Math.max(1, prev - 1))} className="p-1 hover:bg-slate-100 rounded">
+                              <Minus className="h-4 w-4 text-slate-600" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="mb-2 block text-[13px] font-medium text-slate-700">
+                          Proof <span className="text-red-500">*</span>
+                        </label>
+                        <div className="flex items-center rounded-xl border border-slate-200 bg-white px-0 overflow-hidden">
+                          <div className="flex-1 px-3 py-2 text-[13px] text-slate-400 truncate border-r border-slate-200">
+                            {equipmentProofName ? equipmentProofName : "Select ..."}
+                          </div>
+                          <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-100">
+                            <UploadCloud className="h-4 w-4 text-slate-500" />
+                            Upload
+                            <input type="file" accept="image/*" className="hidden" onChange={handleProofUpload} />
+                          </label>
+                        </div>
+                        <p className="mt-1.5 text-[10px] uppercase text-slate-400 font-medium">*.png, jpeg, jpg</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button 
+                    onClick={handleAddEquipment}
+                    className="mb-8 flex items-center justify-center gap-2 rounded-lg bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blue-600"
+                  >
+                    Add Equipment
+                    <FolderPlus className="h-4 w-4" />
+                  </button>
+
+                  <div className="flex w-full gap-3 mb-8">
+                    <button onClick={handleEquipmentBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                      Back
+                    </button>
+                    <button 
+                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors bg-[#0A77FF] hover:bg-[#0864d6]`}
+                    >
+                      Continue
+                    </button>
+                  </div>
+
+                  {/* Uploaded Equipments */}
+                  {equipments.length > 0 && (
+                    <div className="flex flex-col gap-3">
+                      {equipments.map(eq => (
+                        <div key={eq.id} className="relative flex items-center gap-4 rounded-xl border border-slate-200 p-3 bg-white">
+                          <div className="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100">
+                            {eq.proof ? (
+                              <img src={eq.proof} alt="proof" className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">No Image</div>
+                            )}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-[13px] font-medium text-slate-800">{eq.name}</p>
+                            <p className="text-[11px] text-slate-500 mt-0.5">Quantity: {eq.quantity} Pieces</p>
+                          </div>
+                          
+                          <button onClick={() => removeEquipment(eq.id)} className="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
+                            <X className="h-4 w-4" />
+                          </button>
+                          
+                          <div className="absolute right-3 bottom-3 flex gap-2">
+                            <button className="text-[#0A77FF] hover:text-blue-600">
+                              <Pencil className="h-4 w-4" />
+                            </button>
+                            <button onClick={() => removeEquipment(eq.id)} className="text-red-400 hover:text-red-600">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                 </div>
               </>
             )}
