@@ -1,14 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  ArrowLeft, 
-  Search, 
-  Blocks, 
-  Hexagon, 
-  Briefcase, 
-  FileText, 
-  Users, 
+import {
+  ArrowLeft,
+  Search,
+  Blocks,
+  Hexagon,
+  Briefcase,
+  FileText,
+  Users,
   Plus,
   Check,
   ChevronRight,
@@ -77,7 +77,7 @@ export default function ApplicantApplicationsPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTrade, setSelectedTrade] = useState<string | null>(null);
   const [selectedCompetency, setSelectedCompetency] = useState<string | null>(null);
-  
+
   const [tradeSearch, setTradeSearch] = useState("");
   const [competencySearch, setCompetencySearch] = useState("");
 
@@ -88,20 +88,36 @@ export default function ApplicantApplicationsPage() {
   const [equipmentProofName, setEquipmentProofName] = useState<string | null>(null);
   const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; proof: string | null }>>([]);
 
+  // Step 4 state
+  const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
+
+  // Handlers Step 1 -> 2
   const handleTradeContinue = () => {
     if (selectedTrade) setCurrentStep(2);
   };
-
   const handleCompetencyBack = () => {
     setCurrentStep(1);
   };
 
+  // Handlers Step 2 -> 3
   const handleCompetencyContinue = () => {
     if (selectedCompetency) setCurrentStep(3);
   };
-
   const handleEquipmentBack = () => {
     setCurrentStep(2);
+  };
+
+  // Handlers Step 3 -> 4
+  const handleEquipmentContinue = () => {
+    setCurrentStep(4);
+  };
+  const handleCurriculumBack = () => {
+    setCurrentStep(3);
+  };
+
+  // Handlers Step 4 -> 5
+  const handleCurriculumContinue = () => {
+    setCurrentStep(5);
   };
 
   const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +141,42 @@ export default function ApplicantApplicationsPage() {
 
   const removeEquipment = (id: string) => {
     setEquipments(equipments.filter(eq => eq.id !== id));
+  };
+
+  const handleCurriculumUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files).map(file => {
+        const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
+        const sizeRounded = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
+        return {
+          id: Math.random().toString(),
+          name: file.name,
+          size: sizeRounded,
+          extension: ext,
+          progress: 0
+        };
+      });
+
+      setCurriculumDocs(prev => [...prev, ...newFiles]);
+
+      // Simulate upload progress
+      newFiles.forEach(file => {
+        let currentProgress = 0;
+        const interval = setInterval(() => {
+          currentProgress += Math.floor(Math.random() * 20) + 10;
+          if (currentProgress >= 100) {
+            currentProgress = 100;
+            clearInterval(interval);
+          }
+          setCurriculumDocs(prev => prev.map(d => d.id === file.id ? { ...d, progress: currentProgress } : d));
+        }, 400);
+      });
+      e.target.value = '';
+    }
+  };
+
+  const removeCurriculumDoc = (id: string) => {
+    setCurriculumDocs(prev => prev.filter(d => d.id !== id));
   };
 
   const selectedTradeName = trades.find(t => t.id === selectedTrade)?.name || "Unknown";
@@ -166,12 +218,12 @@ export default function ApplicantApplicationsPage() {
           <div className="relative">
             {/* Vertical Line */}
             <div className="absolute bottom-[20px] left-[23px] top-[20px] border-l border-slate-200 w-[#E4E7EC]" />
-            
+
             <div className="flex flex-col gap-10">
               {stepsList.map((step) => {
                 const Icon = step.icon;
                 const isActive = currentStep === step.id;
-                
+
                 return (
                   <div key={step.id} className="relative z-10 flex gap-4">
                     <div className={`flex h-[48px] w-[48px] shrink-0 items-center justify-center rounded-[14px] bg-white text-slate-400 transition-colors ${isActive ? "shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200" : "ring-1 ring-slate-100"}`}>
@@ -195,7 +247,7 @@ export default function ApplicantApplicationsPage() {
         {/* Wizard Content */}
         <div className="flex flex-1 flex-col overflow-y-auto bg-white px-[100px] py-14">
           <div className="mx-auto flex w-full max-w-[600px] flex-col">
-            
+
             {/* STEP 1: TRADE SELECTION */}
             {currentStep === 1 && (
               <>
@@ -214,7 +266,7 @@ export default function ApplicantApplicationsPage() {
                   <p className="mb-3 text-[12px] text-slate-500">
                     24 trades available for you to choose
                   </p>
-                  
+
                   {/* Search */}
                   <div className="relative mb-6">
                     <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -232,8 +284,8 @@ export default function ApplicantApplicationsPage() {
                     {trades.map((trade) => {
                       const isSelected = selectedTrade === trade.id;
                       return (
-                        <div 
-                          key={trade.id} 
+                        <div
+                          key={trade.id}
                           onClick={() => setSelectedTrade(trade.id)}
                           className={`flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-colors ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
                         >
@@ -254,7 +306,7 @@ export default function ApplicantApplicationsPage() {
                     <button className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
                       Back
                     </button>
-                    <button 
+                    <button
                       onClick={handleTradeContinue}
                       disabled={!selectedTrade}
                       className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedTrade ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
@@ -297,7 +349,7 @@ export default function ApplicantApplicationsPage() {
                   <p className="mb-3 text-[12px] text-slate-500">
                     24 competencies under this trade
                   </p>
-                  
+
                   {/* Search */}
                   <div className="relative mb-6">
                     <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
@@ -315,8 +367,8 @@ export default function ApplicantApplicationsPage() {
                     {competenciesList.map((comp) => {
                       const isSelected = selectedCompetency === comp.id;
                       return (
-                        <div 
-                          key={comp.id} 
+                        <div
+                          key={comp.id}
                           onClick={() => setSelectedCompetency(comp.id)}
                           className={`flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-colors ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
                         >
@@ -337,7 +389,7 @@ export default function ApplicantApplicationsPage() {
                     <button onClick={handleCompetencyBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
                       Back
                     </button>
-                    <button 
+                    <button
                       onClick={handleCompetencyContinue}
                       disabled={!selectedCompetency}
                       className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedCompetency ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
@@ -365,7 +417,7 @@ export default function ApplicantApplicationsPage() {
 
                 <div className="mt-8 flex flex-col items-center">
                   {/* Badges Row */}
-                  <div className="mb-8 flex items-center justify-center gap-4">
+                  <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
                     <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
                       <div className="flex items-center gap-2">
                         <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
@@ -390,8 +442,8 @@ export default function ApplicantApplicationsPage() {
 
                 <div className="mt-2 text-left">
                   {/* Equipment Form Box */}
-                  <div className="rounded-2xl border border-slate-200 p-6 bg-white shadow-sm mb-5">
-                    
+                  <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+
                     {/* Top Row: Name */}
                     <div className="mb-5">
                       <label className="mb-2 block text-[13px] font-medium text-slate-700">
@@ -402,10 +454,10 @@ export default function ApplicantApplicationsPage() {
                         placeholder="Select ..."
                         value={equipmentName}
                         onChange={(e) => setEquipmentName(e.target.value)}
-                        className="w-full rounded-xl border border-slate-200 py-2.5 px-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                        className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                       />
                     </div>
-                    
+
                     {/* Bottom Row: Number & Proof */}
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -415,25 +467,25 @@ export default function ApplicantApplicationsPage() {
                         <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
                           <div className="flex items-center gap-2">
                             <Briefcase className="h-3.5 w-3.5 text-slate-400" />
-                            <span className="text-[13px] font-medium w-8 outline-none">{equipmentNumber}</span>
+                            <span className="w-8 text-[13px] font-medium outline-none">{equipmentNumber}</span>
                           </div>
                           <div className="flex items-center gap-1">
-                            <button onClick={() => setEquipmentNumber(prev => prev + 1)} className="p-1 hover:bg-slate-100 rounded">
+                            <button onClick={() => setEquipmentNumber(prev => prev + 1)} className="rounded p-1 hover:bg-slate-100">
                               <Plus className="h-4 w-4 text-slate-600" />
                             </button>
-                            <button onClick={() => setEquipmentNumber(prev => Math.max(1, prev - 1))} className="p-1 hover:bg-slate-100 rounded">
+                            <button onClick={() => setEquipmentNumber(prev => Math.max(1, prev - 1))} className="rounded p-1 hover:bg-slate-100">
                               <Minus className="h-4 w-4 text-slate-600" />
                             </button>
                           </div>
                         </div>
                       </div>
-                      
+
                       <div>
                         <label className="mb-2 block text-[13px] font-medium text-slate-700">
                           Proof <span className="text-red-500">*</span>
                         </label>
-                        <div className="flex items-center rounded-xl border border-slate-200 bg-white px-0 overflow-hidden">
-                          <div className="flex-1 px-3 py-2 text-[13px] text-slate-400 truncate border-r border-slate-200">
+                        <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white px-0 items-center">
+                          <div className="flex-1 truncate border-r border-slate-200 px-3 py-2 text-[13px] text-slate-400">
                             {equipmentProofName ? equipmentProofName : "Select ..."}
                           </div>
                           <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 transition-colors hover:bg-slate-100">
@@ -442,12 +494,12 @@ export default function ApplicantApplicationsPage() {
                             <input type="file" accept="image/*" className="hidden" onChange={handleProofUpload} />
                           </label>
                         </div>
-                        <p className="mt-1.5 text-[10px] uppercase text-slate-400 font-medium">*.png, jpeg, jpg</p>
+                        <p className="mt-1.5 text-[10px] uppercase font-medium text-slate-400">*.png, jpeg, jpg</p>
                       </div>
                     </div>
                   </div>
 
-                  <button 
+                  <button
                     onClick={handleAddEquipment}
                     className="mb-8 flex items-center justify-center gap-2 rounded-lg bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blue-600"
                   >
@@ -455,12 +507,13 @@ export default function ApplicantApplicationsPage() {
                     <FolderPlus className="h-4 w-4" />
                   </button>
 
-                  <div className="flex w-full gap-3 mb-8">
+                  <div className="mb-8 flex w-full gap-3">
                     <button onClick={handleEquipmentBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
                       Back
                     </button>
-                    <button 
-                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors bg-[#0A77FF] hover:bg-[#0864d6]`}
+                    <button
+                      onClick={handleEquipmentContinue}
+                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]"
                     >
                       Continue
                     </button>
@@ -470,7 +523,7 @@ export default function ApplicantApplicationsPage() {
                   {equipments.length > 0 && (
                     <div className="flex flex-col gap-3">
                       {equipments.map(eq => (
-                        <div key={eq.id} className="relative flex items-center gap-4 rounded-xl border border-slate-200 p-3 bg-white">
+                        <div key={eq.id} className="relative flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-3">
                           <div className="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100">
                             {eq.proof ? (
                               <img src={eq.proof} alt="proof" className="h-full w-full object-cover" />
@@ -480,14 +533,14 @@ export default function ApplicantApplicationsPage() {
                           </div>
                           <div className="flex-1">
                             <p className="text-[13px] font-medium text-slate-800">{eq.name}</p>
-                            <p className="text-[11px] text-slate-500 mt-0.5">Quantity: {eq.quantity} Pieces</p>
+                            <p className="mt-0.5 text-[11px] text-slate-500">Quantity: {eq.quantity} Pieces</p>
                           </div>
-                          
+
                           <button onClick={() => removeEquipment(eq.id)} className="absolute right-3 top-3 text-slate-400 hover:text-slate-600">
                             <X className="h-4 w-4" />
                           </button>
-                          
-                          <div className="absolute right-3 bottom-3 flex gap-2">
+
+                          <div className="absolute bottom-3 right-3 flex gap-2">
                             <button className="text-[#0A77FF] hover:text-blue-600">
                               <Pencil className="h-4 w-4" />
                             </button>
@@ -500,6 +553,129 @@ export default function ApplicantApplicationsPage() {
                     </div>
                   )}
 
+                </div>
+              </>
+            )}
+
+            {/* STEP 4: CURRICULUM DOCUMENTS */}
+            {currentStep === 4 && (
+              <>
+                {/* Step Header */}
+                <div className="flex flex-col items-center text-center">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
+                    <FileText className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
+                  </div>
+                  <h2 className="text-[17px] font-semibold text-slate-900">Curriculum Documents</h2>
+                  <p className="mt-1.5 text-[13px] text-slate-500">
+                    Upload curriculum and related training documents.
+                  </p>
+                </div>
+
+                <div className="mt-8 flex flex-col items-center">
+                  {/* Badges Row */}
+                  <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedTradeName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
+                    <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2">
+                      <div className="flex items-center gap-2">
+                        <Hexagon className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
+                        <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedCompetencyName}</span>
+                      </div>
+                      <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500">
+                        <Check className="h-3 w-3 text-white" strokeWidth={3} />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-2 mb-8 w-full text-left">
+                  <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white py-10 transition-colors hover:bg-slate-50">
+                    <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm">
+                      <UploadCloud className="h-5 w-5 text-slate-500" strokeWidth={1.5} />
+                    </div>
+                    <p className="text-[13px] text-slate-500">
+                      <span className="font-medium text-[#0A77FF]">Click to upload</span> or drag and drop
+                    </p>
+                    <p className="mt-1 text-[11px] text-slate-400">PDF, DOCX, MP4 or FIG (max. 100MB)</p>
+                    <input type="file" multiple className="hidden" onChange={handleCurriculumUpload} />
+                  </label>
+                </div>
+
+                {/* Uploaded Files */}
+                {curriculumDocs.length > 0 && (
+                  <div className="mb-8 flex w-full flex-col gap-3">
+                    {curriculumDocs.map(doc => {
+                      const isDone = doc.progress === 100;
+                      let iconBg = "bg-slate-500";
+                      if (doc.extension === "PDF") iconBg = "bg-red-500";
+                      else if (doc.extension === "MP4") iconBg = "bg-blue-500";
+                      else if (doc.extension === "FIG") iconBg = "bg-purple-500";
+                      else if (doc.extension === "DOCX" || doc.extension === "DOC") iconBg = "bg-blue-400";
+
+                      return (
+                        <div key={doc.id} className="relative flex flex-col justify-center rounded-xl border border-slate-200 bg-white p-4">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-center gap-4">
+                              {/* Extension Icon */}
+                              <div className="relative mt-0.5 flex h-10 w-8 items-center justify-center rounded-md border border-slate-200 bg-slate-50 shadow-sm">
+                                <div className={`absolute bottom-1 left-1.5 right-1.5 flex items-center justify-center rounded-[3px] ${iconBg} px-1 py-0.5`}>
+                                  <span className="tracking-widest text-[8px] font-bold text-white">{doc.extension}</span>
+                                </div>
+                              </div>
+                              <div className="flex flex-col pt-0.5">
+                                <p className="text-[13px] font-medium text-slate-800">{doc.name}</p>
+                                <p className="text-[11px] text-slate-500">{doc.size}</p>
+                              </div>
+                            </div>
+                            {/* Right Action */}
+                            <div className="pt-0.5">
+                              {isDone ? (
+                                <div className="flex h-[22px] w-[22px] items-center justify-center rounded-md bg-[#0A77FF]">
+                                  <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+                                </div>
+                              ) : (
+                                <button onClick={() => removeCurriculumDoc(doc.id)} className="transition-colors text-slate-400 hover:text-red-500">
+                                  <Trash2 className="h-5 w-5" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Progress Bar */}
+                          <div className="mt-4 flex items-center gap-3">
+                            <div className="h-2 flex-1 overflow-hidden rounded-full bg-slate-100">
+                              <div
+                                className="h-full bg-[#0A77FF] ease-in-out transition-all duration-300"
+                                style={{ width: `${doc.progress}%` }}
+                              />
+                            </div>
+                            <span className="w-8 text-right text-[12px] font-medium text-slate-500">{doc.progress}%</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                <div className="flex w-full gap-3 mb-8">
+                  <button onClick={handleCurriculumBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                    Back
+                  </button>
+                  <button
+                    onClick={handleCurriculumContinue}
+                    disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)}
+                    className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${(curriculumDocs.length > 0 && curriculumDocs.every(d => d.progress === 100)) ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
+                  >
+                    Continue
+                  </button>
                 </div>
               </>
             )}
