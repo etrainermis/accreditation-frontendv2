@@ -14,10 +14,10 @@ export function usePortalNavigation(role: UserRole) {
 
     return config.items.map((item) => ({
       ...item,
-      isActive:
-        item.match === "exact"
+      isActive: item.activeMatchers?.some((matcher) => pathname === matcher || pathname.startsWith(`${matcher}/`))
+        ?? (item.match === "exact"
           ? pathname === item.href
-          : pathname === item.href || pathname.startsWith(`${item.href}/`),
+          : pathname === item.href || pathname.startsWith(`${item.href}/`)),
     }));
   }, [pathname, role]);
 }
