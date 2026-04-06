@@ -11,7 +11,7 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-destructive: var(--destructive);
-  --font-sans: var(--font-nunito-sans);
+  --font-sans: var(--font-manrope);
   --font-mono: var(--font-ibm-plex-mono);
   --radius-sm: calc(var(--radius) - 0.5rem);
   --radius-md: calc(var(--radius) - 0.25rem);
@@ -34,7 +34,7 @@ body {
     radial-gradient(circle at top right, rgba(0, 136, 255, 0.12), transparent 24%),
     var(--background);
   color: var(--foreground);
-  font-family: var(--font-nunito-sans), sans-serif;
+  font-family: var(--font-manrope), sans-serif;
 }
 
 a {

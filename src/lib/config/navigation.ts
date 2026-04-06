@@ -4,7 +4,7 @@ import {
   CalendarCheck,
   ClipboardCheck,
   FileSpreadsheet,
-  Home,
+  House,
   ShieldAlert,
   User,
   UserCog,
@@ -20,8 +20,8 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     shortLabel: "Applicant",
     basePath: "/applicant",
     items: [
-      { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: Home, match: "exact" },
-      { title: "Applications", href: "/applicant/applications", description: "", icon: Users },
+      { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: House, match: "exact" },
+      { title: "Applications", href: "/applicant/applications", description: "", icon: FileSpreadsheet },
       { title: "Evaluations", href: "/applicant/certificates", description: "", icon: CalendarCheck },
       { title: "Profile", href: "/applicant/profile", description: "", icon: User },
       { title: "Notifications", href: "/applicant/notifications", description: "", icon: Bell },
@@ -33,7 +33,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     shortLabel: "Evaluator",
     basePath: "/evaluator",
     items: [
-      { title: "Dashboard", href: "/evaluator/dashboard", description: "", icon: Home, match: "exact" },
+      { title: "Dashboard", href: "/evaluator/dashboard", description: "", icon: House, match: "exact" },
       { title: "Evaluations", href: "/evaluator/assignments", description: "", icon: ClipboardCheck },
       { title: "Profile", href: "/evaluator/due-diligence", description: "", icon: User },
       { title: "Notifications", href: "/evaluator/notifications", description: "", icon: Bell },
@@ -45,9 +45,8 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     shortLabel: "Super Admin",
     basePath: "/super-admin",
     items: [
-      { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: Home, match: "exact" },
+      { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: House, match: "exact" },
       { title: "Evaluations", href: "/super-admin/evaluations", description: "", icon: BadgeCheck },
-    
       { title: "Profile", href: "/super-admin/profile", description: "", icon: User },
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
     ],
