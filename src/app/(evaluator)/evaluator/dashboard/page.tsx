@@ -1,5 +1,6 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageContainer } from "@/components/layout/page-container";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
 
 const stats = [
   { label: "Applications", value: "2,203" },
@@ -11,16 +12,7 @@ const stats = [
 export default function EvaluatorDashboardPage() {
   return (
     <PageContainer role="evaluator" title="Manage Accreditation Evaluations" description="View and manage evaluations.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <Card key={item.label} className="rounded-2xl border border-slate-200 bg-white shadow-none">
-            <CardContent className="space-y-3 p-6">
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="text-2xl font-semibold text-slate-900">{item.value}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid items={stats} />
 
       <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
         <CardHeader>

@@ -2,7 +2,20 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { PageHeaderProvider } from "@/lib/context/page-header-context";
+
+// Suppress the React 19 warning for next-themes script tag in development
+if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
+  const orig = console.error;
+  console.error = (...args: unknown[]) => {
+    if (typeof args[0] === 'string' && args[0].includes('Encountered a script tag')) {
+      return;
+    }
+    orig.apply(console, args);
+  };
+}
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -19,7 +32,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <TooltipProvider>
+        <PageHeaderProvider>
+          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        </PageHeaderProvider>
+      </TooltipProvider>
     </ThemeProvider>
   );
 }
