@@ -1,12 +1,15 @@
+"use client";
+
 import { PageContainer } from "@/components/layout/page-container";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
 
 const stats = [
-  { label: "Applications", value: "2,203" },
-  { label: "Pending", value: "1,003" },
-  { label: "Evaluated", value: "1,190" },
-  { label: "Rejected", value: "10" },
+  { label: "Applications", value: "2,203", icon: NotepadText, iconColor: "#0A77FF" },
+  { label: "Pending", value: "1,003", icon: ClipboardClock, iconColor: "#FF8D28" },
+  { label: "Evaluated", value: "1,190", icon: CheckCheck, iconColor: "#34C759" },
+  { label: "Rejected", value: "10", icon: AlertTriangle, iconColor: "#FF383C" },
 ];
 
 export default function EvaluatorDashboardPage() {
