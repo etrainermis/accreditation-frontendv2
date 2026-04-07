@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import { FormSection } from "@/components/forms/form-section";
 import { DataTablePlaceholder } from "@/components/tables/data-table-placeholder";
 import { PageContainer } from "@/components/layout/page-container";
@@ -11,12 +9,6 @@ export default function SuperAdminEvaluatorsPage() {
       role="super-admin"
       title="Manage Accreditation Evalutions"
       description="View & manage active elders and requests"
-      action={
-        <Button className="rounded-sm cursor-pointer px-4 py-3 text-sm font-medium">
-          Start New Evaluation
-          <Plus className="ml-2 h-4 w-4" />
-        </Button>
-      }
     >
       <EvaluationsSubNav />
       

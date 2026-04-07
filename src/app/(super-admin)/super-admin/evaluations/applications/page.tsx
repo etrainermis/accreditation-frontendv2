@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { DataTable } from "@/components/ui/data-table";
 import { 
@@ -35,12 +34,6 @@ export default function SuperAdminApplicationsPage() {
       role="super-admin"
       title="Manage Accreditation Evalutions"
       description="View & manage active elders and requests"
-      action={
-        <Button className="rounded-sm cursor-pointer px-4 py-3 text-sm font-medium">
-          Start New Evaluation
-          <Plus className="ml-2 h-4 w-4" />
-        </Button>
-      }
     >
       <EvaluationsSubNav />
       <StatsGrid items={stats} />

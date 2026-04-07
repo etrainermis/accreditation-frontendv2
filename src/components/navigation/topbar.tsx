@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, LogOut, MessageSquareMore, User, Menu } from "lucide-react";
+import { Bell, LogOut, MessageSquareMore, User, Menu, Plus } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { usePageHeader } from "@/lib/context/page-header-context";
 
 import type { UserRole } from "@/types/auth";
 
 import { PortalBreadcrumbs } from "./portal-breadcrumbs";
-import { cn } from "@/lib/utils/cn";
+
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: () => void }) {
@@ -109,12 +109,26 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
 
       {/* Page Header Row (Integrated/Fused) with content-width border */}
       <div className="px-6">
-        <div className="flex items-center justify-between pb-5 pt-1 border-b border-[#EAECF0]">
+        <div className="flex w-full pb-5 pt-1 border-b border-[#EAECF0]">
           {title ? (
             <>
-              <div>
-                <h1 className="text-lg text-[#101828] font-semibold">{title}</h1>
-                {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
+              <div className="flex w-full justify-between items-center gap-10">
+                <div>
+                  <h1 className="text-lg text-[#101828]">{title}</h1>
+                  {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
+                </div>
+
+                {role === "super-admin" && (
+                  <button 
+                    data-slot="button" 
+                    data-variant="default" 
+                    data-size="default" 
+                    className="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 rounded-sm cursor-pointer px-4 py-3 text-sm font-medium"
+                  >
+                    Start New Evaluation
+                    <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
+                  </button>
+                )}
               </div>
               {action}
             </>

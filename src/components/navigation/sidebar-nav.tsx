@@ -58,7 +58,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
                 strokeWidth={1.5} 
                 size={20}
               />
-              <span className={cn(item.isActive ? "text-[var(--primary)] font-semibold" : "text-[#353E49]")}>
+              <span className={cn(item.isActive ? "text-[var(--primary)]" : "text-[#353E49]")}>
                 {item.title}
               </span>
             </Link>

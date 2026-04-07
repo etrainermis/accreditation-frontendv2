@@ -7,9 +7,11 @@ import { cn } from "@/lib/utils/cn";
 export interface StatItem {
   label: string;
   value: string | number;
+  icon?: LucideIcon;
+  color?: string;
 }
 
-const statConfig: Record<string, { icon: LucideIcon; color: string }> = {
+const defaultStatConfig: Record<string, { icon: LucideIcon; color: string }> = {
   "Applications": { icon: NotepadText, color: "#0A77FF" },
   "Pending": { icon: ClipboardClock, color: "#FF8D28" },
   "Evaluated": { icon: CheckCheck, color: "#34C759" },
@@ -26,8 +28,9 @@ export function StatsGrid({ items, className }: StatsGridProps) {
   return (
     <div className={cn("grid gap-4 md:grid-cols-2 xl:grid-cols-4 mb-6", className)}>
       {items.map((item) => {
-        const config = statConfig[item.label] || { icon: NotepadText, color: "#64748B" };
-        const Icon = config.icon;
+        const config = defaultStatConfig[item.label] || { icon: NotepadText, color: "#64748B" };
+        const Icon = item.icon || config.icon;
+        const iconColor = item.color || config.color;
         
         return (
           <Card 
@@ -36,7 +39,7 @@ export function StatsGrid({ items, className }: StatsGridProps) {
           >
             <CardContent className="p-5 flex flex-col gap-4">
               <div className="w-fit p-2.5 rounded-sm border border-[#EAECF0] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)]">
-                <Icon className="h-5 w-5" style={{ color: config.color }} strokeWidth={1} />
+                <Icon className="h-5 w-5" style={{ color: iconColor }} strokeWidth={1} />
               </div>
               <div className="space-y-1">
                 <p className="text-sm text-slate-500 font-medium">{item.label}</p>
