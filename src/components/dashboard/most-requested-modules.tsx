@@ -34,10 +34,10 @@ export function MostRequestedModules() {
         <div className="mt-4 space-y-4">
           {modules.map((mod) => (
             <div key={mod.id} className="flex items-center gap-4">
-              <span className="text-xs font-bold text-slate-400 w-4">{mod.id}</span>
+              <span className="text-xs text-slate-400 w-4">{mod.id}</span>
               <div className="flex-1 space-y-2">
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-semibold text-slate-700">{mod.name}</span>
+                  <span className="text-[11px]  text-slate-700">{mod.name}</span>
                   <span className="text-[11px] font-bold text-slate-900">{mod.percentage.toFixed(2)}%</span>
                 </div>
                 <div className="h-2 w-full bg-slate-50 rounded-full overflow-hidden border border-slate-100">
