@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
@@ -22,6 +23,7 @@ const stats = [
 const columns = getApplicationColumns();
 
 export default function SuperAdminApplicationsPage() {
+  const router = useRouter();
   const [search, setSearch] = useState("");
 
   const filteredData = mockApplications.filter(item => 
@@ -48,6 +50,7 @@ export default function SuperAdminApplicationsPage() {
         showPagination={true}
         currentPage={1}
         totalPages={10}
+        onRowClick={(item) => router.push(`/super-admin/evaluations/applications/${item.id}`)}
       />
     </PageContainer>
   );

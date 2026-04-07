@@ -7,12 +7,16 @@ export function PageContainer({
   title,
   description,
   action,
+  breadcrumbs,
+  hideSidebar,
   children,
 }: {
   role: string;
   title: string;
   description: string;
   action?: ReactNode;
+  breadcrumbs?: { label: string; href: string }[];
+  hideSidebar?: boolean;
   children: ReactNode;
 }) {
   const { setHeader } = usePageHeader();
@@ -21,13 +25,15 @@ export function PageContainer({
     setHeader({
       title,
       description,
-      action: action || null
+      action: action || null,
+      breadcrumbs,
+      hideSidebar,
     });
-  }, [title, description, action, setHeader]);
+  }, [title, description, action, breadcrumbs, hideSidebar, setHeader]);
 
   return (
     <div className="space-y-6">
-      <div className="space-y-6 py-6">
+      <div className="py-6">
         {children}
       </div>
     </div>

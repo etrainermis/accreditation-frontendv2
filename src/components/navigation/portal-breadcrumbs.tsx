@@ -4,11 +4,43 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronRight, Home } from "lucide-react";
 import { portalNavigation } from "@/lib/config/navigation";
+import { usePageHeader } from "@/lib/context/page-header-context";
 
 export function PortalBreadcrumbs() {
+  const { breadcrumbs: contextBreadcrumbs } = usePageHeader();
   const pathname = usePathname();
   
-  // Split path and filter out empty segments and route groups
+  // If context breadcrumbs are provided, use them
+  if (contextBreadcrumbs && contextBreadcrumbs.length > 0) {
+    return (
+      <nav className="flex items-center text-sm" aria-label="Breadcrumb">
+        <ol className="flex items-center gap-2">
+          {contextBreadcrumbs.map((crumb: { label: string; href: string }, index: number) => {
+            const isLast = index === contextBreadcrumbs.length - 1;
+            return (
+              <li key={crumb.href} className="flex items-center gap-2">
+                {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
+                {isLast ? (
+                  <span className="font-medium bg-[#F9FAFB] p-2 rounded-sm text-[var(--primary)]">
+                    {crumb.label}
+                  </span>
+                ) : (
+                  <Link
+                    href={crumb.href as never}
+                    className="text-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+                  >
+                    {crumb.label}
+                  </Link>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+    );
+  }
+
+  // Fallback to dynamic generation
   const allSegments = pathname
     .split("/")
     .filter((segment) => segment && !segment.startsWith("("));
@@ -17,9 +49,6 @@ export function PortalBreadcrumbs() {
   const role = allSegments[0] || "";
   const roleConfig = portalNavigation[role as keyof typeof portalNavigation];
   
-  // The first segment after the role is the starting point (e.g., 'dashboard' or 'evaluations')
-  const portalSegments = allSegments.slice(1);
-
   // Map of URL segments to friendly titles for cases where the URL structure
   // doesn't match the navigation config titles perfectly.
   const SEGMENT_TITLE_MAP: Record<string, string> = {
@@ -30,6 +59,9 @@ export function PortalBreadcrumbs() {
     schedule: "Schedule",
     dashboard: "Dashboard",
   };
+
+  // The first segment after the role is the starting point (e.g., 'dashboard' or 'evaluations')
+  const portalSegments = allSegments.slice(1);
 
   // Map of segments to specific default internal redirects
   const SEGMENT_HREF_MAP: Record<string, string> = {

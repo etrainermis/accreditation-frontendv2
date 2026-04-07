@@ -6,33 +6,55 @@ interface PageHeaderContextType {
   title: string;
   description: string;
   action: ReactNode | null;
-  setHeader: (header: { title?: string; description?: string; action?: ReactNode | null }) => void;
+  breadcrumbs?: { label: string; href: string }[];
+  hideSidebar?: boolean;
+  setHeader: (header: { 
+    title?: string; 
+    description?: string; 
+    action?: ReactNode | null;
+    breadcrumbs?: { label: string; href: string }[];
+    hideSidebar?: boolean;
+  }) => void;
 }
 
 const PageHeaderContext = createContext<PageHeaderContextType | undefined>(undefined);
 
 export function PageHeaderProvider({ children }: { children: ReactNode }) {
-  const [{ title, description, action }, setHeaderState] = useState<{ 
+  const [{ title, description, action, breadcrumbs, hideSidebar }, setHeaderState] = useState<{ 
     title: string; 
     description: string; 
-    action: ReactNode | null 
+    action: ReactNode | null;
+    breadcrumbs?: { label: string; href: string }[];
+    hideSidebar?: boolean;
   }>({
     title: "",
     description: "",
     action: null,
+    breadcrumbs: [],
+    hideSidebar: false,
   });
 
-  const setHeader = useCallback((newHeader: { title?: string; description?: string; action?: ReactNode | null }) => {
+  const setHeader = useCallback((newHeader: { 
+    title?: string; 
+    description?: string; 
+    action?: ReactNode | null;
+    breadcrumbs?: { label: string; href: string }[];
+    hideSidebar?: boolean;
+  }) => {
     setHeaderState((prev) => {
-      // Check if anything actually changed to avoid redundant state updates
-      const nextTitle = newHeader.title ?? prev.title;
-      const nextDescription = newHeader.description ?? prev.description;
-      const nextAction = newHeader.action !== undefined ? newHeader.action : prev.action;
+      // Use 'in' operator to check if the property was explicitly passed
+      const nextTitle = 'title' in newHeader ? newHeader.title! : prev.title;
+      const nextDescription = 'description' in newHeader ? newHeader.description! : prev.description;
+      const nextAction = 'action' in newHeader ? newHeader.action : prev.action;
+      const nextBreadcrumbs = 'breadcrumbs' in newHeader ? newHeader.breadcrumbs : prev.breadcrumbs;
+      const nextHideSidebar = 'hideSidebar' in newHeader ? newHeader.hideSidebar : prev.hideSidebar;
 
       if (
         nextTitle === prev.title && 
         nextDescription === prev.description && 
-        nextAction === prev.action
+        nextAction === prev.action &&
+        nextBreadcrumbs === prev.breadcrumbs &&
+        nextHideSidebar === prev.hideSidebar
       ) {
         return prev;
       }
@@ -41,6 +63,8 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
         title: nextTitle,
         description: nextDescription,
         action: nextAction,
+        breadcrumbs: nextBreadcrumbs,
+        hideSidebar: nextHideSidebar,
       };
     });
   }, []);
@@ -49,8 +73,10 @@ export function PageHeaderProvider({ children }: { children: ReactNode }) {
     title,
     description,
     action,
+    breadcrumbs,
+    hideSidebar,
     setHeader
-  }), [title, description, action, setHeader]);
+  }), [title, description, action, breadcrumbs, hideSidebar, setHeader]);
 
   return (
     <PageHeaderContext.Provider value={value}>

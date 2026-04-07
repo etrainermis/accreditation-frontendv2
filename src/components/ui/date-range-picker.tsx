@@ -153,8 +153,6 @@ export function DateRangePicker({
             {showRightNav && (
               <button 
                 type="button"
-                onClick={() => setLeftMonth(new Date(year, month, 1))} // Since it's right calendar, next for left is current for right? No.
-                // Actually next for left calendar moves both.
                 onClick={() => setLeftMonth(new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1))}
                 className="p-1 hover:bg-slate-100 rounded-md"
               >
@@ -221,7 +219,7 @@ export function DateRangePicker({
       <button 
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white shadow-sm hover:bg-slate-50 transition-colors"
+        className="flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
       >
         <Calendar className="h-4 w-4 text-[#344054]" strokeWidth={1.5} />
         <span className="text-sm font-medium text-[#344054]">

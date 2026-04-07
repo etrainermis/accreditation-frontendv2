@@ -73,7 +73,7 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
           );
         })}
       </div>
-    <div className="justify-end flex w-full">
+    <div className="justify-end mt-6 flex w-full">
         {children}
     </div>
     </div>
