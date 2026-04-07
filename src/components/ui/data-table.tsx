@@ -100,7 +100,7 @@ export function DataTable<T extends { id: string | number }>({
                 <th className="pl-6 pr-2 py-4 w-10 text-right">
                   <input 
                     type="checkbox" 
-                    className="h-4 w-4 rounded border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
+                    className="h-4 w-4 rounded-sm border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
                   />
                 </th>
                 {columns.map((col, idx) => (
@@ -140,7 +140,7 @@ export function DataTable<T extends { id: string | number }>({
                   <td className="pl-6 pr-2 py-4 text-right">
                     <input 
                       type="checkbox" 
-                      className="h-4 w-4 rounded border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
+                      className="h-4 w-4 rounded-sm border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
                     />
                   </td>
                   {columns.map((col, idx) => (

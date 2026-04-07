@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils/cn";
 import { CheckCheck, X, Clock, TriangleAlert } from "lucide-react";
 
-export type StatusType = "Pending" | "Approved" | "Rejected" | "Active" | "Deactivated";
+export type StatusType = "Pending" | "Approved" | "Rejected" | "Active" | "Deactivated" | "Completed" | "Cancelled";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -17,31 +17,49 @@ export function StatusBadge({ status }: StatusBadgeProps) {
       text: "text-[#3538CD]",
       border: "border-[#C7D7FE]",
       dot: "bg-[#6155F5]",
+      icon: Clock,
     },
     Active: {
       label: "Active",
       text: "text-[#027A48]",
       border: "border-[#ABEFC6]",
       dot: "bg-[#34C759]",
+      icon: CheckCheck,
     },
     Approved: {
       label: "Approved",
       text: "text-[#027A48]",
       border: "border-[#ABEFC6]",
       dot: "bg-[#12B76A]",
+      icon: CheckCheck,
     },
     Deactivated: {
       label: "Deactivated",
       text: "text-[#B42318]",
-    
       border: "border-[#FECDCA]",
       dot: "bg-[#F04438]",
+      icon: X,
     },
     Rejected: {
       label: "Rejected",
       text: "text-[#B42318]",
       border: "border-[#FECDCA]",
       dot: "bg-[#B42318]",
+      icon: TriangleAlert,
+    },
+    Completed: {
+      label: "Completed",
+      text: "text-[#027A48]",
+      border: "border-[#ABEFC6]",
+      dot: "bg-[#32D583]",
+      icon: CheckCheck,
+    },
+    Cancelled: {
+      label: "Cancelled",
+      text: "text-[#B42318]",
+      border: "border-[#FECDCA]",
+      dot: "bg-[#F04438]",
+      icon: TriangleAlert,
     },
   };
 
@@ -53,8 +71,8 @@ export function StatusBadge({ status }: StatusBadgeProps) {
       config.border,
       config.text,
     )}>
-      <span className={cn("h-1.5 w-1.5 rounded-full", config.dot)} />
       {config.label}
+      <config.icon className="h-3 w-3 ml-1 opacity-80" />
     </div>
   );
 }

@@ -75,7 +75,7 @@ export const getEvaluatorColumns = (): Column<Evaluator>[] => [
           />
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-[#101828]">{item.name}</span>
+          <span className="text-sm text-[#101828]">{item.name}</span>
           <span className="text-xs text-[#475467]">{item.email}</span>
         </div>
       </div>
