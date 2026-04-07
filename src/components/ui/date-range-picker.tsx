@@ -16,6 +16,71 @@ interface DateRangePickerProps {
   placeholder?: string;
 }
 
+const presets = [
+  { label: "Today", getValue: () => ({ from: new Date(), to: new Date() }) },
+  { 
+    label: "Yesterday", 
+    getValue: () => {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return { from: d, to: d };
+    }
+  },
+  {
+    label: "This week",
+    getValue: () => {
+      const now = new Date();
+      const first = now.getDate() - now.getDay();
+      return { from: new Date(now.setDate(first)), to: new Date() };
+    }
+  },
+  {
+    label: "Last week",
+    getValue: () => {
+      const now = new Date();
+      const last = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const first = last.getDate() - last.getDay();
+      const end = first + 6;
+      return { from: new Date(last.setDate(first)), to: new Date(last.setDate(end)) };
+    }
+  },
+  {
+    label: "This month",
+    getValue: () => {
+      const now = new Date();
+      return { from: new Date(now.getFullYear(), now.getMonth(), 1), to: now };
+    }
+  },
+  {
+    label: "Last month",
+    getValue: () => {
+      const now = new Date();
+      return { 
+        from: new Date(now.getFullYear(), now.getMonth() - 1, 1), 
+        to: new Date(now.getFullYear(), now.getMonth(), 0) 
+      };
+    }
+  },
+  {
+    label: "This year",
+    getValue: () => {
+      const now = new Date();
+      return { from: new Date(now.getFullYear(), 0, 1), to: now };
+    }
+  },
+  {
+    label: "Last year",
+    getValue: () => {
+      const now = new Date();
+      return { 
+        from: new Date(now.getFullYear() - 1, 0, 1), 
+        to: new Date(now.getFullYear() - 1, 11, 31) 
+      };
+    }
+  },
+  { label: "All time", getValue: () => ({ from: undefined, to: undefined }) },
+];
+
 export function DateRangePicker({
   className,
   value,
@@ -23,34 +88,27 @@ export function DateRangePicker({
   placeholder = "Select date range",
 }: DateRangePickerProps) {
   const [open, setOpen] = React.useState(false);
-  const [month, setMonth] = React.useState(new Date());
+  const [leftMonth, setLeftMonth] = React.useState(new Date());
   const [hoverDate, setHoverDate] = React.useState<Date | null>(null);
   
   const [range, setRange] = React.useState<DateRange>(
     value || { from: undefined, to: undefined }
   );
 
-  // Synchronize with external value
   React.useEffect(() => {
     if (value) setRange(value);
   }, [value]);
 
   const handleDateClick = (date: Date) => {
     let newRange: DateRange;
-    
     if (!range.from || (range.from && range.to)) {
       newRange = { from: date, to: undefined };
     } else if (date < range.from) {
       newRange = { from: date, to: undefined };
-    } else if (date.getTime() === range.from.getTime()) {
-      // Toggle off if same date clicked twice as start
-      newRange = { from: undefined, to: undefined };
     } else {
       newRange = { from: range.from, to: date };
     }
-    
     setRange(newRange);
-    onChange?.(newRange);
   };
 
   const formatDate = (date: Date | undefined) => {
@@ -62,173 +120,172 @@ export function DateRangePicker({
     });
   };
 
-  const displayText = range.from
-    ? range.to
-      ? `${formatDate(range.from)} – ${formatDate(range.to)}`
-      : formatDate(range.from)
-    : placeholder;
+  const rightMonth = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1);
 
-  // Calendar Helper Logic
-  const daysInMonth = (year: number, month: number) => new Date(year, month + 1, 0).getDate();
-  const firstDayOfMonth = (year: number, month: number) => new Date(year, month, 1).getDay();
+  const renderCalendar = (monthDate: Date, showLeftNav = false, showRightNav = false) => {
+    const year = monthDate.getFullYear();
+    const month = monthDate.getMonth();
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    
+    const days = [];
+    for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) days.push(null); // Adjust for Mo-Su
+    for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
 
-  const currentYear = month.getFullYear();
-  const currentMonth = month.getMonth();
-  
-  const days = [];
-  const totalDays = daysInMonth(currentYear, currentMonth);
-  const startDay = firstDayOfMonth(currentYear, currentMonth);
+    return (
+      <div className="w-[280px]">
+        <div className="flex items-center justify-between mb-4 px-2">
+          <div className="flex items-center gap-2">
+            {showLeftNav && (
+              <button 
+                type="button"
+                onClick={() => setLeftMonth(new Date(year, month - 1, 1))}
+                className="p-1 hover:bg-slate-100 rounded-md"
+              >
+                <ChevronLeft className="h-4 w-4 text-slate-500" />
+              </button>
+            )}
+          </div>
+          <h4 className="text-sm font-medium text-slate-900">
+            {monthDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+          </h4>
+          <div className="flex items-center gap-2">
+            {showRightNav && (
+              <button 
+                type="button"
+                onClick={() => setLeftMonth(new Date(year, month, 1))} // Since it's right calendar, next for left is current for right? No.
+                // Actually next for left calendar moves both.
+                onClick={() => setLeftMonth(new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1))}
+                className="p-1 hover:bg-slate-100 rounded-md"
+              >
+                <ChevronRight className="h-4 w-4 text-slate-500" />
+              </button>
+            )}
+          </div>
+        </div>
 
-  for (let i = 0; i < startDay; i++) {
-    days.push(null);
-  }
+        <div className="grid grid-cols-7 gap-y-1 text-center mb-2">
+          {["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => (
+            <span key={d} className="text-[11px] font-medium text-slate-400 uppercase">{d}</span>
+          ))}
+        </div>
 
-  for (let i = 1; i <= totalDays; i++) {
-    days.push(new Date(currentYear, currentMonth, i));
-  }
+        <div className="grid grid-cols-7 gap-y-0.5">
+          {days.map((date, i) => {
+            if (!date) return <div key={i} className="h-9 w-9" />;
+            
+            const isFrom = range.from && date.toDateString() === range.from.toDateString();
+            const isTo = range.to && date.toDateString() === range.to.toDateString();
+            const isHover = !range.to && hoverDate && date.toDateString() === hoverDate.toDateString();
+            
+            const inRange = range.from && (range.to || hoverDate) && (
+              (date > range.from && date < (range.to || (hoverDate as Date))) ||
+              (date < range.from && date > (range.to || (hoverDate as Date)))
+            );
 
-  const isSelected = (date: Date) => {
-    if (!range.from) return false;
-    if (range.from.toDateString() === date.toDateString()) return true;
-    if (range.to && range.to.toDateString() === date.toDateString()) return true;
-    return false;
+            return (
+              <button
+                key={date.toISOString()}
+                type="button"
+                onMouseEnter={() => range.from && !range.to && setHoverDate(date)}
+                onClick={() => handleDateClick(date)}
+                className={cn(
+                  "h-9 w-9 text-xs flex items-center justify-center transition-all relative group",
+                  (isFrom || isTo || isHover) && "z-10",
+                  isFrom && "bg-[var(--primary)] text-white rounded-full font-bold",
+                  isTo && "bg-[var(--primary)] text-white rounded-full font-bold",
+                  isHover && "bg-[var(--primary)]/50 text-white rounded-full",
+                  inRange && "bg-[var(--primary)]/5 text-[var(--primary)]"
+                )}
+              >
+                {/* Indicator dot as seen in image */}
+                {date.getDate() === 24 && !isFrom && !isTo && (
+                   <div className="absolute bottom-1 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-[var(--primary)]" />
+                )}
+                {date.getDate()}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
   };
 
-  const isInRange = (date: Date) => {
-    const from = range.from;
-    const to = range.to || hoverDate;
-    if (!from || !to) return false;
-    
-    const dTime = date.getTime();
-    const fTime = from.getTime();
-    const tTime = to.getTime();
-    
-    if (fTime < tTime) {
-      return dTime > fTime && dTime < tTime;
-    } else {
-      return dTime > tTime && dTime < fTime;
-    }
+  const handleApply = () => {
+    onChange?.(range);
+    setOpen(false);
   };
-
-  const nextMonth = () => setMonth(new Date(currentYear, currentMonth + 1, 1));
-  const prevMonth = () => setMonth(new Date(currentYear, currentMonth - 1, 1));
 
   return (
-    <div className={cn("grid gap-2", className)}>
+    <div className={cn("relative", className)}>
       <button 
         type="button"
         onClick={() => setOpen(true)}
-        className={cn(
-          "flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)] cursor-pointer hover:bg-slate-50 transition-colors outline-none",
-          open && "ring-1 ring-[var(--primary)] border-[var(--primary)]"
-        )}
+        className="flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white shadow-sm hover:bg-slate-50 transition-colors"
       >
         <Calendar className="h-4 w-4 text-[#344054]" strokeWidth={1.5} />
-        <span className="text-sm font-medium text-[#344054] whitespace-nowrap">{displayText}</span>
+        <span className="text-sm font-medium text-[#344054]">
+          {range.from ? (range.to ? `${formatDate(range.from)} – ${formatDate(range.to)}` : formatDate(range.from)) : placeholder}
+        </span>
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-          {/* Backdrop */}
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/80 ">
           <div 
-            className="absolute inset-0 bg-slate-900/80 transition-opacity" 
+            className="absolute inset-0" 
             onClick={() => setOpen(false)}
           />
           
-          {/* Modal Content */}
-          <div 
-            className="relative w-full max-w-[360px] bg-white rounded-md shadow-2xl border border-slate-200 p-6 animate-in zoom-in-95 duration-200"
-            onMouseLeave={() => setHoverDate(null)}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-slate-900">
-                {month.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
-              </h3>
-              <div className="flex gap-1">
-                <button 
-                  type="button"
-                  onClick={prevMonth} 
-                  className="p-1 hover:bg-slate-100 rounded-md transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4 text-slate-600" />
-                </button>
-                <button 
-                  type="button"
-                  onClick={nextMonth} 
-                  className="p-1 hover:bg-slate-100 rounded-md transition-colors"
-                >
-                  <ChevronRight className="h-4 w-4 text-slate-600" />
-                </button>
-              </div>
-            </div>
-            
-            <div className="grid grid-cols-7 gap-1 text-center mb-2">
-              {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((d) => (
-                <span key={d} className="text-[11px] font-medium text-slate-400 uppercase tracking-tight">
-                  {d}
-                </span>
-              ))}
-            </div>
-            
-            <div className="grid grid-cols-7 gap-1">
-              {days.map((date, i) => {
-                if (!date) return <div key={`empty-${i}`} className="h-8 w-8" />;
-                
-                const selected = isSelected(date);
-                const inRange = isInRange(date);
-                const isStart = range.from && date.toDateString() === range.from.toDateString();
-                const isEnd = (range.to && date.toDateString() === range.to.toDateString()) || 
-                            (!range.to && hoverDate && date.toDateString() === hoverDate.toDateString());
-
-                return (
-                  <button
-                    key={date.toISOString()}
-                    type="button"
-                    onMouseEnter={() => range.from && !range.to && setHoverDate(date)}
-                    onClick={() => handleDateClick(date)}
-                    className={cn(
-                      "h-8 w-8 text-xs rounded-md flex items-center justify-center transition-all relative",
-                      selected && "bg-[var(--primary)] text-white font-bold z-10",
-                      !selected && inRange && "bg-[var(--primary)]/10 text-[var(--primary)] rounded-none",
-                      !selected && !inRange && "hover:bg-slate-100 text-slate-700",
-                      isStart && (range.to || hoverDate) && "rounded-r-none",
-                      isEnd && range.from && "rounded-l-none",
-                      !range.to && hoverDate && date.toDateString() === hoverDate.toDateString() && "bg-[var(--primary)]/50 text-white"
-                    )}
-                  >
-                    {date.getDate()}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="mt-6 flex flex-col gap-4">
-              <div className="flex justify-between items-center gap-2 pt-4 border-t border-slate-100">
-                <button 
+          <div className="relative flex bg-white rounded-sm  border border-slate-200 overflow-hidden max-w-[840px] animate-in fade-in zoom-in-95 duration-200">
+            {/* Sidebar Presets */}
+            <div className="w-[180px] border-r border-slate-100 p-2 flex flex-col gap-0.5">
+              {presets.map((p) => (
+                <button
+                  key={p.label}
                   type="button"
                   onClick={() => {
-                    const empty = { from: undefined, to: undefined };
-                    setRange(empty);
-                    onChange?.(empty);
+                    const val = p.getValue();
+                    setRange(val);
                   }}
-                  className="text-xs cursor-pointer text-slate-500 hover:text-slate-900 transition-colors flex items-center gap-1"
+                  className="w-full text-left px-4 py-2 text-[13px] text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
                 >
-                  <X className="h-3 w-3 cursor-pointer" /> Clear selection
+                  {p.label}
                 </button>
-                <div className="flex gap-2">
-                  <button 
+              ))}
+            </div>
+
+            <div className="flex flex-col">
+              <div className="flex p-6 gap-8">
+                {renderCalendar(leftMonth, true, false)}
+                {renderCalendar(rightMonth, false, true)}
+              </div>
+
+              {/* Footer */}
+              <div className="mt-auto border-t border-slate-100 p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                    {range.from ? formatDate(range.from) : "Start date"}
+                  </div>
+                  <span className="text-slate-400">–</span>
+                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                    {range.to ? formatDate(range.to) : "End date"}
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="text-xs cursor-pointer px-3 py-1.5 border border-slate-200 rounded-sm hover:bg-slate-50"
+                    className="px-6 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors"
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     type="button"
-                    onClick={() => setOpen(false)}
-                    className="text-xs  bg-[var(--primary)] text-white px-4 py-1.5 rounded-sm cursor-pointer hover:opacity-90 transition-opacity"
+                    onClick={handleApply}
+                    className="px-8 py-2 text-sm font-medium text-white bg-[var(--primary)] rounded-sm hover:opacity-90 transition-opacity"
                   >
-                    Apply Range
+                    Apply
                   </button>
                 </div>
               </div>
