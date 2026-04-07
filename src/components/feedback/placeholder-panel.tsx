@@ -31,7 +31,7 @@ export function PlaceholderPanel({ eyebrow, title, description, actions = [], bu
         {actions.length > 0 ? (
           <div className="flex flex-wrap gap-3">
             {actions.map((action) => (
-              <Button key={action.label} variant={action.href ? "primary" : "outline"}>
+              <Button key={action.label} variant={action.href ? "default" : "outline"}>
                 {action.label}
               </Button>
             ))}
