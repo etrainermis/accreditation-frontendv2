@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Building, MapPin, User, ClipboardList, Users, CheckCircle, Plus } from "lucide-react";
+import { Building, MapPin, User, ClipboardList, Users, CheckCircle, Plus, Save } from "lucide-react";
 
 import {
   applicantOnboardingSteps,
@@ -34,11 +34,11 @@ let globalFormData: Record<string, string> = {};
 let globalLegalReps: Record<string, string>[] = [];
 let globalStaffList: Record<string, string | number>[] = [];
 let globalAboutText: Record<string, string> = {};
-let globalSelectedFile: File | null = null;
+let globalFiles: Record<string, File | null> = { mou: null, registration: null };
 
 export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingStepKey }) {
   const [institutionSubStep, setInstitutionSubStep] = useState<1 | 2>(1);
-  const [selectedFile, setSelectedFile] = useState<File | null>(globalSelectedFile);
+  const [files, setFiles] = useState<Record<string, File | null>>(globalFiles);
 
   const [legalReps, setLegalReps] = useState<Record<string, string>[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
@@ -57,7 +57,13 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   useEffect(() => { globalLegalReps = legalReps; }, [legalReps]);
   useEffect(() => { globalStaffList = staffList; }, [staffList]);
   useEffect(() => { globalAboutText = aboutText; }, [aboutText]);
-  useEffect(() => { globalSelectedFile = selectedFile; }, [selectedFile]);
+  useEffect(() => { globalFiles = files; }, [files]);
+
+  const handleSaveDraft = () => {
+    // Placeholder for save draft logic
+    console.log("Saving draft...", { formData, legalReps, staffList, aboutText, files });
+    alert("Draft saved successfully!");
+  };
 
   const config = applicantOnboardingSteps.find((item) => item.key === step);
 
@@ -78,8 +84,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <InstitutionDetailsStep
             subStep={institutionSubStep}
             setSubStep={setInstitutionSubStep}
-            selectedFile={selectedFile}
-            setSelectedFile={setSelectedFile}
+            files={files}
+            setFiles={setFiles}
             formData={formData}
             setFormData={setFormData}
           />
@@ -108,7 +114,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         return (
           <ReviewApplicationStep
             formData={formData}
-            selectedFile={selectedFile}
+            files={files}
             legalReps={legalReps}
             aboutText={aboutText}
             staffList={staffList}
@@ -163,8 +169,18 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
       <div className="pt-2">{renderStep()}</div>
 
-      <div className="flex items-center gap-4 pt-4">
-        {(() => {
+      <div className="flex items-center gap-3 pt-4">
+        <button
+          type="button"
+          onClick={handleSaveDraft}
+          className="flex items-center justify-center gap-2 rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer"
+        >
+          <Save className="h-4 w-4" />
+          <span>Save Draft</span>
+        </button>
+
+        <div className="flex flex-1 items-center gap-3">
+          {(() => {
           let secondaryBtn = null;
           let primaryBtn = null;
 
@@ -230,13 +246,14 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
             );
           }
 
-          return (
-            <>
-              {secondaryBtn}
-              {primaryBtn}
-            </>
-          );
-        })()}
+            return (
+              <>
+                {secondaryBtn}
+                {primaryBtn}
+              </>
+            );
+          })()}
+        </div>
       </div>
 
       {staffToDelete !== null && (
