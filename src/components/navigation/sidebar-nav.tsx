@@ -32,7 +32,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
         />
         <div>
           <p className="text-sm font-bold text-[var(--app-text)]">RTB Accreditation</p>
-          <p className="text-xs font-semibold text-[var(--primary)]">{config.shortLabel} Portal</p>
+          <p className="text-xs  text-[var(--primary)]">{config.shortLabel} Portal</p>
         </div>
       </div>
 

@@ -37,7 +37,7 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col w-full items-center justify-between gap-4 pb-2 mb-6">
+    <div className="flex flex-col w-full items-center justify-between mb-6">
       <div className="flex w-full justify-between items-center gap-2">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
