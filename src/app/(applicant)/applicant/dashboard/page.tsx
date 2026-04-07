@@ -9,29 +9,25 @@ const stats = [
     label: "Applications",
     value: "2",
     icon: FileText,
-    iconBg: "border border-blue-100",
-    iconColor: "text-blue-500",
+    iconColor: "#0A77FF",
   },
   {
     label: "Pending",
     value: "6",
     icon: Clock,
-    iconBg: "border border-orange-100",
-    iconColor: "text-orange-400",
+    iconColor: "#FF8D28",
   },
   {
     label: "Approved",
     value: "6",
     icon: CheckCircle2,
-    iconBg: "border border-green-100",
-    iconColor: "text-green-500",
+    iconColor: "#34C759",
   },
   {
     label: "Rejected",
     value: "12",
     icon: AlertTriangle,
-    iconBg: "border border-red-100",
-    iconColor: "text-red-400",
+    iconColor: "#FF383C",
   },
 ];
 

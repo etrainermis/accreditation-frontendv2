@@ -3,8 +3,8 @@
 import React, { useState } from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
+
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { DataTable } from "@/components/ui/data-table";
 import { 
@@ -13,10 +13,10 @@ import {
 } from "@/lib/utils/application-utils";
 
 const stats = [
-  { label: "Applications", value: 24 },
-  { label: "Pending", value: 8 },
-  { label: "Evaluated", value: 5 },
-  { label: "Rejected", value: 11 },
+  { label: "Applications", value: 24, icon: NotepadText, iconColor: "#0A77FF" },
+  { label: "Pending", value: 8, icon: ClipboardClock, iconColor: "#FF8D28" },
+  { label: "Evaluated", value: 5, icon: CheckCheck, iconColor: "#34C759" },
+  { label: "Rejected", value: 11, icon: AlertTriangle, iconColor: "#FF383C" },
 ];
 
 const columns = getApplicationColumns();
@@ -35,12 +35,6 @@ export default function SuperAdminApplicationsPage() {
       role="super-admin"
       title="Manage Accreditation Evalutions"
       description="View & manage active elders and requests"
-      action={
-        <Button className="rounded-sm cursor-pointer px-4 py-3 text-sm font-medium">
-          Start New Evaluation
-          <Plus className="ml-2 h-4 w-4" />
-        </Button>
-      }
     >
       <EvaluationsSubNav />
       <StatsGrid items={stats} />

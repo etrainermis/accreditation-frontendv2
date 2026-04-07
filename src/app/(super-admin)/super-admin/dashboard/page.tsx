@@ -1,15 +1,18 @@
+"use client";
+
 import { PageContainer } from "@/components/layout/page-container";
 import { StackedAnalyticsChart } from "@/components/dashboard/stacked-analytics-chart";
 import { ApplicationsByTradeChart } from "@/components/dashboard/applications-by-trade-chart";
 import { MostRequestedModules } from "@/components/dashboard/most-requested-modules";
 import { RecentApplicationsTable } from "@/components/dashboard/recent-applications-table";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
 
 const stats = [
-  { label: "Applications", value: "24" },
-  { label: "Pending", value: "8" },
-  { label: "Evaluated", value: "5" },
-  { label: "Rejected", value: "11" },
+  { label: "Applications", value: "24", icon: NotepadText, iconColor: "#0A77FF" },
+  { label: "Pending", value: "8", icon: ClipboardClock, iconColor: "#FF8D28" },
+  { label: "Evaluated", value: "5", icon: CheckCheck, iconColor: "#34C759" },
+  { label: "Rejected", value: "11", icon: AlertTriangle, iconColor: "#FF383C" },
 ];
 const chartData = {
   "12 Months": [
@@ -49,8 +52,7 @@ const chartData = {
   })),
 };
 
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+
 
 export default function SuperAdminDashboardPage() {
   return (
@@ -58,12 +60,6 @@ export default function SuperAdminDashboardPage() {
       role="super-admin" 
       title="Welcome, John" 
       description="View & manage active elders and requests"
-      action={
-        <Button className="rounded-sm cursor-pointer px-4 py-3 text-sm font-medium">
-          Start New Evaluation
-          <Plus className="ml-2 h-4 w-4" />
-        </Button>
-      }
     >
       <StatsGrid items={stats} />
 

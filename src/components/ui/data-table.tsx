@@ -51,7 +51,7 @@ export function DataTable<T extends { id: string | number }>({
       {(title || description) && (
         <div className="mb-6">
           <div className="mb-6">
-            <h2 className="text-md text-[#101828] font-semibold">{title}</h2>
+            <h2 className="text-md text-[#101828]">{title}</h2>
             <p className="text-xs text-[#64748B]">{description}</p>
           </div>
           
@@ -62,7 +62,7 @@ export function DataTable<T extends { id: string | number }>({
                 placeholder={searchPlaceholder}
                 value={searchValue}
                 onChange={(e) => onSearchChange?.(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-sm rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all border border-slate-100 bg-white shadow-sm" 
+                className="w-full pl-10 pr-4 py-2 text-sm rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all border border-slate-100 bg-white" 
                 type="text" 
               />
             </div>
@@ -72,15 +72,15 @@ export function DataTable<T extends { id: string | number }>({
                 filters
               ) : (
                 <>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white shadow-sm">
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white">
                     <span>All time</span>
                     <X className="h-3 w-3 text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" />
                   </div>
-                  <div className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white shadow-sm">
+                  <div className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white">
                     <span>US, AU, +4</span>
                     <X className="h-3 w-3 text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" />
                   </div>
-                  <button className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white shadow-sm">
+                  <button className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white">
                     <ListFilter className="h-4 w-4 text-slate-500" />
                     <span>More filters</span>
                   </button>
@@ -100,7 +100,7 @@ export function DataTable<T extends { id: string | number }>({
                 <th className="pl-6 pr-2 py-4 w-10 text-right">
                   <input 
                     type="checkbox" 
-                    className="h-4 w-4 rounded border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
+                    className="h-4 w-4 rounded-sm border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
                   />
                 </th>
                 {columns.map((col, idx) => (
@@ -140,7 +140,7 @@ export function DataTable<T extends { id: string | number }>({
                   <td className="pl-6 pr-2 py-4 text-right">
                     <input 
                       type="checkbox" 
-                      className="h-4 w-4 rounded border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
+                      className="h-4 w-4 rounded-sm border-[#D0D5DD] text-[var(--primary)] focus:ring-[var(--primary)] cursor-pointer" 
                     />
                   </td>
                   {columns.map((col, idx) => (
@@ -174,7 +174,7 @@ export function DataTable<T extends { id: string | number }>({
                 Next
               </button>
             </div>
-            <span className="text-xs font-bold text-slate-500">
+            <span className="text-xs text-slate-500">
               Page {currentPage} of {totalPages}
             </span>
           </div>
