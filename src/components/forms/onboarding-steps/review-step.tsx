@@ -15,7 +15,7 @@ interface ReviewApplicationStepProps {
 
 export function ReviewApplicationStep({
   formData,
-  selectedFile,
+  files,
   legalReps,
   aboutText,
   staffList,
@@ -59,10 +59,21 @@ export function ReviewApplicationStep({
             <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
               <div className="space-y-1">
                 <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
-                {selectedFile ? (
+                {files.registration ? (
                   <div className="flex items-center gap-2 text-slate-700 mt-1">
                     <FileText className="h-4 w-4 text-blue-500" />
-                    <span className="text-[13.5px] font-medium truncate max-w-[200px]">{selectedFile.name}</span>
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.registration.name}</span>
+                  </div>
+                ) : (
+                  <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <span className="text-[12px] text-slate-500 block">MOU (Signed)</span>
+                {files.mou ? (
+                  <div className="flex items-center gap-2 text-slate-700 mt-1">
+                    <FileText className="h-4 w-4 text-emerald-500" />
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.mou.name}</span>
                   </div>
                 ) : (
                   <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>

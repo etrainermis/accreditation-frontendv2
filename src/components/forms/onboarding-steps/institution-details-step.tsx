@@ -119,6 +119,7 @@ export function InstitutionDetailsStep({
     );
   }
 
+
   return (
     <div className="grid gap-x-4 gap-y-4 md:grid-cols-2">
       <FormInput
@@ -160,6 +161,7 @@ export function InstitutionDetailsStep({
         onChange={(v) => setFormData({ ...formData, "P.O Box": v })}
         placeholder="e.g. P.O. Box 1234, K..."
         icon={Package}
+        className="md:col-span-2"
       />
       <FormInput
         label="Email"
