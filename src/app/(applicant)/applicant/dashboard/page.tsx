@@ -1,39 +1,50 @@
-import { Card, CardContent } from "@/components/ui/card";
+"use client";
+
+import { FileText, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
 
 const stats = [
-  { label: "Applications", value: "2" },
-  { label: "Pending", value: "6" },
-  { label: "Approved", value: "6" },
-  { label: "Rejected", value: "12" },
+  {
+    label: "Applications",
+    value: "2",
+    icon: FileText,
+    iconColor: "#0A77FF",
+  },
+  {
+    label: "Pending",
+    value: "6",
+    icon: Clock,
+    iconColor: "#FF8D28",
+  },
+  {
+    label: "Approved",
+    value: "6",
+    icon: CheckCircle2,
+    iconColor: "#34C759",
+  },
+  {
+    label: "Rejected",
+    value: "12",
+    icon: AlertTriangle,
+    iconColor: "#FF383C",
+  },
 ];
 
 export default function ApplicantDashboardPage() {
   return (
-    <PageContainer role="applicant" title="Welcome, John" description="View and manage your applications.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <Card key={item.label} className="rounded-2xl border border-slate-200 bg-white shadow-none">
-            <CardContent className="space-y-3 p-6">
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="text-2xl font-semibold text-slate-900">{item.value}</p>
-            </CardContent>
-          </Card>
-        ))}
+    <PageContainer 
+      role="applicant" 
+      title="Welcome, John" 
+      description="View and manage your applications."
+    >
+      <div className="space-y-6">
+        <StatsGrid items={stats} />
+        {/* Placeholder for local content if any was removed */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* You can add more local dashboard components here */}
+        </div>
       </div>
-
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-        <CardContent className="flex min-h-[320px] flex-col items-center justify-center gap-4 p-8 text-center">
-          <div className="h-16 w-16 rounded-2xl border border-[var(--primary-soft-strong)] bg-[var(--primary-soft)]" />
-          <div>
-            <p className="text-lg font-medium text-slate-900">No Applications Yet</p>
-            <p className="mt-1 text-sm text-slate-400">Start your first application.</p>
-          </div>
-          <button type="button" className="rounded-xl bg-[var(--primary)] px-5 py-3 text-sm font-medium text-white">
-            Start Application
-          </button>
-        </CardContent>
-      </Card>
     </PageContainer>
   );
 }

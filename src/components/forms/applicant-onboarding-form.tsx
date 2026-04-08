@@ -1,8 +1,4 @@
-"use client";
-
-import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Building, MapPin, User, ClipboardList, Users, CheckCircle, Plus } from "lucide-react";
 
 import {
   applicantOnboardingSteps,
@@ -11,9 +7,9 @@ import {
 
 import { InstitutionDetailsStep } from "./onboarding-steps/institution-details-step";
 import { AddressInformationStep } from "./onboarding-steps/address-information-step";
-import { LegalRepresentativesStep } from "./onboarding-steps/legal-representatives-step";
+import { LegalRepresentativesStep, type LegalRep } from "./onboarding-steps/legal-representatives-step";
 import { AboutInstitutionStep } from "./onboarding-steps/about-institution-step";
-import { TechnicalStaffStep } from "./onboarding-steps/technical-staff-step";
+import { TechnicalStaffStep, type TechnicalStaff, type TechnicalStaffEntry } from "./onboarding-steps/technical-staff-step";
 import { ReviewApplicationStep } from "./onboarding-steps/review-step";
 import { DeleteStaffModal } from "./onboarding-steps/delete-staff-modal";
 
@@ -31,23 +27,25 @@ function getPreviousStep(step: ApplicantOnboardingStepKey) {
 
 // Global cached variables to persist data across Next.js route unmounts
 let globalFormData: Record<string, string> = {};
-let globalLegalReps: Record<string, string>[] = [];
-let globalStaffList: Record<string, string | number>[] = [];
+let globalLegalReps: LegalRep[] = [];
+let globalStaffList: TechnicalStaffEntry[] = [];
 let globalAboutText: Record<string, string> = {};
-let globalSelectedFile: File | null = null;
+let globalMouFile: File | null = null;
+let globalRegCertFile: File | null = null;
 
 export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingStepKey }) {
   const [institutionSubStep, setInstitutionSubStep] = useState<1 | 2>(1);
-  const [selectedFile, setSelectedFile] = useState<File | null>(globalSelectedFile);
+  const [mouFile, setMouFile] = useState<File | null>(globalMouFile);
+  const [regCertFile, setRegCertFile] = useState<File | null>(globalRegCertFile);
 
-  const [legalReps, setLegalReps] = useState<Record<string, string>[]>(globalLegalReps);
+  const [legalReps, setLegalReps] = useState<LegalRep[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
-  const [newRep, setNewRep] = useState<Record<string, string>>({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
+  const [newRep, setNewRep] = useState<LegalRep>({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
   const [aboutText, setAboutText] = useState<Record<string, string>>(globalAboutText);
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
-  const [staffList, setStaffList] = useState<Record<string, string | number>[]>(globalStaffList);
-  const [newStaff, setNewStaff] = useState<Record<string, string>>({ qualification: "", position: "", status: "" });
+  const [staffList, setStaffList] = useState<TechnicalStaffEntry[]>(globalStaffList);
+  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", position: "", status: "" });
   const [editingStaffIdx, setEditingStaffIdx] = useState<number | null>(null);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);
@@ -57,7 +55,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   useEffect(() => { globalLegalReps = legalReps; }, [legalReps]);
   useEffect(() => { globalStaffList = staffList; }, [staffList]);
   useEffect(() => { globalAboutText = aboutText; }, [aboutText]);
-  useEffect(() => { globalSelectedFile = selectedFile; }, [selectedFile]);
+  useEffect(() => { globalMouFile = mouFile; }, [mouFile]);
+  useEffect(() => { globalRegCertFile = regCertFile; }, [regCertFile]);
 
   const config = applicantOnboardingSteps.find((item) => item.key === step);
 
@@ -65,7 +64,6 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
     return null;
   }
 
-  const currentStepIndex = applicantOnboardingSteps.findIndex((item) => item.key === step);
   const nextStep = getNextStep(step);
   const previousStep = getPreviousStep(step);
   const isLastStep = !nextStep;
@@ -78,8 +76,10 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <InstitutionDetailsStep
             subStep={institutionSubStep}
             setSubStep={setInstitutionSubStep}
-            selectedFile={selectedFile}
-            setSelectedFile={setSelectedFile}
+            mouFile={mouFile}
+            setMouFile={setMouFile}
+            regCertFile={regCertFile}
+            setRegCertFile={setRegCertFile}
             formData={formData}
             setFormData={setFormData}
           />
@@ -108,7 +108,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         return (
           <ReviewApplicationStep
             formData={formData}
-            selectedFile={selectedFile}
+            mouFile={mouFile}
+            regCertFile={regCertFile}
             legalReps={legalReps}
             aboutText={aboutText}
             staffList={staffList}
@@ -134,120 +135,50 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="space-y-3 text-center">
-        <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-md border border-slate-100 bg-white text-slate-800 shadow-sm">
-          <StepIcon className="h-5 w-5 stroke-[1.5]" />
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 text-[var(--primary)]">
+          {applicantOnboardingSteps.findIndex((item) => item.key === step) + 1}
         </div>
-        <div className="space-y-1">
-          <h1 className="text-lg font-semibold text-slate-800">{config.title}</h1>
-          <p className="text-sm text-slate-500">{config.description}</p>
-          {step === "legal-representatives" && (
-            <div className="flex items-center justify-between pt-1">
-              <p className="text-[13px] text-blue-500 font-medium">
-                You can add up to {3 - legalReps.length} {3 - legalReps.length === 1 ? 'more person' : 'People'}
-              </p>
-              {legalReps.length > 0 && !isAddingRep && legalReps.length < 3 && (
-                <button
-                  type="button"
-                  onClick={() => setIsAddingRep(true)}
-                  className="text-[13px] font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
-                >
-                  Add another <Plus className="h-4 w-4" />
-                </button>
-              )}
-            </div>
-          )}
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-900">{config.title}</h1>
+          <p className="mt-2 text-sm text-slate-500">{config.description}</p>
         </div>
       </div>
 
-      <div className="pt-2">{renderStep()}</div>
-
-      <div className="flex items-center gap-4 pt-4">
-        {(() => {
-          let secondaryBtn = null;
-          let primaryBtn = null;
-
-          if (step === "institution-details" && institutionSubStep === 2) {
-            secondaryBtn = (
-              <button type="button" onClick={() => setInstitutionSubStep(1)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
-                Back
-              </button>
-            );
-          } else if (step === "about-the-institution" && aboutSubStep > 1) {
-            secondaryBtn = (
-              <button type="button" onClick={() => setAboutSubStep((prev) => (prev - 1) as 1 | 2 | 3)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
-                Back
-              </button>
-            );
-          } else if (step === "legal-representatives" && isAddingRep && legalReps.length > 0) {
-            secondaryBtn = (
-              <button type="button" onClick={() => setIsAddingRep(false)} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
-                Cancel
-              </button>
-            );
-          } else if (previousStep) {
-            secondaryBtn = (
-              <Link href={`/applicant/onboarding/${previousStep.key}`} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50">
-                Back
-              </Link>
-            );
-          }
-
-          const primaryWidth = secondaryBtn ? ((step === "institution-details" && institutionSubStep === 2) || (step === "about-the-institution" && aboutSubStep > 1) ? 'w-1/2' : 'w-2/3') : 'w-full';
-
-          if (step === "institution-details" && institutionSubStep === 1) {
-            primaryBtn = (
-              <button type="button" onClick={() => setInstitutionSubStep(2)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
-                Continue
-              </button>
-            );
-          } else if (step === "about-the-institution" && aboutSubStep < 3) {
-            primaryBtn = (
-              <button type="button" onClick={() => setAboutSubStep((prev) => (prev + 1) as 1 | 2 | 3)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
-                Continue
-              </button>
-            );
-          } else if (step === "legal-representatives" && (isAddingRep || legalReps.length === 0)) {
-            primaryBtn = (
-              <button
-                type="button"
-                onClick={() => {
-                  setLegalReps([...legalReps, newRep]);
-                  setIsAddingRep(false);
-                  setNewRep({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
-                }}
-                className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}
-              >
-                Save Representative
-              </button>
-            );
-          } else {
-            primaryBtn = (
-              <Link href={isLastStep ? "/applicant/dashboard" : `/applicant/onboarding/${nextStep.key}`} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
-                {isLastStep ? "Confirm and Submit" : "Continue"}
-              </Link>
-            );
-          }
-
-          return (
-            <>
-              {secondaryBtn}
-              {primaryBtn}
-            </>
-          );
-        })()}
+      <div className="grid gap-4 md:grid-cols-2">
+        {config.fields.map((field, index) => (
+          <label key={field} className={`space-y-2 text-sm ${index === 0 ? "md:col-span-2" : ""}`}>
+            <span className="font-medium text-slate-700">{field}</span>
+            <input
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-[var(--primary)]"
+              placeholder={`Enter ${field.toLowerCase()}`}
+            />
+          </label>
+        ))}
       </div>
 
-      {staffToDelete !== null && (
-        <DeleteStaffModal
-          onCancel={() => setStaffToDelete(null)}
-          onConfirm={() => {
-            setStaffList(staffList.filter((_, i) => i !== staffToDelete));
-            setStaffToDelete(null);
-          }}
-        />
-      )}
+      <div className="flex items-center justify-between gap-4">
+        {previousStep ? (
+          <Link
+            href={`/applicant/onboarding/${previousStep.key}`}
+            className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600"
+          >
+            Back
+          </Link>
+        ) : (
+          <Link href="/login" className="rounded-xl border border-slate-200 px-5 py-3 text-sm font-medium text-slate-600">
+            Back
+          </Link>
+        )}
+
+        <Link
+          href={isLastStep ? "/applicant/dashboard" : `/applicant/onboarding/${nextStep.key}`}
+          className="rounded-xl bg-[var(--primary)] px-6 py-3 text-sm font-medium text-white"
+        >
+          {isLastStep ? "Finish and enter portal" : "Continue"}
+        </Link>
+      </div>
     </div>
   );
 }

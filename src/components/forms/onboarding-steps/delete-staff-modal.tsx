@@ -15,18 +15,18 @@ export function DeleteStaffModal({ onCancel, onConfirm }: DeleteStaffModalProps)
             Are you sure you want to remove this staff configuration? This action cannot be undone.
           </p>
         </div>
-        <div className="flex items-center justify-end gap-3 bg-slate-50 px-6 py-4 border-t border-slate-100">
+        <div className="flex items-center justify-start gap-3 bg-slate-50 px-6 py-4 border-t border-slate-100">
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer"
+            className="rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-md bg-red-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-600 active:scale-95 cursor-pointer"
+            className="rounded-md bg-red-500 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-600 active:scale-95 cursor-pointer"
           >
             Delete
           </button>

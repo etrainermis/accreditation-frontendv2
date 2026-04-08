@@ -1,81 +1,150 @@
-import Image from "next/image";
-import { Menu } from "lucide-react";
-import { usePathname } from "next/navigation";
+"use client";
 
-import { evaluatorEvaluationsBreadcrumbs, evaluatorEvaluationsHeader } from "@/features/evaluations";
+import Link from "next/link";
+import { Bell, LogOut, MessageSquareMore, User, Menu, Plus } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { usePageHeader } from "@/lib/context/page-header-context";
+
 import type { UserRole } from "@/types/auth";
-import avatar from "@/components/evaluator/assets/avatar.png";
 
-function NotificationIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M10.268 21C10.4435 21.304 10.696 21.5565 11 21.732C11.3041 21.9075 11.6489 21.9999 12 21.9999C12.3511 21.9999 12.6959 21.9075 13 21.732C13.304 21.5565 13.5565 21.304 13.732 21" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M3.262 15.326C3.13137 15.4692 3.04516 15.6472 3.01386 15.8385C2.98256 16.0298 3.00752 16.226 3.08571 16.4034C3.1639 16.5807 3.29194 16.7316 3.45426 16.8375C3.61658 16.9434 3.80618 16.9999 4 17H20C20.1938 17.0001 20.3834 16.9438 20.5459 16.8381C20.7083 16.7324 20.8365 16.5817 20.9149 16.4045C20.9933 16.2273 21.0185 16.0311 20.9874 15.8398C20.9564 15.6485 20.8704 15.4703 20.74 15.327C19.41 13.956 18 12.499 18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 12.499 4.589 13.956 3.262 15.326Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+import { PortalBreadcrumbs } from "./portal-breadcrumbs";
 
-function MessageIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <path d="M1.32641 12.4514C1.44894 12.7605 1.47622 13.0992 1.40474 13.4239L0.517243 16.1656C0.488646 16.3046 0.49604 16.4487 0.538722 16.584C0.581405 16.7194 0.657961 16.8416 0.761132 16.9391C0.864302 17.0366 0.990667 17.1062 1.12824 17.1411C1.26582 17.1761 1.41004 17.1753 1.54724 17.1389L4.39141 16.3072C4.69784 16.2465 5.01518 16.273 5.30724 16.3839C7.08673 17.2149 9.10255 17.3907 10.999 16.8803C12.8955 16.3699 14.5508 15.2061 15.6728 13.5942C16.7948 11.9823 17.3115 10.0259 17.1317 8.0702C16.9518 6.11449 16.087 4.28514 14.6898 2.90491C13.2926 1.52468 11.4528 0.682277 9.49506 0.526325C7.53729 0.370374 5.58735 0.910896 3.98928 2.05253C2.3912 3.19416 1.24769 4.86353 0.760487 6.76611C0.273289 8.66869 0.473717 10.6822 1.32641 12.4514Z" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
+import { Skeleton } from "@/components/ui/skeleton";
 
-const roleLabel: Record<UserRole, string> = {
-  applicant: "Applicant Portal",
-  evaluator: "Evaluator Portal",
-  "super-admin": "Super Admin Portal",
-};
+export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: () => void }) {
+  const { title, description, action } = usePageHeader();
+  const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const closeTimeout = useRef<NodeJS.Timeout | null>(null);
 
-export function Topbar({ role, onMenuClick }: { role: UserRole; onMenuClick?: () => void }) {
-  const pathname = usePathname();
+  const handleOpen = () => {
+    if (closeTimeout.current) clearTimeout(closeTimeout.current);
+    setOpen(true);
+  };
 
-  const evaluationBreadcrumb = pathname?.startsWith("/evaluator/evaluations")
-    ? pathname.includes("/evaluator/evaluations/criteria")
-      ? evaluatorEvaluationsBreadcrumbs.criteria
-      : pathname.includes("/evaluator/evaluations/schedule")
-        ? evaluatorEvaluationsBreadcrumbs.schedule
-        : evaluatorEvaluationsBreadcrumbs.applications
-    : null;
+  const handleClose = () => {
+    closeTimeout.current = setTimeout(() => {
+      setOpen(false);
+    }, 200);
+  };
+
+  // Close when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-30 flex h-[72px] items-center justify-between bg-white px-4 sm:h-20 sm:px-6 lg:px-8">
-      <div className="flex min-w-0 items-center gap-3">
-        <button
-          type="button"
-          aria-label="Open navigation menu"
-          className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition-colors hover:bg-slate-50 md:hidden"
-          onClick={onMenuClick}
-        >
-          <Menu className="h-5 w-5 stroke-[2]" />
-        </button>
-        <div className="min-w-0">
-          {evaluationBreadcrumb ? (
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--primary)] sm:text-xs font-sans">
-              {evaluatorEvaluationsHeader.breadcrumbBase} &gt; {evaluationBreadcrumb}
-            </span>
-          ) : (
-            <span className="text-[11px] font-medium uppercase tracking-[0.18em] text-[var(--primary)] sm:text-xs font-sans">Dashboard</span>
+    <header className="bg-white">
+      {/* Global Navigation Row */}
+      <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center gap-3">
+          {onOpenMobile && (
+            <button 
+              type="button" 
+              onClick={onOpenMobile} 
+              className="md:hidden p-1.5 -ml-1 text-slate-500 hover:bg-slate-100 rounded-md transition-colors"
+              aria-label="Open sidebar"
+            >
+               <Menu className="h-5 w-5" />
+            </button>
           )}
-          <p className="truncate text-sm font-medium text-slate-500 md:hidden font-sans">{roleLabel[role]}</p>
+          <PortalBreadcrumbs />
         </div>
-      </div>
-      <div className="flex items-center gap-2 sm:gap-4">
-        <div className="relative">
-          <button type="button" className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#323539] transition-all hover:bg-slate-50 active:scale-95 sm:h-11 sm:w-11">
-            <MessageIcon className="h-[18px] w-[18px]" />
+        
+        <div className="flex items-center gap-3">
+          <button type="button" className="rounded-[5px] cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
+            <MessageSquareMore className="h-4 w-4" />
           </button>
-          <div className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-rose-500 text-[10px] font-medium text-white ring-4 ring-white">
-            2
+          <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
+            <Bell className="h-4 w-4" />
+          </button>
+          
+          <div 
+            className="relative ml-1" 
+            ref={containerRef}
+            onMouseEnter={handleOpen}
+            onMouseLeave={handleClose}
+          >
+            <div 
+              className="h-9 w-9 rounded-full bg-[var(--primary-soft)] cursor-pointer outline-none border border-slate-100 flex items-center justify-center overflow-hidden"
+              onClick={() => setOpen(!open)}
+            >
+              <User className="h-5 w-5 text-[var(--primary)]" />
+            </div>
+
+            {open && (
+              <div 
+                className="absolute right-0 top-full mt-1 w-48 rounded-md bg-white p-1 shadow-lg ring-1 ring-slate-200 z-50 overflow-hidden"
+                onMouseEnter={handleOpen}
+                onMouseLeave={handleClose}
+              >
+                <Link 
+                  href="/profile" 
+                  className="flex w-full items-center gap-2 rounded-sm px-3 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                  onClick={() => setOpen(false)}
+                >
+                  <User className="h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
+                <div className="my-1 h-px bg-slate-100" />
+                <Link 
+                  href="/login" 
+                  className="flex w-full items-center gap-2 rounded-sm px-3 py-3 text-sm text-red-600 hover:bg-red-50"
+                  onClick={() => setOpen(false)}
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
-        <button type="button" className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-[#84888C] transition-all hover:bg-slate-50 active:scale-95 sm:h-11 sm:w-11">
-          <NotificationIcon className="h-5 w-5" />
-        </button>
-        <div className="relative ml-1 h-9 w-9 overflow-hidden rounded-full ring-2 ring-slate-100 shadow-sm sm:ml-2 sm:h-10 sm:w-10">
-          <Image src={avatar} alt="User Avatar" fill className="object-cover" />
+      </div>
+
+      {/* Page Header Row (Integrated/Fused) with content-width border */}
+      <div className="px-6">
+        <div className="flex w-full pb-5 pt-1 border-b border-[#EAECF0]">
+          {title ? (
+            <>
+              <div className="flex w-full justify-between items-center gap-10">
+                <div>
+                  <h1 className="text-sm text-[#101828]">{title}</h1>
+                  {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
+                </div>
+
+                {(role === "super-admin" || role === "evaluator") && (
+                  <button 
+                    data-slot="button" 
+                    data-variant="default" 
+                    data-size="default" 
+                    className="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 rounded-sm cursor-pointer px-4 py-3 text-sm font-medium"
+                  >
+                    Start New Evaluation
+                    <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+              {action}
+            </>
+          ) : (
+            <>
+              <div className="flex w-full justify-between items-center gap-10">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-[240px]" />
+                  <Skeleton className="h-3 w-[320px]" />
+                </div>
+                {(role === "super-admin" || role === "evaluator") && (
+                  <Skeleton className="h-9 w-[180px] rounded-sm" />
+                )}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </header>

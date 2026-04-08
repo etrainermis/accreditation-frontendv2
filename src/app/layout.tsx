@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, IBM_Plex_Mono, Manrope, Montserrat } from "next/font/google";
+import { IBM_Plex_Mono, Manrope, Geist, Nunito_Sans } from "next/font/google";
 
 import { AppProviders } from "@/components/layout/app-providers";
 import { appConfig } from "@/lib/config/app";
@@ -14,10 +14,10 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const nunitoSans = Nunito_Sans({
+  variable: "--font-nunito-sans",
   subsets: ["latin"],
-  weight: ["500"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(manrope.variable, montserrat.variable, ibmPlexMono.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html lang="en" className={cn(manrope.variable, ibmPlexMono.variable, nunitoSans.variable, "font-sans", geist.variable)} suppressHydrationWarning>
       <body>
         <AppProviders>{children}</AppProviders>
       </body>
