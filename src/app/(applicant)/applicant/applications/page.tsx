@@ -336,14 +336,16 @@ export default function ApplicantApplicationsPage() {
 
                   {/* Footer Actions */}
                   <div className="flex w-full gap-3">
-                    <PrimaryButton label="Back" variant="outline" className="flex-1" hideIcon />
-                    <PrimaryButton 
-                      label="Continue" 
-                      onClick={handleTradeContinue} 
-                      disabled={!selectedTrade} 
-                      className="flex-1" 
-                      hideIcon 
-                    />
+                    <button className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                      Back
+                    </button>
+                    <button
+                      onClick={handleTradeContinue}
+                      disabled={!selectedTrade}
+                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedTrade ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
+                    >
+                      Continue
+                    </button>
                   </div>
                 </div>
               </>
@@ -417,14 +419,16 @@ export default function ApplicantApplicationsPage() {
 
                   {/* Footer Actions */}
                   <div className="flex w-full gap-3">
-                    <PrimaryButton label="Back" onClick={handleCompetencyBack} variant="outline" className="flex-1" hideIcon />
-                    <PrimaryButton 
-                      label="Continue" 
-                      onClick={handleCompetencyContinue} 
-                      disabled={!selectedCompetency} 
-                      className="flex-1" 
-                      hideIcon 
-                    />
+                    <button onClick={handleCompetencyBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                      Back
+                    </button>
+                    <button
+                      onClick={handleCompetencyContinue}
+                      disabled={!selectedCompetency}
+                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedCompetency ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
+                    >
+                      Continue
+                    </button>
                   </div>
                 </div>
               </>
@@ -537,13 +541,15 @@ export default function ApplicantApplicationsPage() {
                   />
 
                   <div className="mb-8 flex w-full gap-3">
-                    <PrimaryButton label="Back" onClick={handleEquipmentBack} variant="outline" className="flex-1" hideIcon />
-                    <PrimaryButton 
-                      label="Continue" 
-                      onClick={handleEquipmentContinue} 
-                      className="flex-1" 
-                      hideIcon 
-                    />
+                    <button onClick={handleEquipmentBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                      Back
+                    </button>
+                    <button
+                      onClick={handleEquipmentContinue}
+                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]"
+                    >
+                      Continue
+                    </button>
                   </div>
 
                   {/* Uploaded Equipments */}
@@ -693,14 +699,16 @@ export default function ApplicantApplicationsPage() {
                 )}
 
                 <div className="flex w-full gap-3 mb-8">
-                  <PrimaryButton label="Back" onClick={handleCurriculumBack} variant="outline" className="flex-1" hideIcon />
-                  <PrimaryButton 
-                    label="Continue" 
-                    onClick={handleCurriculumContinue} 
-                    disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)} 
-                    className="flex-1" 
-                    hideIcon 
-                  />
+                  <button onClick={handleCurriculumBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
+                    Back
+                  </button>
+                  <button
+                    onClick={handleCurriculumContinue}
+                    disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)}
+                    className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${(curriculumDocs.length > 0 && curriculumDocs.every(d => d.progress === 100)) ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
+                  >
+                    Continue
+                  </button>
                 </div>
               </>
             )}
@@ -753,7 +761,7 @@ export default function ApplicantApplicationsPage() {
                           Qualification <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <select 
+                          <select
                             className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                             value={staffQualification}
                             onChange={(e) => setStaffQualification(e.target.value)}
@@ -773,7 +781,7 @@ export default function ApplicantApplicationsPage() {
                           Position <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <select 
+                          <select
                             className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                             value={staffPosition}
                             onChange={(e) => setStaffPosition(e.target.value)}
@@ -813,7 +821,7 @@ export default function ApplicantApplicationsPage() {
                           Availability Status <span className="text-red-500">*</span>
                         </label>
                         <div className="relative">
-                          <select 
+                          <select
                             className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 bg-white focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                             value={staffStatus}
                             onChange={(e) => setStaffStatus(e.target.value)}
@@ -859,13 +867,15 @@ export default function ApplicantApplicationsPage() {
                   )}
 
                   <div className="mb-8 flex w-full gap-3">
-                    <PrimaryButton label="Back" onClick={() => setCurrentStep(4)} variant="outline" className="flex-1 bg-white" hideIcon />
-                    <PrimaryButton 
-                      label="Continue" 
-                      onClick={() => setCurrentStep(6)} 
-                      className="flex-1" 
-                      hideIcon 
-                    />
+                    <button onClick={() => setCurrentStep(4)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-white bg-white w-full shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
+                      Back
+                    </button>
+                    <button
+                      onClick={() => setCurrentStep(6)}
+                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6] w-full"
+                    >
+                      Continue
+                    </button>
                   </div>
                 </div>
               </>
@@ -885,12 +895,12 @@ export default function ApplicantApplicationsPage() {
                 </div>
 
                 <div className="mt-6 flex w-full gap-3 mb-8">
-                  <PrimaryButton label="Back" onClick={() => setCurrentStep(5)} variant="outline" className="flex-1 bg-white" hideIcon />
-                  <PrimaryButton 
-                    label="Submit Application" 
-                    className="flex-1" 
-                    hideIcon 
-                  />
+                  <button onClick={() => setCurrentStep(5)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50 bg-white">
+                    Back
+                  </button>
+                  <button className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]">
+                    Submit Application
+                  </button>
                 </div>
 
                 <div className="flex flex-col gap-3">
@@ -925,7 +935,7 @@ export default function ApplicantApplicationsPage() {
                             )}
                           </div>
                         </button>
-                        
+
                         {isExpanded && (
                           <div className="border-t border-slate-100 bg-slate-50/50 p-5 p-6">
                             {section.id === 1 && (

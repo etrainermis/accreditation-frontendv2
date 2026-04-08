@@ -34,8 +34,6 @@ export function PrimaryButton({
   disabled = false,
   variant = "primary"
 }: PrimaryButtonProps) {
-  const Icon = customIcon || Plus;
-  
   const baseClasses = cn(
     "flex items-center justify-center gap-2.5 rounded-[12px] px-6 py-3",
     "text-[13px] font-semibold leading-none",

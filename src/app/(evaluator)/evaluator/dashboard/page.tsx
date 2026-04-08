@@ -1,26 +1,21 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
 import { PageContainer } from "@/components/layout/page-container";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
 
 const stats = [
-  { label: "Applications", value: "2,203" },
-  { label: "Pending", value: "1,003" },
-  { label: "Evaluated", value: "1,190" },
-  { label: "Rejected", value: "10" },
+  { label: "Applications", value: "2,203", icon: NotepadText, iconColor: "#0A77FF" },
+  { label: "Pending", value: "1,003", icon: ClipboardClock, iconColor: "#FF8D28" },
+  { label: "Evaluated", value: "1,190", icon: CheckCheck, iconColor: "#34C759" },
+  { label: "Rejected", value: "10", icon: AlertTriangle, iconColor: "#FF383C" },
 ];
 
 export default function EvaluatorDashboardPage() {
   return (
     <PageContainer role="evaluator" title="Manage Accreditation Evaluations" description="View and manage evaluations.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <Card key={item.label} className="rounded-2xl border border-slate-200 bg-white shadow-none">
-            <CardContent className="space-y-3 p-6">
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="text-2xl font-semibold text-slate-900">{item.value}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <StatsGrid items={stats} />
 
       <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
         <CardHeader>

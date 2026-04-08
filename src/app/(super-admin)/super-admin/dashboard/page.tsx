@@ -1,63 +1,76 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+"use client";
+
 import { PageContainer } from "@/components/layout/page-container";
+import { StackedAnalyticsChart } from "@/components/dashboard/stacked-analytics-chart";
+import { ApplicationsByTradeChart } from "@/components/dashboard/applications-by-trade-chart";
+import { MostRequestedModules } from "@/components/dashboard/most-requested-modules";
+import { RecentApplicationsTable } from "@/components/dashboard/recent-applications-table";
+import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
 
 const stats = [
-  { label: "Applications", value: "24" },
-  { label: "Evaluators", value: "8" },
-  { label: "Criteria", value: "5" },
-  { label: "Pending", value: "11" },
+  { label: "Applications", value: "24", icon: NotepadText, iconColor: "#0A77FF" },
+  { label: "Pending", value: "8", icon: ClipboardClock, iconColor: "#FF8D28" },
+  { label: "Evaluated", value: "5", icon: CheckCheck, iconColor: "#34C759" },
+  { label: "Rejected", value: "11", icon: AlertTriangle, iconColor: "#FF383C" },
 ];
+const chartData = {
+  "12 Months": [
+    { label: "Jan", rejected: 6, approved: 5, pending: 4 },
+    { label: "Feb", rejected: 8, approved: 6, pending: 5 },
+    { label: "Mar", rejected: 4, approved: 4, pending: 3 },
+    { label: "Apr", rejected: 6, approved: 6, pending: 6 },
+    { label: "May", rejected: 4, approved: 4, pending: 3 },
+    { label: "Jun", rejected: 7, approved: 6, pending: 5 },
+    { label: "Jul", rejected: 6, approved: 5, pending: 6 },
+    { label: "Aug", rejected: 6, approved: 6, pending: 6 },
+    { label: "Sep", rejected: 6, approved: 5, pending: 6 },
+    { label: "Oct", rejected: 6, approved: 6, pending: 5 },
+    { label: "Nov", rejected: 7, approved: 5, pending: 5 },
+    { label: "Dec", rejected: 7, approved: 7, pending: 5 },
+  ],
+  "30 Days": Array.from({ length: 30 }, (_, i) => ({
+    label: `${i + 1}`,
+    rejected: Math.floor(Math.random() * 5) + 2,
+    approved: Math.floor(Math.random() * 6) + 3,
+    pending: Math.floor(Math.random() * 4) + 2,
+  })),
+  "7 Days": [
+    { label: "Mon", rejected: 2, approved: 2, pending: 1 },
+    { label: "Tue", rejected: 3, approved: 1, pending: 3 },
+    { label: "Wed", rejected: 2, approved: 4, pending: 2 },
+    { label: "Thu", rejected: 4, approved: 2, pending: 2 },
+    { label: "Fri", rejected: 5, approved: 3, pending: 1 },
+    { label: "Sat", rejected: 1, approved: 1, pending: 1 },
+    { label: "Sun", rejected: 1, approved: 0, pending: 1 },
+  ],
+  "24 Hours": Array.from({ length: 24 }, (_, i) => ({
+    label: `${String(i).padStart(2, "0")}h`,
+    rejected: Math.floor(Math.random() * 3) + 1,
+    approved: Math.floor(Math.random() * 4) + 1,
+    pending: Math.floor(Math.random() * 2) + 1,
+  })),
+};
+
+
 
 export default function SuperAdminDashboardPage() {
   return (
-    <PageContainer role="super-admin" title="Welcome, John" description="View and manage your records.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <Card key={item.label} className="rounded-2xl border border-slate-200 bg-white shadow-none">
-            <CardContent className="space-y-3 p-6">
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="text-2xl font-semibold text-slate-900">{item.value}</p>
-            </CardContent>
-          </Card>
-        ))}
+    <PageContainer 
+      role="super-admin" 
+      title="Welcome, John" 
+      description="View & manage active elders and requests"
+    >
+      <StatsGrid items={stats} />
+
+      <StackedAnalyticsChart data={chartData} />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
+        <ApplicationsByTradeChart />
+        <MostRequestedModules />
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[1.2fr_0.8fr]">
-        <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-          <CardHeader>
-            <CardTitle className="text-base">Applications Trend</CardTitle>
-            <CardDescription>Overview</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid h-52 grid-cols-8 items-end gap-3">
-              {[45, 68, 30, 72, 40, 78, 60, 82].map((value, index) => (
-                <div key={index} className="rounded-t-xl bg-[var(--primary)]" style={{ height: `${value}%` }} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-          <CardHeader>
-            <CardTitle className="text-base">Recent Applications</CardTitle>
-            <CardDescription>Minimal list</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm text-slate-600">
-            <div className="flex items-center justify-between rounded-xl bg-[var(--primary-soft)] px-3 py-3">
-              <span>Command+R</span>
-              <span className="text-[var(--primary)]">Pending</span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-3">
-              <span>Nova Institute</span>
-              <span>Approved</span>
-            </div>
-            <div className="flex items-center justify-between rounded-xl bg-slate-50 px-3 py-3">
-              <span>Riverside</span>
-              <span>Rejected</span>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <RecentApplicationsTable />
     </PageContainer>
   );
 }
