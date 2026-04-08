@@ -1,0 +1,20 @@
+﻿9b61e60 HEAD@{0}: pull origin dev: Fast-forward
+e0813dc HEAD@{1}: reset: moving to HEAD
+e0813dc HEAD@{2}: commit: style: fix tailwind css and sidebar layout
+6572647 HEAD@{3}: reset: moving to 6572647
+d46686d HEAD@{4}: merge dev: Fast-forward
+b035169 HEAD@{5}: checkout: moving from dev to emmanuel
+d46686d HEAD@{6}: revert: Revert "Merge pull request #10 from etrainermis/aaron"
+a3a4fe1 HEAD@{7}: reset: moving to origin/dev
+a3a4fe1 HEAD@{8}: checkout: moving from emmanuel to dev
+b035169 HEAD@{9}: reset: moving to b035169
+a3a4fe1 HEAD@{10}: pull origin dev: Fast-forward
+b035169 HEAD@{11}: reset: moving to HEAD@{1}
+a3a4fe1 HEAD@{12}: pull origin dev: Fast-forward
+b035169 HEAD@{13}: pull origin emmanuel --rebase (finish): returning to refs/heads/emmanuel
+b035169 HEAD@{14}: pull origin emmanuel --rebase (pick): feat: redesign certificate upload UI, fix type errors, and add Save as Draft button
+1234264 HEAD@{15}: pull origin emmanuel --rebase (start): checkout 1234264c641030dfe7cb22bbb865c4d98ff49817
+2469fa2 HEAD@{16}: commit: feat: redesign certificate upload UI, fix type errors, and add Save as Draft button
+bcc1d5b HEAD@{17}: commit (cherry-pick): refactor: adopt enhanced Button API and remove duplicate component
+9293119 HEAD@{18}: checkout: moving from tresor to emmanuel
+0df50db HEAD@{19}: commit: refactor: adopt enhanced Button API and remove duplicate component

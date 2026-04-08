@@ -12,6 +12,7 @@ import { AboutInstitutionStep } from "./onboarding-steps/about-institution-step"
 import { TechnicalStaffStep, type TechnicalStaff, type TechnicalStaffEntry } from "./onboarding-steps/technical-staff-step";
 import { ReviewApplicationStep } from "./onboarding-steps/review-step";
 import { DeleteStaffModal } from "./onboarding-steps/delete-staff-modal";
+import { FormSectionHeader } from "./form-section-header";
 
 const stepIcons = [Building, MapPin, User, ClipboardList, Users, CheckCircle];
 
@@ -135,16 +136,29 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   };
 
   return (
-    <div className="space-y-8">
-      <div className="space-y-3 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl border border-slate-200 text-[var(--primary)]">
-          {applicantOnboardingSteps.findIndex((item) => item.key === step) + 1}
-        </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-900">{config.title}</h1>
-          <p className="mt-2 text-sm text-slate-500">{config.description}</p>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <FormSectionHeader
+        icon={StepIcon}
+        title={config.title}
+        description={config.description}
+      >
+        {step === "legal-representatives" && (
+          <div className="flex items-center justify-between mt-1 px-1">
+            <p className="text-[13px] text-blue-500 font-medium">
+              You can add up to {3 - legalReps.length} {3 - legalReps.length === 1 ? 'more person' : 'People'}
+            </p>
+            {legalReps.length > 0 && !isAddingRep && legalReps.length < 3 && (
+              <button
+                type="button"
+                onClick={() => setIsAddingRep(true)}
+                className="text-[13px] font-medium text-blue-600 hover:text-blue-700 flex items-center gap-1 cursor-pointer"
+              >
+                Add another <Plus className="h-4 w-4" />
+              </button>
+            )}
+          </div>
+        )}
+      </FormSectionHeader>
 
       <div className="grid gap-4 md:grid-cols-2">
         {config.fields.map((field, index) => (
