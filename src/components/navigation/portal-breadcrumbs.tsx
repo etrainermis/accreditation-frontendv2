@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { portalNavigation } from "@/lib/config/navigation";
 import { usePageHeader } from "@/lib/context/page-header-context";
 
 export function PortalBreadcrumbs() {
   const { breadcrumbs: contextBreadcrumbs } = usePageHeader();
   const pathname = usePathname();
-  
+
   // If context breadcrumbs are provided, use them
   if (contextBreadcrumbs && contextBreadcrumbs.length > 0) {
     return (
@@ -21,7 +21,7 @@ export function PortalBreadcrumbs() {
               <li key={`${crumb.href}-${index}`} className="flex items-center gap-2">
                 {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
                 {isLast ? (
-                  <span className="text-[var(--primary)]">
+                  <span className="font-semibold text-[#0A77FF]">
                     {crumb.label}
                   </span>
                 ) : (
@@ -48,7 +48,7 @@ export function PortalBreadcrumbs() {
   // Determine the role/root (e.g., 'super-admin')
   const role = allSegments[0] || "";
   const roleConfig = portalNavigation[role as keyof typeof portalNavigation];
-  
+
   // Map of URL segments to friendly titles for cases where the URL structure
   // doesn't match the navigation config titles perfectly.
   const SEGMENT_TITLE_MAP: Record<string, string> = {
@@ -76,7 +76,7 @@ export function PortalBreadcrumbs() {
     }
 
     if (!roleConfig) return formatSegment(segment);
-    
+
     // Fallback to exact path match in navigation config
     const navItem = roleConfig.items.find(item => item.href === fullPath);
     return navItem ? navItem.title : formatSegment(segment);
@@ -105,7 +105,7 @@ export function PortalBreadcrumbs() {
           // Construct default href correctly: /role/segment/segment...
           const rawPath = `/${role}/${portalSegments.slice(0, index + 1).join("/")}`;
           const isLast = index === portalSegments.length - 1;
-          
+
           const href = getSegmentHref(segment, rawPath);
           const title = getSegmentTitle(segment, rawPath);
 
@@ -113,7 +113,7 @@ export function PortalBreadcrumbs() {
             <li key={rawPath} className="flex items-center gap-2">
               {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
               {isLast ? (
-                <span className="font-medium text-[var(--primary)]">
+                <span className="font-semibold text-[#0A77FF]">
                   {title}
                 </span>
               ) : (

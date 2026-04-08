@@ -13,9 +13,9 @@ export default function SuperAdminApplicationsPage() {
       description="View & manage active elders and requests"
     >
       <EvaluationsSubNav />
-      <SharedApplicationsList 
-        role="super-admin" 
-        basePath="/super-admin/evaluations/applications" 
+      <SharedApplicationsList
+        role="super-admin"
+        basePath="/super-admin/evaluations/applications"
       />
     </PageContainer>
   );
