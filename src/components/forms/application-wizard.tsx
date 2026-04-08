@@ -81,9 +81,10 @@ const competenciesList = [
 
 interface ApplicationWizardProps {
   onQuit?: () => void;
+  onSubmit?: () => void;
 }
 
-export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
+export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTrade, setSelectedTrade] = useState<string | null>(null);
   const [selectedCompetency, setSelectedCompetency] = useState<string | null>(null);
@@ -199,7 +200,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
         <h2 className="mb-10 text-[15px] font-semibold text-slate-700">
           Short Course Application
         </h2>
-        <button 
+        <button
           onClick={onQuit}
           className="mb-12 flex items-center gap-2 text-[13px] font-medium text-[#0A77FF] hover:opacity-80 transition-opacity"
         >
@@ -263,7 +264,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                     placeholder="Search"
                     value={tradeSearch}
                     onChange={(e) => setTradeSearch(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                    className="w-full rounded-sm border border-slate-200 py-2.5 pl-10 pr-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                   />
                 </div>
                 <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -273,7 +274,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                       <div
                         key={trade.id}
                         onClick={() => setSelectedTrade(trade.id)}
-                        className={`flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
+                        className={`flex cursor-pointer items-center justify-between rounded-sm border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
                       >
                         <div className="flex items-center gap-3">
                           <Blocks className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
@@ -287,19 +288,19 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   })}
                 </div>
                 <div className="flex w-full gap-3">
-                  <PrimaryButton 
-                    label="Back" 
-                    onClick={onQuit} 
-                    variant="outline" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Back"
+                    onClick={onQuit}
+                    variant="outline"
+                    className="flex-1"
                     hideIcon={true}
                   />
-                  <PrimaryButton 
-                    label="Continue" 
-                    onClick={handleTradeContinue} 
-                    disabled={!selectedTrade} 
-                    variant="primary" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Continue"
+                    onClick={handleTradeContinue}
+                    disabled={!selectedTrade}
+                    variant="primary"
+                    className="flex-1"
                     hideIcon={true}
                   />
                 </div>
@@ -318,7 +319,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <p className="mt-1.5 text-[13px] text-slate-500">Specify the competencies offered under the selected trade.</p>
               </div>
               <div className="col-span-full mt-8 flex flex-col items-center">
-                <div className="mb-8 flex w-fit min-w-[140px] items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-4 ring-[#0A77FF]/5">
+                <div className="mb-8 flex w-fit min-w-[140px] items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-4 ring-[#0A77FF]/5">
                   <div className="flex items-center gap-2">
                     <Blocks className="h-4 w-4 text-[#0A77FF]" strokeWidth={2} />
                     <span className="tracking-tight text-[12px] font-medium text-slate-600">{selectedTradeName}</span>
@@ -337,7 +338,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                     placeholder="Search"
                     value={competencySearch}
                     onChange={(e) => setCompetencySearch(e.target.value)}
-                    className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
+                    className="w-full rounded-sm border border-slate-200 py-2.5 pl-10 pr-4 text-[13px] text-slate-900 placeholder:text-slate-400 focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]"
                   />
                 </div>
                 <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -347,7 +348,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                       <div
                         key={comp.id}
                         onClick={() => setSelectedCompetency(comp.id)}
-                        className={`flex cursor-pointer items-center justify-between rounded-xl border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
+                        className={`flex cursor-pointer items-center justify-between rounded-sm border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
                       >
                         <div className="flex items-center gap-3">
                           <Hexagon className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
@@ -361,19 +362,19 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   })}
                 </div>
                 <div className="flex w-full gap-3">
-                  <PrimaryButton 
-                    label="Back" 
-                    onClick={handleCompetencyBack} 
-                    variant="outline" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Back"
+                    onClick={handleCompetencyBack}
+                    variant="outline"
+                    className="flex-1"
                     hideIcon={true}
                   />
-                  <PrimaryButton 
-                    label="Continue" 
-                    onClick={handleCompetencyContinue} 
-                    disabled={!selectedCompetency} 
-                    variant="primary" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Continue"
+                    onClick={handleCompetencyContinue}
+                    disabled={!selectedCompetency}
+                    variant="primary"
+                    className="flex-1"
                     hideIcon={true}
                   />
                 </div>
@@ -393,7 +394,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
               </div>
               <div className="mt-8 flex flex-col items-center">
                 <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-                  <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                  <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]">
                       <Blocks className="h-4 w-4" strokeWidth={2} />
                       <span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedTradeName}</span>
@@ -403,7 +404,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                     </div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
-                   <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                   <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]">
                       <Hexagon className="h-4 w-4" strokeWidth={2} />
                       <span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedCompetencyName}</span>
@@ -443,18 +444,18 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 </div>
                 <PrimaryButton label="Add Equipment" icon={FolderPlus} iconPosition="right" onClick={handleAddEquipment} className="mb-8 w-fit" />
                 <div className="mb-8 flex w-full gap-3">
-                  <PrimaryButton 
-                    label="Back" 
-                    onClick={handleEquipmentBack} 
-                    variant="outline" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Back"
+                    onClick={handleEquipmentBack}
+                    variant="outline"
+                    className="flex-1"
                     hideIcon={true}
                   />
-                  <PrimaryButton 
-                    label="Continue" 
-                    onClick={handleEquipmentContinue} 
-                    variant="primary" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Continue"
+                    onClick={handleEquipmentContinue}
+                    variant="primary"
+                    className="flex-1"
                     hideIcon={true}
                   />
                 </div>
@@ -462,29 +463,27 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 {equipments.length > 0 && (
                   <div className="flex flex-col gap-3">
                     {equipments.map(eq => (
-                      <div key={eq.id} className="relative flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-3 hover:shadow-md transition-shadow">
-                        <div className="h-14 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-100">
+                      <div key={eq.id} className="relative flex items-center gap-4 rounded-sm border border-slate-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="h-16 w-24 shrink-0 overflow-hidden rounded-sm bg-slate-100">
                           {eq.proof ? <img src={eq.proof} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center text-xs text-slate-400 font-medium">No Image</div>}
                         </div>
                         <div className="flex-1">
-                          <p className="text-[13px] font-semibold text-slate-800">{eq.name}</p>
-                          <p className="mt-0.5 text-[11px] text-slate-500 font-medium">Qty: {eq.quantity} Pieces</p>
+                          <p className="text-[14px] font-semibold text-slate-800">{eq.name}</p>
+                          <p className="mt-0.5 text-[11px] text-slate-400 font-medium whitespace-nowrap">Quantity: {eq.quantity} Pieces</p>
                         </div>
-                        <div className="flex gap-2 mr-1">
-                          <PrimaryButton 
-                            label="" 
-                            icon={Pencil} 
-                            hideIcon={false} 
-                            className="p-0 h-9 w-9"
-                            onClick={() => {}}
-                          />
-                          <PrimaryButton 
-                            label="" 
-                            icon={X} 
-                            hideIcon={false} 
-                            className="p-0 h-9 w-9 bg-red-500 hover:bg-red-600"
-                            onClick={() => removeEquipment(eq.id)}
-                          />
+                        {/* Action Icons */}
+                        <div className="absolute top-3 right-3">
+                           <button onClick={() => removeEquipment(eq.id)} className="text-slate-300 hover:text-slate-500 transition-colors">
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        <div className="absolute bottom-3 right-3 flex gap-3">
+                          <button onClick={() => {}} className="text-[#0A77FF] hover:opacity-80 transition-opacity">
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                          <button onClick={() => removeEquipment(eq.id)} className="text-red-500 hover:opacity-80 transition-opacity">
+                            <Trash2 className="h-4 w-4" />
+                          </button>
                         </div>
                       </div>
                     ))}
@@ -506,12 +505,12 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
               </div>
               <div className="mt-8 flex flex-col items-center">
                  <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-                  <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                  <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]"><Blocks className="h-4 w-4" strokeWidth={2} /><span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedTradeName}</span></div>
                     <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500 shadow-sm"><Check className="h-3 w-3 text-white" strokeWidth={3} /></div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
-                   <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                   <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]"><Hexagon className="h-4 w-4" strokeWidth={2} /><span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedCompetencyName}</span></div>
                     <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500 shadow-sm"><Check className="h-3 w-3 text-white" strokeWidth={3} /></div>
                   </div>
@@ -532,13 +531,13 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                     const colors:Record<string,string> = { PDF: "bg-red-500", MP4: "bg-blue-500", FIG: "bg-purple-500", DOCX: "bg-blue-400", DOC: "bg-blue-400" };
                     const iconBg = colors[doc.extension] || "bg-slate-500";
                     return (
-                      <div key={doc.id} className="relative flex flex-col justify-center rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                      <div key={doc.id} className="relative flex flex-col justify-center rounded-sm border border-slate-200 bg-white p-4 shadow-sm">
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="relative mt-0.5 flex h-10 w-8 items-center justify-center rounded-md border border-slate-200 bg-slate-50 shadow-sm overflow-hidden"><div className={`absolute bottom-0 left-0 right-0 h-4 flex items-center justify-center ${iconBg}`}><span className="text-[8px] font-bold text-white tracking-widest">{doc.extension}</span></div></div>
-                            <div className="flex flex-col"><p className="text-[13px] font-semibold text-slate-800 line-clamp-1">{doc.name}</p><p className="text-[11px] font-medium text-slate-400">{doc.size}</p></div>
+                            <div className="relative mt-0.5 flex h-10 w-8 items-center justify-center rounded-sm border border-slate-200 bg-slate-50 shadow-sm overflow-hidden"><div className={`absolute bottom-0 left-0 right-0 h-4 flex items-center justify-center ${iconBg}`}><span className="text-[8px] font-bold text-white tracking-widest">{doc.extension}</span></div></div>
+                            <div className="flex flex-col"><p className="text-[14px] font-semibold text-slate-800 line-clamp-1">{doc.name}</p><p className="text-[11px] font-medium text-slate-400">{doc.size}</p></div>
                           </div>
-                          <div>{isDone ? <div className="flex h-5 w-5 items-center justify-center rounded-full bg-[#0A77FF]"><Check className="h-3 w-3 text-white" strokeWidth={3} /></div> : <button onClick={() => removeCurriculumDoc(doc.id)} className="text-slate-400 hover:text-red-500 transition-colors"><X className="h-5 w-5" /></button>}</div>
+                          <div>{isDone ? <input type="checkbox" checked readOnly className="h-4 w-4 rounded-sm border-slate-300 text-[#0A77FF] focus:ring-[#0A77FF]" /> : <button onClick={() => removeCurriculumDoc(doc.id)} className="text-slate-400 hover:text-red-500 transition-colors"><Trash2 className="h-5 w-5" /></button>}</div>
                         </div>
                         <div className="mt-4 flex items-center gap-3"><div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100"><div className="h-full bg-[#0A77FF] transition-all duration-300" style={{ width: `${doc.progress}%` }} /></div><span className="w-8 text-right text-[11px] font-bold text-slate-500 tracking-tighter">{doc.progress}%</span></div>
                       </div>
@@ -547,19 +546,19 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 </div>
               )}
               <div className="flex w-full gap-3 mb-8">
-                <PrimaryButton 
-                  label="Back" 
-                  onClick={handleCurriculumBack} 
-                  variant="outline" 
-                  className="flex-1" 
+                <PrimaryButton
+                  label="Back"
+                  onClick={handleCurriculumBack}
+                  variant="outline"
+                  className="flex-1"
                   hideIcon={true}
                 />
-                <PrimaryButton 
-                  label="Continue" 
-                  onClick={handleCurriculumContinue} 
-                  disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)} 
-                  variant="primary" 
-                  className="flex-1" 
+                <PrimaryButton
+                  label="Continue"
+                  onClick={handleCurriculumContinue}
+                  disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)}
+                  variant="primary"
+                  className="flex-1"
                   hideIcon={true}
                 />
               </div>
@@ -578,12 +577,12 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
               </div>
               <div className="mt-8 flex flex-col items-center">
                  <div className="mb-8 flex flex-wrap items-center justify-center gap-4">
-                  <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                  <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]"><Blocks className="h-4 w-4" strokeWidth={2} /><span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedTradeName}</span></div>
                     <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500"><Check className="h-3 w-3 text-white" strokeWidth={3} /></div>
                   </div>
                   <ChevronRight className="h-5 w-5 text-slate-300" strokeWidth={1.5} />
-                   <div className="flex items-center justify-between gap-6 rounded-xl border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
+                   <div className="flex items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-2 ring-[#0A77FF]/5">
                     <div className="flex items-center gap-2 text-[#0A77FF]"><Hexagon className="h-4 w-4" strokeWidth={2} /><span className="text-[12px] font-medium text-slate-600 tracking-tight">{selectedCompetencyName}</span></div>
                     <div className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-500"><Check className="h-3 w-3 text-white" strokeWidth={3} /></div>
                   </div>
@@ -622,10 +621,10 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                             <p className="text-[13px] font-bold text-slate-800">{alloc.position}</p>
                             <p className="text-[11px] font-medium text-slate-500">{alloc.qualification} • {alloc.status}</p>
                           </div>
-                          <PrimaryButton 
-                            label="" 
-                            icon={Trash2} 
-                            hideIcon={false} 
+                          <PrimaryButton
+                            label=""
+                            icon={Trash2}
+                            hideIcon={false}
                             className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 opacity-0 group-hover:opacity-100"
                             onClick={() => removeAllocation(alloc.id)}
                           />
@@ -636,18 +635,18 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   </div>
                 )}
                 <div className="mb-8 flex w-full gap-3">
-                  <PrimaryButton 
-                    label="Back" 
-                    onClick={() => setCurrentStep(4)} 
-                    variant="outline" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Back"
+                    onClick={() => setCurrentStep(4)}
+                    variant="outline"
+                    className="flex-1"
                     hideIcon={true}
                   />
-                  <PrimaryButton 
-                    label="Continue" 
-                    onClick={() => setCurrentStep(6)} 
-                    variant="primary" 
-                    className="flex-1" 
+                  <PrimaryButton
+                    label="Continue"
+                    onClick={() => setCurrentStep(6)}
+                    variant="primary"
+                    className="flex-1"
                     hideIcon={true}
                   />
                 </div>
@@ -664,18 +663,18 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <p className="mt-1.5 text-[13px] text-slate-500">Review all information provided before submitting your application for evaluation.</p>
               </div>
               <div className="mt-6 flex w-full gap-3 mb-8">
-                <PrimaryButton 
-                  label="Back" 
-                  onClick={() => setCurrentStep(5)} 
-                  variant="outline" 
-                  className="flex-1" 
+                <PrimaryButton
+                  label="Back"
+                  onClick={() => setCurrentStep(5)}
+                  variant="outline"
+                  className="flex-1"
                   hideIcon={true}
                 />
-                <PrimaryButton 
-                  label="Submit Application" 
-                  onClick={() => {}} 
-                  variant="primary" 
-                  className="flex-1" 
+                <PrimaryButton
+                  label="Submit Application"
+                  onClick={onSubmit}
+                  variant="primary"
+                  className="flex-1"
                   hideIcon={true}
                 />
               </div>

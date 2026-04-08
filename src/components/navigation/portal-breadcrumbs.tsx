@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, Home } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { portalNavigation } from "@/lib/config/navigation";
 import { usePageHeader } from "@/lib/context/page-header-context";
 
@@ -21,7 +21,7 @@ export function PortalBreadcrumbs() {
               <li key={`${crumb.href}-${index}`} className="flex items-center gap-2">
                 {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
                 {isLast ? (
-                  <span className="font-medium bg-[#F9FAFB] p-2 rounded-sm text-[var(--primary)]">
+                  <span className="font-semibold text-[#0A77FF]">
                     {crumb.label}
                   </span>
                 ) : (
@@ -113,7 +113,7 @@ export function PortalBreadcrumbs() {
             <li key={rawPath} className="flex items-center gap-2">
               {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
               {isLast ? (
-                <span className="font-medium bg-[#F9FAFB] p-2 rounded-sm text-[var(--primary)]">
+                <span className="font-semibold text-[#0A77FF]">
                   {title}
                 </span>
               ) : (

@@ -73,27 +73,27 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
           <button type="button" className="cursor-pointer p-2 text-[#667085] hover:text-slate-700 transition-colors">
             <Bell className="h-4.5 w-4.5" />
           </button>
-          
+
           {/* User Profile */}
-          <div 
-            className="relative ml-1" 
+          <div
+            className="relative ml-1"
             ref={containerRef}
             onMouseEnter={handleOpen}
             onMouseLeave={handleClose}
           >
-            <div 
+            <div
               className="h-9 w-9 rounded-full cursor-pointer outline-none border border-slate-200 flex items-center justify-center overflow-hidden hover:opacity-90 transition-opacity"
               onClick={() => setOpen(!open)}
             >
-              <img 
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150" 
-                alt="User profile" 
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150"
+                alt="User profile"
                 className="h-full w-full object-cover"
               />
             </div>
 
             {open && (
-              <div 
+              <div
                 className="absolute right-0 top-full mt-1 w-48 rounded-md bg-white p-1 shadow-lg ring-1 ring-slate-200 z-50 overflow-hidden"
                 onMouseEnter={handleOpen}
                 onMouseLeave={handleClose}

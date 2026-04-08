@@ -40,8 +40,8 @@ export function PrimaryButton({
     "text-[13px] font-semibold leading-none",
     "transition-all duration-150 select-none",
     disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:opacity-90 active:scale-[0.98]",
-    variant === "primary" 
-      ? "bg-[#0A77FF] !text-white border-none shadow-[0_1px_2px_rgba(10,119,255,0.1)]" 
+    variant === "primary"
+      ? "bg-[#0A77FF] !text-white border-none shadow-[0_1px_2px_rgba(10,119,255,0.1)]"
       : "bg-white text-[#344054] border border-[#D0D5DD] hover:bg-slate-50 rounded-xl",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A77FF]/50",
     className,

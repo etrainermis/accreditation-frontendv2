@@ -7,6 +7,7 @@ import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { ApplicationWizard } from "@/components/forms/application-wizard";
+import { DashboardFilledState } from "@/components/dashboard/dashboard-filled-state";
 
 const stats = [
   {
@@ -37,6 +38,7 @@ const stats = [
 
 export default function ApplicantDashboardPage() {
   const [isApplying, setIsApplying] = useState(false);
+  const [hasApplications, setHasApplications] = useState(false);
 
   // Dynamic header content
   const pageTitle = isApplying ? "Apply For Short Course" : "Welcome, John";
@@ -69,12 +71,22 @@ export default function ApplicantDashboardPage() {
       <div className="space-y-6">
         {isApplying ? (
           <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <ApplicationWizard onQuit={() => setIsApplying(false)} />
+            <ApplicationWizard 
+              onQuit={() => setIsApplying(false)} 
+              onSubmit={() => {
+                setIsApplying(false);
+                setHasApplications(true);
+              }}
+            />
           </div>
         ) : (
           <>
             <StatsGrid items={stats} />
-            <DashboardEmptyState />
+            {hasApplications ? (
+              <DashboardFilledState />
+            ) : (
+              <DashboardEmptyState />
+            )}
           </>
         )}
       </div>
