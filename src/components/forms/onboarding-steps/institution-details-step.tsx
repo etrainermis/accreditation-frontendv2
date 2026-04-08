@@ -52,7 +52,7 @@ export function InstitutionDetailsStep({
             value={selectedDocType}
             onChange={(v) => setSelectedDocType(v)}
             options={docTypes.map(type => ({
-              label: type + (type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""),
+              label: `${type}${type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""}`,
               value: type
             }))}
           />
