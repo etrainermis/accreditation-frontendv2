@@ -54,7 +54,7 @@ export function ApplicantOnboardingShell({
                 <div key={step.key} className="flex gap-3">
                   <div className="flex flex-col items-center">
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
+                      className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
                         isActive
                           ? "border-slate-200 bg-white text-slate-800 shadow-sm"
                           : isComplete

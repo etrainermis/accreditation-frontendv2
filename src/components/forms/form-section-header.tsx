@@ -16,7 +16,7 @@ export function FormSectionHeader({
 }: FormSectionHeaderProps) {
   return (
     <div className="space-y-3 text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl border border-slate-100 bg-white text-slate-800 shadow-[0_1px_3px_rgb(0_0_0_/_0.02)]">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-sm border border-slate-100 bg-white text-slate-800 shadow-[0_1px_3px_rgb(0_0_0_/_0.02)]">
         <Icon className="h-5 w-5 stroke-[1.5]" />
       </div>
       <div className="space-y-1.5">
