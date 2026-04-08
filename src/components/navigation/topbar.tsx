@@ -118,7 +118,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                   {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
                 </div>
 
-                {role === "super-admin" && (
+                {(role === "super-admin" || role === "evaluator") && (
                   <button 
                     data-slot="button" 
                     data-variant="default" 

@@ -10,31 +10,45 @@ import {
   CalendarCheck2,
 } from "lucide-react";
 
-const navItems = [
-  {
-    title: "Applications",
-    href: "/super-admin/evaluations/applications",
-    icon: NotepadText,
-  },
-  {
-    title: "Evaluators",
-    href: "/super-admin/evaluations/evaluators",
-    icon: ShieldUser,
-  },
-  {
-    title: "Evaluation Criteria Files",
-    href: "/super-admin/evaluations/criteria",
-    icon: FolderOpen,
-  },
-  {
-    title: "Due Diligence Schedule",
-    href: "/super-admin/evaluations/schedule",
-    icon: CalendarCheck2,
-  },
-];
+interface EvaluationsSubNavProps {
+  role?: "super-admin" | "evaluator";
+  children?: React.ReactNode;
+}
 
-export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) {
+export function EvaluationsSubNav({ role = "super-admin", children }: EvaluationsSubNavProps) {
   const pathname = usePathname();
+  const basePath = role === "super-admin" ? "/super-admin/evaluations" : "/evaluator";
+
+  const allNavItems = [
+    {
+      title: "Applications",
+      href: `${basePath}/applications`,
+      icon: NotepadText,
+    },
+    {
+      title: "Evaluators",
+      href: `${basePath}/evaluators`,
+      icon: ShieldUser,
+    },
+    {
+      title: "Evaluation Criteria Files",
+      href: `${basePath}/criteria`,
+      icon: FolderOpen,
+    },
+    {
+      title: "Due Diligence Schedule",
+      href: `${basePath}/schedule`,
+      icon: CalendarCheck2,
+    },
+  ];
+
+  // Filter out the 'Evaluators' item if the active role is 'evaluator'
+  const navItems = allNavItems.filter((item) => {
+    if (role === "evaluator" && item.title === "Evaluators") {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-col w-full items-center justify-between mb-6">
@@ -48,7 +62,7 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
               key={item.href}
               href={item.href as never}
               className={cn(
-                "flex items-center gap-2 px-4 py-3 rounded-sm transition-all duration-200 whitespace-nowrap",
+                "flex items-center gap-2 px-4 py-3 rounded-sm transition-all w-full duration-200 whitespace-nowrap",
                 isActive
                   ? "text-[var(--primary)] bg-[#F9FAFB]"
                   : "text-[#353E49]"
@@ -73,9 +87,9 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
           );
         })}
       </div>
-    <div className="justify-end mt-6 flex w-full">
+      <div className="justify-end mt-6 flex w-full">
         {children}
-    </div>
+      </div>
     </div>
   );
 }
