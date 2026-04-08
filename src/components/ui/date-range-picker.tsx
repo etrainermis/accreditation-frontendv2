@@ -18,8 +18,8 @@ interface DateRangePickerProps {
 
 const presets = [
   { label: "Today", getValue: () => ({ from: new Date(), to: new Date() }) },
-  { 
-    label: "Yesterday", 
+  {
+    label: "Yesterday",
     getValue: () => {
       const d = new Date();
       d.setDate(d.getDate() - 1);
@@ -55,9 +55,9 @@ const presets = [
     label: "Last month",
     getValue: () => {
       const now = new Date();
-      return { 
-        from: new Date(now.getFullYear(), now.getMonth() - 1, 1), 
-        to: new Date(now.getFullYear(), now.getMonth(), 0) 
+      return {
+        from: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+        to: new Date(now.getFullYear(), now.getMonth(), 0)
       };
     }
   },
@@ -72,9 +72,9 @@ const presets = [
     label: "Last year",
     getValue: () => {
       const now = new Date();
-      return { 
-        from: new Date(now.getFullYear() - 1, 0, 1), 
-        to: new Date(now.getFullYear() - 1, 11, 31) 
+      return {
+        from: new Date(now.getFullYear() - 1, 0, 1),
+        to: new Date(now.getFullYear() - 1, 11, 31)
       };
     }
   },
@@ -90,7 +90,7 @@ export function DateRangePicker({
   const [open, setOpen] = React.useState(false);
   const [leftMonth, setLeftMonth] = React.useState(new Date());
   const [hoverDate, setHoverDate] = React.useState<Date | null>(null);
-  
+
   const [range, setRange] = React.useState<DateRange>(
     value || { from: undefined, to: undefined }
   );
@@ -127,7 +127,7 @@ export function DateRangePicker({
     const month = monthDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     const days = [];
     for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) days.push(null); // Adjust for Mo-Su
     for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
@@ -137,10 +137,10 @@ export function DateRangePicker({
         <div className="flex items-center justify-between mb-4 px-2">
           <div className="flex items-center gap-2">
             {showLeftNav && (
-              <button 
+              <button
                 type="button"
                 onClick={() => setLeftMonth(new Date(year, month - 1, 1))}
-                className="p-1 hover:bg-slate-100 rounded-md"
+                className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
               >
                 <ChevronLeft className="h-4 w-4 text-slate-500" />
               </button>
@@ -151,10 +151,10 @@ export function DateRangePicker({
           </h4>
           <div className="flex items-center gap-2">
             {showRightNav && (
-              <button 
+              <button
                 type="button"
                 onClick={() => setLeftMonth(new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1))}
-                className="p-1 hover:bg-slate-100 rounded-md"
+                className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
               >
                 <ChevronRight className="h-4 w-4 text-slate-500" />
               </button>
@@ -171,11 +171,11 @@ export function DateRangePicker({
         <div className="grid grid-cols-7 gap-y-0.5">
           {days.map((date, i) => {
             if (!date) return <div key={i} className="h-9 w-9" />;
-            
+
             const isFrom = range.from && date.toDateString() === range.from.toDateString();
             const isTo = range.to && date.toDateString() === range.to.toDateString();
             const isHover = !range.to && hoverDate && date.toDateString() === hoverDate.toDateString();
-            
+
             const inRange = range.from && (range.to || hoverDate) && (
               (date > range.from && date < (range.to || (hoverDate as Date))) ||
               (date < range.from && date > (range.to || (hoverDate as Date)))
@@ -188,7 +188,7 @@ export function DateRangePicker({
                 onMouseEnter={() => range.from && !range.to && setHoverDate(date)}
                 onClick={() => handleDateClick(date)}
                 className={cn(
-                  "h-9 w-9 text-xs flex items-center justify-center transition-all relative group",
+                  "h-9 w-9 text-xs flex items-center justify-center transition-all relative group cursor-pointer",
                   (isFrom || isTo || isHover) && "z-10",
                   isFrom && "bg-[var(--primary)] text-white rounded-full font-bold",
                   isTo && "bg-[var(--primary)] text-white rounded-full font-bold",
@@ -216,10 +216,10 @@ export function DateRangePicker({
 
   return (
     <div className={cn("relative", className)}>
-      <button 
+      <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
+        className="flex items-center gap-2 mt-2 cursor-pointer px-3 py-3 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
       >
         <Calendar className="h-4 w-4 text-[#344054]" strokeWidth={1.5} />
         <span className="text-sm font-medium text-[#344054]">
@@ -229,11 +229,11 @@ export function DateRangePicker({
 
       {open && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/80 ">
-          <div 
-            className="absolute inset-0" 
+          <div
+            className="absolute inset-0"
             onClick={() => setOpen(false)}
           />
-          
+
           <div className="relative flex bg-white rounded-sm  border border-slate-200 overflow-hidden max-w-[840px] animate-in fade-in zoom-in-95 duration-200">
             {/* Sidebar Presets */}
             <div className="w-[180px] border-r border-slate-100 p-2 flex flex-col gap-0.5">
@@ -245,7 +245,7 @@ export function DateRangePicker({
                     const val = p.getValue();
                     setRange(val);
                   }}
-                  className="w-full text-left px-4 py-2 text-[13px] text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+                  className="w-full text-left px-4 py-3 text-[13px] text-slate-600 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 >
                   {p.label}
                 </button>
@@ -261,27 +261,27 @@ export function DateRangePicker({
               {/* Footer */}
               <div className="mt-auto border-t border-slate-100 p-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                  <div className="px-3 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
                     {range.from ? formatDate(range.from) : "Start date"}
                   </div>
                   <span className="text-slate-400">–</span>
-                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                  <div className="px-3 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
                     {range.to ? formatDate(range.to) : "End date"}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="px-6 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors"
+                    className="px-6 py-3 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleApply}
-                    className="px-8 py-2 text-sm font-medium text-white bg-[var(--primary)] rounded-sm hover:opacity-90 transition-opacity"
+                    className="px-8 py-3 text-sm font-medium text-white bg-[var(--primary)] rounded-sm hover:opacity-90 transition-opacity cursor-pointer"
                   >
                     Apply
                   </button>

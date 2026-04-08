@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import {
   NotepadText,
@@ -10,31 +11,45 @@ import {
   CalendarCheck2,
 } from "lucide-react";
 
-const navItems = [
-  {
-    title: "Applications",
-    href: "/super-admin/evaluations/applications",
-    icon: NotepadText,
-  },
-  {
-    title: "Evaluators",
-    href: "/super-admin/evaluations/evaluators",
-    icon: ShieldUser,
-  },
-  {
-    title: "Evaluation Criteria Files",
-    href: "/super-admin/evaluations/criteria",
-    icon: FolderOpen,
-  },
-  {
-    title: "Due Diligence Schedule",
-    href: "/super-admin/evaluations/schedule",
-    icon: CalendarCheck2,
-  },
-];
+interface EvaluationsSubNavProps {
+  role?: "super-admin" | "evaluator";
+  children?: React.ReactNode;
+}
 
-export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) {
+export function EvaluationsSubNav({ role = "super-admin", children }: EvaluationsSubNavProps) {
   const pathname = usePathname();
+  const basePath = role === "super-admin" ? "/super-admin/evaluations" : "/evaluator";
+
+  const allNavItems = [
+    {
+      title: "Applications",
+      href: `${basePath}/applications`,
+      icon: NotepadText,
+    },
+    {
+      title: "Evaluators",
+      href: `${basePath}/evaluators`,
+      icon: ShieldUser,
+    },
+    {
+      title: "Evaluation Criteria Files",
+      href: `${basePath}/criteria`,
+      icon: FolderOpen,
+    },
+    {
+      title: "Due Diligence Schedule",
+      href: `${basePath}/schedule`,
+      icon: CalendarCheck2,
+    },
+  ];
+
+  // Filter out the 'Evaluators' item if the active role is 'evaluator'
+  const navItems = allNavItems.filter((item) => {
+    if (role === "evaluator" && item.title === "Evaluators") {
+      return false;
+    }
+    return true;
+  });
 
   return (
     <div className="flex flex-col w-full items-center justify-between mb-6">
@@ -48,23 +63,30 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
               key={item.href}
               href={item.href as never}
               className={cn(
-                "flex items-center gap-2 px-4 py-2.5 rounded-sm transition-all duration-200 whitespace-nowrap",
+                "relative group flex items-center justify-center gap-2 px-4 py-3 rounded-sm transition-colors w-full duration-200 whitespace-nowrap",
                 isActive
-                  ? "text-[var(--primary)] bg-[#F9FAFB]"
-                  : "text-[#353E49]"
+                  ? "text-[var(--primary)]"
+                  : "text-[#353E49] hover:bg-slate-50 hover:text-[var(--primary)]"
               )}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="subnav-active-pill"
+                  className="absolute inset-0 bg-[#F9FAFB] rounded-sm z-0"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
               <Icon
                 className={cn(
-                  "h-4 w-4",
-                  isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+                  "relative z-10 h-4 w-4 transition-colors duration-200",
+                  isActive ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]"
                 )}
                 strokeWidth={1}
               />
               <span
                 className={cn(
-                  "text-sm font-medium",
-                  isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+                  "relative z-10 text-sm font-medium transition-colors duration-200",
+                  isActive ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]"
                 )}
               >
                 {item.title}
@@ -73,9 +95,9 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
           );
         })}
       </div>
-    <div className="justify-end mt-6 flex w-full">
+      <div className="justify-end mt-6 flex w-full">
         {children}
-    </div>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { Button } from "@/components/ui/button";
 
 interface PrimaryButtonProps {
   /** Label text shown inside the button */
@@ -35,41 +36,39 @@ export function PrimaryButton({
   variant = "primary"
 }: PrimaryButtonProps) {
   const Icon = customIcon || Plus;
-  const baseClasses = cn(
-    "flex items-center justify-center gap-2.5 rounded-sm px-6 py-3",
-    "text-[13px] font-semibold leading-none",
-    "transition-all duration-150 select-none",
-    disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:opacity-90 active:scale-[0.98]",
-    variant === "primary"
-      ? "bg-[#0A77FF] !text-white border-none shadow-[0_1px_2px_rgba(10,119,255,0.1)]"
-      : "bg-white text-[#344054] border border-[#D0D5DD] hover:bg-slate-50 rounded-xl",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A77FF]/50",
-    className,
+  const buttonVariant = variant === "primary" ? "default" : "outline";
+  
+  const inner = (
+    <span className={cn("inline-flex items-center", variant === "primary" && "text-white")}>
+      {!hideIcon && iconPosition === "left" && (
+        <Icon className={cn("h-4 w-4 text-white", label && "mr-2")} aria-hidden="true" />
+      )}
+      {label && <span className={cn(variant === "primary" && "text-white font-medium")}>{label}</span>}
+      {!hideIcon && iconPosition === "right" && (
+        <Icon className={cn("h-4 w-4 text-white", label && "ml-2")} aria-hidden="true" />
+      )}
+    </span>
   );
 
-  const inner = (
-    <>
-      {!hideIcon && iconPosition === "left" && (
-        <Icon className="h-4 w-4 text-white" strokeWidth={2.5} />
-      )}
-      <span>{label}</span>
-      {!hideIcon && iconPosition === "right" && (
-        <Icon className="h-4 w-4 text-white" strokeWidth={2.5} />
-      )}
-    </>
+  const buttonClasses = cn(
+    "rounded-sm cursor-pointer",
+    variant === "primary" && "text-white !text-white bg-[#0A77FF]",
+    className
   );
 
   if (href) {
     return (
-      <Link href={href as never} className={baseClasses}>
-        {inner}
-      </Link>
+      <Button variant={buttonVariant} className={buttonClasses} disabled={disabled} style={variant === "primary" ? { color: "white" } : undefined} asChild>
+        <Link href={href as never} style={variant === "primary" ? { color: "white" } : undefined}>
+          {inner}
+        </Link>
+      </Button>
     );
   }
 
   return (
-    <button type={type} onClick={onClick} className={baseClasses} disabled={disabled}>
+    <Button variant={buttonVariant} type={type} onClick={onClick} className={buttonClasses} disabled={disabled} style={variant === "primary" ? { color: "white" } : undefined}>
       {inner}
-    </button>
+    </Button>
   );
 }

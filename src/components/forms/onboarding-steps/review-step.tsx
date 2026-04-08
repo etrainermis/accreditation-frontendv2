@@ -2,13 +2,15 @@
 
 import Link from "next/link";
 import { CheckCircle, FileText } from "lucide-react";
+import type { TechnicalStaffEntry } from "./technical-staff-step";
+import type { LegalRep } from "./legal-representatives-step";
 
 interface ReviewApplicationStepProps {
   formData: Record<string, string>;
-  files: Record<string, File | null>;
-  legalReps: Record<string, string>[];
+  selectedFile: File | null;
+  legalReps: LegalRep[];
   aboutText: Record<string, string>;
-  staffList: Record<string, string | number>[];
+  staffList: TechnicalStaffEntry[];
 }
 
 export function ReviewApplicationStep({
@@ -53,8 +55,8 @@ export function ReviewApplicationStep({
               <span className="text-[12px] text-slate-500 block mb-1">Phone Number</span>
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
-            
-            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 grid grid-cols-2 gap-4">
+
+            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
               <div className="space-y-1">
                 <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
                 {files.registration ? (

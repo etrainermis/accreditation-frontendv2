@@ -47,7 +47,7 @@ export function RecentApplicationsTable() {
             {activeFilters.map((filter) => (
               <div 
                 key={filter} 
-                className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white"
+                className="flex items-center gap-2 px-3 py-3 rounded-sm text-xs text-[#344054] border border-slate-100 bg-white"
               >
                 <span>{filter}</span>
                 <X 
@@ -56,7 +56,7 @@ export function RecentApplicationsTable() {
                 />
               </div>
             ))}
-            <button className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white ">
+            <button className="flex items-center gap-2 px-3 py-3 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white ">
               <ListFilter className="h-4 w-4 text-slate-500" />
               <span>More filters</span>
             </button>

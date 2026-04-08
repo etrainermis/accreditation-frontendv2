@@ -34,8 +34,8 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/evaluator",
     items: [
       { title: "Dashboard", href: "/evaluator/dashboard", description: "", icon: House, match: "exact" },
-      { title: "Evaluations", href: "/evaluator/assignments", description: "", icon: ClipboardCheck },
-      { title: "Profile", href: "/evaluator/due-diligence", description: "", icon: User },
+      { title: "Evaluations", href: "/evaluator/applications", description: "", icon: BadgeCheck },
+      { title: "Profile", href: "/evaluator/profile", description: "", icon: User },
       { title: "Notifications", href: "/evaluator/notifications", description: "", icon: Bell },
     ],
   },

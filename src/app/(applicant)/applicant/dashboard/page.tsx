@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import { FileText, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
 import { PrimaryButton } from "@/components/ui/primary-button";
-import { ApplicationWizard } from "@/components/forms/application-wizard";
 import { DashboardFilledState } from "@/components/dashboard/dashboard-filled-state";
 
 const stats = [
@@ -37,57 +35,27 @@ const stats = [
 ];
 
 export default function ApplicantDashboardPage() {
-  const [isApplying, setIsApplying] = useState(false);
-  const [hasApplications, setHasApplications] = useState(false);
-
-  // Dynamic header content
-  const pageTitle = isApplying ? "Apply For Short Course" : "Welcome, John";
-  const pageDescription = isApplying
-    ? "Create and manage your accreditation applications for the selected trades."
-    : "View & manage active elders and requests";
-
-  const breadcrumbs = isApplying ? [
-    { label: "Dashboard", href: "/applicant/dashboard" },
-    { label: "Short Course Application", href: "#" }
-  ] : undefined;
+  const hasApplications = false;
 
   return (
     <PageContainer
       role="applicant"
-      title={pageTitle}
-      description={pageDescription}
-      breadcrumbs={breadcrumbs}
+      title="Welcome, John"
+      description="View & manage active elders and requests"
       action={
-        !isApplying && (
-          <PrimaryButton
-            label="New Application"
-            onClick={() => setIsApplying(true)}
-            iconPosition="right"
-            className="h-10 px-5 text-white font-sm"
-          />
-        )
+        <PrimaryButton
+          label="New Application"
+          href="/applicant/applications"
+          iconPosition="right"
+        />
       }
     >
       <div className="space-y-6">
-        {isApplying ? (
-          <div className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-            <ApplicationWizard 
-              onQuit={() => setIsApplying(false)} 
-              onSubmit={() => {
-                setIsApplying(false);
-                setHasApplications(true);
-              }}
-            />
-          </div>
+        <StatsGrid items={stats} />
+        {hasApplications ? (
+          <DashboardFilledState />
         ) : (
-          <>
-            <StatsGrid items={stats} />
-            {hasApplications ? (
-              <DashboardFilledState />
-            ) : (
-              <DashboardEmptyState />
-            )}
-          </>
+          <DashboardEmptyState />
         )}
       </div>
     </PageContainer>
