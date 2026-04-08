@@ -5,19 +5,17 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 
 export function DashboardEmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 px-4">
+    <div className="flex flex-col items-center justify-center py-20 pt-0 -mt-10 px-4">
       {/* Concentric Circles Graphic */}
-      <div className="relative flex items-center justify-center mb-6 h-[260px] w-full max-w-[400px]">
+      <div className="relative flex items-center justify-center mb-8 h-[240px] w-full max-w-[500px]">
         {/* Outer Circles */}
-        <div className="absolute h-[260px] w-[260px] rounded-full border border-slate-100/40" />
-        <div className="absolute h-[210px] w-[210px] rounded-full border border-slate-100/60" />
-        <div className="absolute h-[160px] w-[160px] rounded-full border border-slate-100/80" />
-        <div className="absolute h-[110px] w-[110px] rounded-full border border-slate-100" />
-        {/* Inner Circle */}
-        <div className="absolute h-[65px] w-[65px] rounded-full border border-slate-200/20 bg-slate-50/5" />
+        <div className="absolute h-[320px] w-[320px] rounded-full border border-slate-100/50" />
+        <div className="absolute h-[240px] w-[240px] rounded-full border border-slate-100/60" />
+        <div className="absolute h-[160px] w-[160px] rounded-full border border-slate-100/70" />
+        <div className="absolute h-[80px] w-[80px] rounded-full border border-[#F2F4F7]" />
         
-        {/* Central Icon Container */}
-        <div className="relative z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_8px_16px_-4px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/60">
+        {/* Icon Container - Positioned at the bottom pole of the circles */}
+        <div className="absolute bottom-0 z-10 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_8px_16px_-4px_rgba(0,0,0,0.04),0_1px_2px_rgba(0,0,0,0.02)] ring-1 ring-slate-200/60 transition-transform hover:scale-105">
           <FilePlus className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
         </div>
       </div>

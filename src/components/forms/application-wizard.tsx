@@ -199,14 +199,13 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
         <h2 className="mb-10 text-[15px] font-semibold text-slate-700">
           Short Course Application
         </h2>
-        <PrimaryButton 
-          label="Quit"
+        <button 
           onClick={onQuit}
-          variant="primary"
-          icon={ArrowLeft}
-          className="mb-12 w-fit px-4"
-          hideIcon={false}
-        />
+          className="mb-12 flex items-center gap-2 text-[13px] font-medium text-[#0A77FF] hover:opacity-80 transition-opacity"
+        >
+          <ArrowLeft className="h-4 w-4" strokeWidth={2} />
+          Quit
+        </button>
 
         {/* Stepper */}
         <div className="relative">
@@ -291,7 +290,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   <PrimaryButton 
                     label="Back" 
                     onClick={onQuit} 
-                    variant="primary" 
+                    variant="outline" 
                     className="flex-1" 
                     hideIcon={true}
                   />
@@ -365,7 +364,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   <PrimaryButton 
                     label="Back" 
                     onClick={handleCompetencyBack} 
-                    variant="primary" 
+                    variant="outline" 
                     className="flex-1" 
                     hideIcon={true}
                   />
@@ -444,8 +443,20 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 </div>
                 <PrimaryButton label="Add Equipment" icon={FolderPlus} iconPosition="right" onClick={handleAddEquipment} className="mb-8 w-fit" />
                 <div className="mb-8 flex w-full gap-3">
-                  <button onClick={handleEquipmentBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 hover:bg-slate-50">Back</button>
-                  <button onClick={handleEquipmentContinue} className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white hover:bg-[#0864d6]">Continue</button>
+                  <PrimaryButton 
+                    label="Back" 
+                    onClick={handleEquipmentBack} 
+                    variant="outline" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
+                  <PrimaryButton 
+                    label="Continue" 
+                    onClick={handleEquipmentContinue} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
                 </div>
                 {/* Equipment List */}
                 {equipments.length > 0 && (
@@ -539,7 +550,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <PrimaryButton 
                   label="Back" 
                   onClick={handleCurriculumBack} 
-                  variant="primary" 
+                  variant="outline" 
                   className="flex-1" 
                   hideIcon={true}
                 />
@@ -604,6 +615,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <PrimaryButton label="Add Staff" icon={UserPlus} iconPosition="right" onClick={handleAddStaff} className="mb-8 w-fit" />
                 {allocations.length > 0 && (
                   <div className="mb-8 w-full flex flex-col gap-3">
+                    {allocations.map(alloc => (
                       <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm group hover:border-[#0A77FF] transition-colors">
                         <div className="flex justify-between items-start">
                           <div>
@@ -620,13 +632,14 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                         </div>
                         <p className="mt-3 text-[10px] font-bold text-[#0A77FF] uppercase tracking-widest bg-blue-50 w-fit px-2 py-0.5 rounded-full">Qty: {alloc.quantity}</p>
                       </div>
+                    ))}
                   </div>
                 )}
                 <div className="mb-8 flex w-full gap-3">
                   <PrimaryButton 
                     label="Back" 
                     onClick={() => setCurrentStep(4)} 
-                    variant="primary" 
+                    variant="outline" 
                     className="flex-1" 
                     hideIcon={true}
                   />
@@ -654,7 +667,7 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <PrimaryButton 
                   label="Back" 
                   onClick={() => setCurrentStep(5)} 
-                  variant="primary" 
+                  variant="outline" 
                   className="flex-1" 
                   hideIcon={true}
                 />
