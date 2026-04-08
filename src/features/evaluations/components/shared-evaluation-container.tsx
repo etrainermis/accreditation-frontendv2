@@ -203,6 +203,33 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
     }
   };
 
+  const equipmentList = [
+    { id: 1, name: "Server", quantity: "2 Pieces" },
+    { id: 2, name: "Server", quantity: "2 Pieces" },
+    { id: 3, name: "Server", quantity: "2 Pieces" },
+  ];
+
+  const documentList = [
+    { id: 1, name: "Evaluation Criteria One", size: "200 KB" },
+    { id: 2, name: "Evaluation Criteria One", size: "200 KB" },
+    { id: 3, name: "Evaluation Criteria One", size: "200 KB" },
+    { id: 4, name: "Evaluation Criteria One", size: "200 KB" },
+  ];
+  
+  const staffAllocationList = [
+    { id: 1, position: "Position", qualification: "Qualification", count: 2, status: "Rejected" },
+    { id: 2, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
+    { id: 3, position: "Position", qualification: "Qualification", count: 2, status: "Rejected" },
+    { id: 4, position: "Position", qualification: "Qualification", count: 2, status: "Approved" },
+    { id: 5, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
+  ];
+
+  const dueDiligenceEquipment = [
+    { id: 1, name: "Server", quantity: "2 Pieces", found: true, image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?w=100&h=80&fit=crop" },
+    { id: 2, name: "Server", quantity: "2 Pieces", found: true, image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?w=100&h=80&fit=crop" },
+  ];
+
+
   const application = mockApplications.find(app => app.id === id) || mockApplications[0];
 
   return (
@@ -228,23 +255,744 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A77FF]" />
                 </div>
               ) : (
-                <div className="w-full h-full p-8">
-                  {/* Evaluation Workspace UI ... */}
-                  <div className="max-w-4xl mx-auto space-y-8">
-                    {/* Simplified for unification demonstration, actual UI logic re-embedded here */}
-                    {activeMajorStep === 0 && (
-                       <div className="flex flex-col items-center">
-                         <div className="flex items-center gap-4 mb-12 w-full max-w-md">
-                            <button className="flex-1 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => window.history.back()}>Back</button>
-                            <button onClick={handleNext} className="flex-1 py-3 bg-[var(--primary)] text-white rounded-sm text-sm  hover:opacity-90 transition-opacity cursor-pointer">{isEvaluating ? "Next" : "Start Evaluation"}</button>
-                         </div>
-                         <div className="w-full text-slate-500 text-sm">Evaluation details for INSTITUTION: {application.institution.name}</div>
-                       </div>
-                    )}
-                    {/* ... (re-implement rest as needed) ... */}
+                  <>
+                    {(activeMajorStep === 0 || activeMajorStep === 3) && (
+                      <>
+                    {activeInternalStep === 0 && (
+                  <>
+                    {/* Top Action Buttons */}
+                    <div className="max-w-md mx-auto flex items-center mt-8 gap-4 mb-12 w-full">
+                      <button className="flex-1 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => {
+                        if (isEvaluating) {
+                          const currentIndex = tabs.indexOf(activeTab);
+                          if (currentIndex > 0) {
+                            setActiveTab(tabs[currentIndex - 1]);
+                          } else {
+                            setIsEvaluating(false);
+                          }
+                        } else {
+                          window.history.back();
+                        }
+                      }}>
+                        Back
+                      </button>
+                      <button
+                        onClick={handleNext}
+                        className="flex-1 py-3 bg-[var(--primary)] text-white rounded-sm text-sm  hover:opacity-90 transition-opacity cursor-pointer"
+                      >
+                        {isEvaluating ? "Next" : "Start Evaluation"}
+                      </button>
+                    </div>
+
+                    {/* Tabs */}
+                    {/* Tabs */}
+                    <div className="flex justify-start mb-4 gap-10 w-full max-w-md">
+                      {tabs.map((tab) => (
+                        <button
+                          key={tab}
+                          onClick={() => setActiveTab(tab)}
+                          className={cn(
+                            "py-3 text-sm cursor-pointer transition-all relative",
+                            activeTab === tab 
+                              ? "text-[#0A77FF]" 
+                              : "text-slate-400 hover:text-slate-600"
+                          )}
+                        >
+                          {tab}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Form Container */}
+                    <div className="max-w-md mx-auto space-y-8 w-full">
+                      {activeTab === "General" && (
+                        <div className="grid grid-cols-1 gap-8">
+                          {/* Institution Name */}
+                          <div className="space-y-2">
+                            <label className="text-[13px]  text-slate-700">Name of Institution</label>
+                            <div className="relative mt-2">
+                              <input
+                                type="text"
+                                readOnly
+                                defaultValue={application.institution.name}
+                                className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
+                              />
+                              <Building2 className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
+                          </div>
+
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2 text-left">
+                              <label className="text-[13px]  text-slate-700">Institution Type</label>
+                              <div className="relative mt-2">
+                                <select disabled defaultValue="SPE" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-500 appearance-none bg-white cursor-default">
+                                  <option value="SPE">SPE</option>
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 pointer-events-none" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px]  text-slate-700">P.O Box</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                                <Package className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-[13px]  text-slate-700">Email Address</label>
+                            <div className="relative mt-2">
+                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                              <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <label className="text-[13px]  text-slate-700">Phone Number</label>
+                            <div className="flex mt-2">
+                              <div className="relative">
+                                <select disabled defaultValue="+250" className="pl-4 pr-10 py-3 rounded-l-sm border border-r-0 border-slate-200 text-sm text-slate-500 bg-slate-50 cursor-default appearance-none">
+                                  <option>+250</option>
+                                </select>
+                                <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 pointer-events-none" />
+                              </div>
+                              <div className="relative flex-1">
+                                <input readOnly defaultValue="791-234-567" className="w-full px-4 py-3 rounded-r-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Phone className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeTab === "Address" && (
+                        <div className="grid grid-cols-1 gap-8">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Province</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Western" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">District</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Map className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Sector</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Globe className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Cell</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Flag className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[13px] text-slate-700">Village/City</label>
+                            <div className="relative mt-2">
+                              <input readOnly defaultValue="Mukamira Urban" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                              <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <label className="text-[13px] text-slate-700">Address Line</label>
+                            <div className="relative mt-2">
+                              <input readOnly defaultValue="Mukamira Road, Avenue 4, Plot 12" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                              <Navigation className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {activeTab === "Personnel" && (
+                        <div className="border border-slate-100 rounded-sm overflow-hidden bg-white">
+                          <table className="w-full text-left">
+                            <thead>
+                              <tr className="border-b border-slate-100">
+                                <th className="w-10 pl-6 pr-2 py-4">
+                                  <div className="h-5 w-5 rounded-sm border border-slate-200 bg-white" />
+                                </th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500">Name</th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500">Position</th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500 pr-6">Position</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              {[
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" },
+                                { name: "Drew Cano", gender: "Male", role: "Deputy Director", email: "drew.cano@itbz.rw", phone: "+250 712 345 678" },
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" },
+                                { name: "Drew Cano", gender: "Male", role: "Deputy Director", email: "drew.cano@itbz.rw", phone: "+250 712 345 678" },
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" }
+                              ].map((person, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50/30 transition-colors">
+                                  <td className="w-10 pl-6 pr-2 py-5">
+                                    <div className="h-5 w-5 rounded-sm border border-slate-200 bg-white" />
+                                  </td>
+                                  <td className="py-5">
+                                    <div className="flex items-center gap-4">
+                                      <div className="h-10 w-10 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center">
+                                        <User className="h-5 w-5 text-slate-400 stroke-[1.2]" />
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-slate-900 leading-tight">{person.name}</span>
+                                        <span className="text-[12px] text-slate-400">{person.gender}</span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="py-5">
+                                    <span className="text-[13px] text-slate-500">{person.role}</span>
+                                  </td>
+                                  <td className="py-5 pr-6">
+                                    <div className="flex flex-col text-[13px] text-slate-500">
+                                      <span>{person.email.split('@')[0]}...</span>
+                                      <span>{person.phone.substring(0, 7)}...</span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+
+                      {activeTab === "About" && (
+                        <div className="grid grid-cols-1 gap-8">
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                               Institution Mission
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="To provide high-quality technical education and vocational training that meets domestic and international standards, empowering students with the skills needed for the global workforce." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[100px] resize-none no-scrollbar" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                                Institution Vision
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="To be a center of excellence in technical innovation and vocational training, recognized for producing highly skilled professionals who drive economic growth and sustainability." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[100px] resize-none no-scrollbar" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                            
+                             Key Objectives
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="1. Maintain 95% student placement rate within 6 months of graduation.&#10;2. Establish 5+ international industry partnerships annually.&#10;3. Continuously upgrade laboratory and workshop facilities to match current industry technologies." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[120px] resize-none no-scrollbar" />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {activeInternalStep === 1 && (
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                      <Ungroup className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                    </div>
+                    <h2 className="text-xl  text-slate-900 mb-2">Trade & Module Selected</h2>
+                    <p className="text-sm text-slate-500 mb-8">Select the trade you are applying for accreditation in.</p>
+                    <div className="flex items-center w-full justify-start gap-4 mb-8">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                        <Ungroup className="h-4 w-4" />Masonry
+                        <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center"><ChevronDown className="h-3 w-3 text-white rotate-180" /></div>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-slate-300" />
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                        <Database className="h-4 w-4" />Data Structures & Algorithms
+                        <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white">✓</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-4 w-full mb-12">
+                      <button onClick={() => setActiveInternalStep(0)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Next</button>
+                    </div>
+                    <div className="w-full space-y-4">
+                      <h3 className="text-sm text-slate-800">Add Comment (Optional)</h3>
+                      <div className="space-y-1">
+                        <label className="text-[12px] text-slate-500">Comment Input</label>
+                        <div className="relative">
+                          <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none" />
+                          <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">275 characters left</div>
+                        </div>
+                      </div>
+                      <button className="flex items-center gap-2 px-6 py-3 bg-[#0A77FF] text-white rounded-sm text-sm  hover:opacity-90 transition-all cursor-pointer">Add Comment<span className="flex items-center justify-center w-4 h-4 border border-white/50 rounded-sm text-[10px] cursor-pointer">+</span></button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+
+                {activeInternalStep === 2 && (
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                      <Package className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                    </div>
+                    <h2 className="text-xl text-slate-900 mb-2">Equipment & Facilities</h2>
+                    <p className="text-sm text-slate-500 mb-8 text-center px-4">Specify the competencies offered under the selected trade.</p>
+
+                    <div className="flex items-center justify-start w-full gap-4 mb-8">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                        <Ungroup className="h-4 w-4" />Masonry
+                        <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center ml-1">
+                          <Check className="h-2.5 w-2.5 text-white" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 w-full mb-10">
+                      <button onClick={() => setActiveInternalStep(1)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                    </div>
+
+                    <div className="w-full space-y-6">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm  text-slate-600">24 equipment</span>
+                        </div>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            placeholder="Search"
+                            className="w-full pl-10 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all"
+                          />
+                          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        {equipmentList.map((item) => (
+                          <div key={item.id} className="flex items-center gap-4 p-4 border border-slate-100 rounded-sm hover:border-slate-200 transition-all bg-white group">
+                            <div className="h-16 w-24 bg-slate-100 rounded-sm overflow-hidden shrink-0 flex items-center justify-center">
+                              {/* Using a placeholder for the equipment image */}
+                              <div className="flex flex-col items-center gap-1 opacity-20 group-hover:opacity-40 transition-opacity">
+                                <Database className="h-6 w-6" />
+                                <span className="text-[8px]  font-bold">Image</span>
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="text-sm  text-slate-900">{item.name}</h4>
+                              <p className="text-xs text-slate-500">Quantity: {item.quantity}</p>
+                            </div>
+                            <button className="h-8 w-8 rounded-sm hover:bg-slate-50 flex items-end justify-center text-slate-400 transition-colors cursor-pointer self-end">
+                              <Eye className="h-4 w-4" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeInternalStep === 3 && (
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                      <FileText className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                    </div>
+                    <h2 className="text-xl text-slate-900 mb-2">Curriculum Documents</h2>
+                    <p className="text-sm text-slate-500 mb-8 text-center px-4">Upload curriculum and training materials.</p>
+
+                    <div className="flex items-center gap-4 w-full mb-10">
+                      <button onClick={() => setActiveInternalStep(2)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                    </div>
+
+                    <div className="w-full border border-slate-100 rounded-sm overflow-hidden bg-white ">
+                      <div className="p-6 border-b border-slate-100 flex items-center justify-between">
+                        <div>
+                          <h3 className="text-sm  text-slate-900">Curriculum Documents</h3>
+                          <p className="text-[11px] text-slate-400">Files and assets that have been attached to this project.</p>
+                        </div>
+                        <button className="h-8 w-8 rounded-sm hover:bg-slate-50 flex items-center justify-center text-slate-400 transition-colors cursor-pointer">
+                          <MoreVertical className="h-4 w-4" />
+                        </button>
+                      </div>
+
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50/50 border-b border-slate-100">
+                            <th className="w-10 p-4 text-center">
+                              <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                            </th>
+                            <th className="px-3 py-3 text-left text-[12px] font-normal  text-slate-400 ">File name</th>
+                            <th className="px-3 py-3 text-left text-[12px] font-normal text-slate-400  w-[120px]">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {documentList.map((doc) => (
+                            <tr key={doc.id} className="hover:bg-slate-50/30 transition-colors group">
+                              <td className="w-10 p-4 text-center">
+                                <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                              </td>
+                              <td className="px-3 py-3">
+                                <div className="flex items-center gap-3">
+                                  <div className="relative h-12 w-10 shrink-0">
+                                    <svg viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                      <path d="M0 4C0 1.79086 1.79086 0 4 0H22L32 10V36C32 38.2091 30.2091 40 28 40H4C1.79086 40 0 38.2091 0 36V4Z" fill="#E1412E"></path>
+                                      <path d="M22 0L32 10H26C23.7909 10 22 8.20914 22 6V0Z" fill="white" fillOpacity="0.3"></path>
+                                      <text x="16" y="30" fill="white" fontSize="7" fontWeight="900" textAnchor="middle" className="select-none" style={{ fontFamily: "Inter, sans-serif" }}>PDF</text>
+                                    </svg>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm  text-slate-900 line-clamp-1">{doc.name}</span>
+                                    <span className="text-[11px] text-slate-400">{doc.size}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-3 py-3">
+                                <div className="flex items-center gap-3">
+                                  <button className="text-[12px]  text-slate-600 hover:text-slate-900 transition-colors">Download</button>
+                                  <button className="text-[12px]  text-[#0A77FF] hover:opacity-80 transition-opacity">Open</button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeInternalStep === 4 && (
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                      <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                    </div>
+                    <h2 className="text-xl text-slate-900 mb-2">Staff Allocation</h2>
+                    <p className="text-sm text-slate-500 mb-8 text-center px-4">Indicate staff availability for the selected trade.</p>
+
+                    <div className="flex items-center gap-4 w-full mb-10">
+                      <button onClick={() => setActiveInternalStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">
+                        {activeMajorStep === 3 ? "Proceed to  Decision" : "Continue"}
+                      </button>
+                    </div>
+
+                    <div className="w-full border border-slate-100 rounded-sm overflow-hidden bg-white">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50/50 border-b border-slate-100">
+                            <th className="w-10 p-4 text-center">
+                              <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                            </th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal  text-slate-400 ">Position & Qualification</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal  text-slate-400 ">Count</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal text-slate-400 ">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {staffAllocationList.map((item) => (
+                            <tr key={item.id} className="hover:bg-slate-50/30 transition-colors group">
+                              <td className="w-10 p-4 text-center">
+                                <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                              </td>
+                              <td className="px-3 py-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                                    <Users className="h-4 w-4 text-slate-500" />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm  text-slate-900">{item.position}</span>
+                                    <span className="text-[11px] text-slate-400">{item.qualification}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-3 py-4 text-sm text-slate-600">{item.count}</td>
+                              <td className="px-3 py-4">
+                                {item.status === "Approved" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-green-100  text-[10px] text-green-600">
+                                    Approved
+                                    <Check className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                                {item.status === "Pending" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-blue-100  text-[10px] text-blue-600">
+                                    Pending
+                                    <Clock className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                                {item.status === "Rejected" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-red-100  text-[10px] text-red-600">
+                                    Rejected
+                                    <AlertTriangle className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                  </>
+                )}
+
+                {activeMajorStep === 1 && (
+                  <div className="w-full py-8 px-0 flex flex-col items-start">
+                    <div className="w-full flex gap-12 text-left">
+                      {/* Left Column: Institution Location */}
+                      <div className="flex-1 max-w-lg">
+                        <div className="mb-6">
+                          <h2 className="text-md font-medium text-slate-900">Institution Location</h2>
+                          <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5 ">
+                              <label className="text-[13px] text-slate-700">Province</label>
+                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">District</label>
+                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Sector</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Cell</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Village</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">City</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[13px] text-slate-700">Address Line</label>
+                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Date Selection and Evaluator Assignment */}
+                      <div className="flex-1 flex flex-col gap-8 max-w-sm">
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Date Selection</label>
+                          <DateRangePicker 
+                            value={dateRange} 
+                            onChange={setDateRange}
+                            className="w-full"
+                          />
+                        </div>
+
+                        <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                            <UserPlus className="h-5 w-5 text-slate-400" />
+                          </div>
+                          <div className="text-left">
+                            <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
+                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-auto pt-4">
+                          <button 
+                            onClick={() => setActiveMajorStep(0)}
+                            className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button 
+                            onClick={() => setActiveMajorStep(2)}
+                            className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                          >
+                            Schedule Due Diligence
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeMajorStep === 2 && (
+                  <div className="w-full py-8 px-0 flex flex-col items-start">
+                    <div className="w-full flex gap-12 text-left">
+                      {/* Left Column: Date, Hour, Evaluator, Notes */}
+                      <div className="w-[450px] shrink-0 flex flex-col gap-8">
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Date Selection</label>
+                          <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
+                        </div>
+
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Visit Hour</label>
+                          <div className="relative">
+                            <input defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" />
+                          </div>
+                        </div>
+
+                        <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
+                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                            <UserPlus className="h-5 w-5 text-slate-400" />
+                          </div>
+                          <div className="text-left">
+                            <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
+                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium text-slate-700">Addition Evaluation Note?</h4>
+                          <div className="relative">
+                            <textarea
+                              placeholder="Text..."
+                              value={evaluationNote}
+                              onChange={(e) => setEvaluationNote(e.target.value)}
+                              className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar"
+                            />
+                            <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">{275 - evaluationNote.length} characters left</div>
+                          </div>
+                          <button className="flex items-center gap-2 px-8 py-3 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-all cursor-pointer">
+                            Add Note
+                            <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Equipment Verification */}
+                      <div className="flex-1 flex flex-col gap-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-500">24 equipment</span>
+                        </div>
+                        <div className="relative max-w-xl">
+                          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                          <input placeholder="Search" className="w-full pl-11 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:border-[#0A77FF]" />
+                        </div>
+
+                        <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar max-h-[600px] max-w-xl">
+                          {dueDiligenceEquipment.map((item) => (
+                            <div key={item.id} className="border border-slate-100 rounded-sm p-4 bg-white flex items-center gap-4 group hover:border-slate-200 transition-colors">
+                              <div className="h-20 w-32 rounded-sm overflow-hidden bg-slate-100 shrink-0 relative">
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between mb-1">
+                                  <h4 className="text-sm  text-slate-900">{item.name}</h4>
+                                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-sm text-[10px] text-slate-500 transition-colors">
+                                    Found at Site
+                                    <div className={cn("h-4 w-4 rounded-sm border border-slate-200 flex items-center justify-center transition-all", item.found ? "bg-green-500 border-green-500" : "bg-white")}>
+                                      {item.found && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+                                    </div>
+                                  </div>
+                                </div>
+                                <p className="text-[11px] text-slate-400">Quantity: {item.quantity}</p>
+                                <div className="flex justify-end mt-2">
+                                  <button className="h-7 w-7 rounded-sm border border-slate-100 flex items-center justify-center hover:bg-slate-50 text-blue-500 transition-colors cursor-pointer">
+                                    <Eye className="h-3.5 w-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Footer Actions */}
+                    <div className="flex items-center gap-4 mt-12 w-full max-w-sm">
+                      <button 
+                        onClick={() => setActiveMajorStep(1)}
+                        className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Back
+                      </button>
+                      <button 
+                         onClick={() => {
+                           setActiveMajorStep(3);
+                           setActiveInternalStep(0);
+                           setActiveTab("General");
+                           setIsEvaluating(false);
+                         }}
+                         className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                      >
+                        Complete Due Diligence
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {activeMajorStep === 4 && (
+                  <div className="max-w-xl mx-auto py-12 flex flex-col items-center text-center">
+                    <div className="h-16 w-16 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                      <CheckCircle2 className="h-8 w-8 text-[#0A77FF]" />
+                    </div>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-2">Final Decision</h2>
+                    <p className="text-sm text-slate-500 mb-10">Review the evaluation summary and provide a final decision for this accreditation application.</p>
+                    
+                    <div className="w-full bg-slate-50 rounded-sm p-6 mb-8 border border-slate-100">
+                      <h4 className="text-[13px] font-medium text-slate-700 mb-4 px-1 uppercase tracking-wider text-left">Evaluation Summary</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
+                          <span className="text-[13px] text-slate-500">Documents Status</span>
+                          <span className="text-[13px] font-medium text-green-600">All Verified</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
+                          <span className="text-[13px] text-slate-500">Site Visit Hour</span>
+                          <span className="text-[13px] font-medium text-slate-700">10:00 AM</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-[13px] text-slate-500">Equipment Verified</span>
+                          <span className="text-[13px] font-medium text-slate-700">22/24 Items</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="w-full space-y-4 mb-10 text-left">
+                      <label className="text-sm font-medium text-slate-700 px-1">Action Selection</label>
+                      <div className="grid grid-cols-1 gap-3">
+                        {['Approve Application', 'Request Revision', 'Reject Application'].map((option, idx) => (
+                          <label key={idx} className="flex items-center gap-3 p-4 border border-slate-200 rounded-sm hover:border-[#0A77FF] hover:bg-blue-50/30 transition-all cursor-pointer group">
+                            <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
+                            <span className="text-sm text-slate-700 group-hover:text-[#0A77FF] transition-colors">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="w-full space-y-4 mb-8 text-left">
+                      <label className="text-sm font-medium text-slate-700 px-1">Final Decision Comments</label>
+                      <div className="relative">
+                        <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[120px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 w-full mt-4">
+                      <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Back to Review</button>
+                      <button onClick={() => alert("Application Approved with Comment: ")} className="flex-[2] py-3 bg-green-600 text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer">Approve with Comment</button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
             </div>
           </div>
         </div>
