@@ -3,10 +3,10 @@
 import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import {
-  ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users,
+  ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users, User,
   FileText, HelpCircle, ChevronDown, Building2, Package, Mail, Phone, Database,
   Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File, AlertTriangle, Clock,
-  Calendar, UserPlus, PlusSquare
+  Calendar, UserPlus, PlusSquare, MapPin, Map, Globe, Flag, Navigation, Target, Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useRouter } from "next/navigation";
@@ -93,7 +93,7 @@ const ApplicationSidebar = ({
         <h2 className="text-sm text-slate-800 mb-9 mt-3">Application Details</h2>
         <button
           onClick={() => window.history.back()}
-          className="flex items-center gap-2 text-[12px] text-[var(--primary)] hover:opacity-80 transition-opacity"
+          className="flex items-center gap-2 text-[12px] text-[var(--primary)] hover:opacity-80 transition-opacity cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
           Exit
@@ -113,19 +113,19 @@ const ApplicationSidebar = ({
               key={idx}
               className={cn(
                 "flex gap-4 cursor-pointer group relative",
-                isActive || isCompleted ? "opacity-100" : "opacity-50 hover:opacity-100"
+                isActive || isCompleted ? "opacity-100" : "opacity-40 hover:opacity-100"
               )}
               onClick={() => onStepChange(idx)}
             >
               <div className={cn(
                 "h-9 w-9 rounded-sm border flex items-center justify-center shrink-0 relative z-10 transition-all",
-                isActive ? "border-[var(--primary)]" :
-                  isCompleted ? "border-green-500 text-green-500" : "border-slate-100 bg-[#f9fafb]"
+                isActive ? "border-[var(--primary)] bg-white " :
+                  isCompleted ? "border-green-500 text-green-500 bg-white" : "border-slate-100 bg-white"
               )}>
                 {isCompleted ? (
                   <step.icon strokeWidth={1} className="h-5 w-5 text-green-500" />
                 ) : (
-                  <step.icon strokeWidth={1} className={cn("h-5 w-5", isActive ? "text-[#353E49]" : "text-slate-400")} />
+                  <step.icon strokeWidth={1.2} className={cn("h-5 w-5", isActive ? "text-[#0A77FF]" : "text-slate-400")} />
                 )}
               </div>
               <div className="flex flex-col pt-0.5 justify-center">
@@ -157,10 +157,15 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
   const [activeTab, setActiveTab] = React.useState("General");
   const [isEvaluating, setIsEvaluating] = React.useState(false);
   const [activeMajorStep, setActiveMajorStep] = React.useState(0);
+  const [mounted, setMounted] = React.useState(false);
   const [dateRange, setDateRange] = React.useState<DateRange>({ 
     from: new Date(2024, 0, 6), 
     to: new Date(2024, 0, 13) 
   });
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const tabs = ["General", "Address", "Personnel", "About"];
 
@@ -180,21 +185,22 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
         }
       }
     } else if (activeInternalStep === 1) {
-      // Transition to Equipment and Facilities (Step 2)
       setCompletedSteps(prev => [...new Set([...prev, 1])]);
       setActiveInternalStep(2);
     } else if (activeInternalStep === 2) {
-      // Transition to Curriculum Documents (Step 3)
       setCompletedSteps(prev => [...new Set([...prev, 2])]);
       setActiveInternalStep(3);
     } else if (activeInternalStep === 3) {
-      // Transition to Staff Allocation (Step 4)
       setCompletedSteps(prev => [...new Set([...prev, 3])]);
       setActiveInternalStep(4);
     } else if (activeInternalStep === 4) {
-      // Complete Staff Allocation and move to Phase 2 (Major Step 1)
       setCompletedSteps(prev => [...new Set([...prev, 4])]);
-      setActiveMajorStep(1);
+      if (activeMajorStep === 0) {
+        setActiveMajorStep(1);
+        setActiveInternalStep(0); // Reset for transition if needed, though sidebar hidden
+      } else if (activeMajorStep === 3) {
+        setActiveMajorStep(4);
+      }
     }
   };
 
@@ -218,6 +224,13 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
     { id: 4, position: "Position", qualification: "Qualification", count: 2, status: "Approved" },
     { id: 5, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
   ];
+
+  const dueDiligenceEquipment = [
+    { id: 1, name: "Server", quantity: "2 Pieces", found: true, image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?w=100&h=80&fit=crop" },
+    { id: 2, name: "Server", quantity: "2 Pieces", found: true, image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc48?w=100&h=80&fit=crop" },
+  ];
+
+  const [evaluationNote, setEvaluationNote] = React.useState("");
 
   const application = mockApplications.find(app => app.id === id) || mockApplications[0];
 
@@ -243,7 +256,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
 
             <div className="flex flex-1 overflow-hidden">
               {/* Left Internal Nav */}
-              {activeMajorStep === 0 && (
+              {(activeMajorStep === 0 || activeMajorStep === 3) && (
                 <ApplicationSidebar
                   activeStep={activeInternalStep}
                   completedSteps={completedSteps}
@@ -252,13 +265,19 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
               )}
 
               {/* Form Content */}
-              <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar p-8", activeMajorStep === 0 && "flex flex-col items-center")}>
-                {activeMajorStep === 0 && (
+              <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar", (activeMajorStep === 0 || activeMajorStep === 3) && "flex flex-col items-center")}>
+                {!mounted ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A77FF]" />
+                  </div>
+                ) : (
                   <>
+                    {(activeMajorStep === 0 || activeMajorStep === 3) && (
+                      <>
                     {activeInternalStep === 0 && (
                   <>
                     {/* Top Action Buttons */}
-                    <div className="max-w-md mx-auto flex items-center gap-4 mb-12 w-full">
+                    <div className="max-w-md mx-auto flex items-center mt-8 gap-4 mb-12 w-full">
                       <button className="flex-1 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => {
                         if (isEvaluating) {
                           const currentIndex = tabs.indexOf(activeTab);
@@ -282,14 +301,17 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* Tabs */}
-                    <div className="flex justify-between max-w-md mb-5 overflow-x-auto mx-auto no-scrollbar w-full">
-                      {["General", "Address", "Personnel", "About"].map((tab) => (
+                    {/* Tabs */}
+                    <div className="flex justify-start mb-4 gap-10 w-full max-w-md">
+                      {tabs.map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setActiveTab(tab)}
                           className={cn(
-                            " py-3 text-start text-sm cursor-pointer  transition-all relative",
-                            activeTab === tab ? "text-[var(--primary)]" : "text-slate-400 hover:text-slate-600"
+                            "py-3 text-sm cursor-pointer transition-all relative",
+                            activeTab === tab 
+                              ? "text-[#0A77FF]" 
+                              : "text-slate-400 hover:text-slate-600"
                           )}
                         >
                           {tab}
@@ -363,38 +385,135 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       {activeTab === "Address" && (
                         <div className="grid grid-cols-1 gap-8">
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Province</label><input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">District</label><input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Province</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Western" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">District</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Map className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Sector</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Cell</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Sector</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Globe className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] text-slate-700">Cell</label>
+                              <div className="relative mt-2">
+                                <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <Flag className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                              </div>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Village</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">City</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                          <div className="space-y-2">
+                            <label className="text-[13px] text-slate-700">Village/City</label>
+                            <div className="relative mt-2">
+                              <input readOnly defaultValue="Mukamira Urban" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                              <MapPin className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
                           </div>
-                          <div className="space-y-2"><label className="text-[13px]  text-slate-700">Address Line</label><input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                          <div className="space-y-2">
+                            <label className="text-[13px] text-slate-700">Address Line</label>
+                            <div className="relative mt-2">
+                              <input readOnly defaultValue="Mukamira Road, Avenue 4, Plot 12" className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                              <Navigation className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            </div>
+                          </div>
                         </div>
                       )}
 
                       {activeTab === "Personnel" && (
                         <div className="border border-slate-100 rounded-sm overflow-hidden bg-white">
                           <table className="w-full text-left">
-                            <thead><tr className="border-b border-slate-100"><th className="w-10 pl-4 pr-2 py-4"><div className="h-4 w-4 rounded border border-slate-200" /></th><th className=" py-4 text-[11px] text-slate-400 ">Name</th><th className=" py-4 text-[11px] text-slate-400 ">Position</th><th className=" py-4 text-[11px] text-slate-400 ">Contact</th></tr></thead>
-                            <tbody className="divide-y divide-slate-50">{[{ name: "Natali Craig", role: "Deputy Director", email: "natali...", phone: "+250..." }].map((person, idx) => (<tr key={idx} className="hover:bg-slate-50/50 transition-colors"><td className="w-10 pl-4 pr-2 py-4"><div className="h-4 w-4 rounded border border-slate-200" /></td><td className=" py-4"><div className="flex items-center gap-3"><div className="h-9 w-9 rounded-full bg-slate-100 flex items-center justify-center"><Users className="h-4 w-4 text-slate-400" /></div><div><div className="text-sm text-slate-900">{person.name}</div></div></div></td><td className=" py-4 text-sm text-slate-600">{person.role}</td><td className=" py-4 text-[11px] text-slate-500">{person.email}<br />{person.phone}</td></tr>))}</tbody>
+                            <thead>
+                              <tr className="border-b border-slate-100">
+                                <th className="w-10 pl-6 pr-2 py-4">
+                                  <div className="h-5 w-5 rounded-sm border border-slate-200 bg-white" />
+                                </th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500">Name</th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500">Position</th>
+                                <th className="py-4 text-[13px] font-normal text-slate-500 pr-6">Position</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-slate-100">
+                              {[
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" },
+                                { name: "Drew Cano", gender: "Male", role: "Deputy Director", email: "drew.cano@itbz.rw", phone: "+250 712 345 678" },
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" },
+                                { name: "Drew Cano", gender: "Male", role: "Deputy Director", email: "drew.cano@itbz.rw", phone: "+250 712 345 678" },
+                                { name: "Natali Craig", gender: "Female", role: "Deputy Director", email: "natali.craig@itbz.rw", phone: "+250 788 123 456" }
+                              ].map((person, idx) => (
+                                <tr key={idx} className="hover:bg-slate-50/30 transition-colors">
+                                  <td className="w-10 pl-6 pr-2 py-5">
+                                    <div className="h-5 w-5 rounded-sm border border-slate-200 bg-white" />
+                                  </td>
+                                  <td className="py-5">
+                                    <div className="flex items-center gap-4">
+                                      <div className="h-10 w-10 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center">
+                                        <User className="h-5 w-5 text-slate-400 stroke-[1.2]" />
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-sm font-medium text-slate-900 leading-tight">{person.name}</span>
+                                        <span className="text-[12px] text-slate-400">{person.gender}</span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="py-5">
+                                    <span className="text-[13px] text-slate-500">{person.role}</span>
+                                  </td>
+                                  <td className="py-5 pr-6">
+                                    <div className="flex flex-col text-[13px] text-slate-500">
+                                      <span>{person.email.split('@')[0]}...</span>
+                                      <span>{person.phone.substring(0, 7)}...</span>
+                                    </div>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
                           </table>
                         </div>
                       )}
 
                       {activeTab === "About" && (
                         <div className="grid grid-cols-1 gap-8">
-                          {["Mission", "Vision", "Objects"].map((label) => (
-                            <div key={label} className="space-y-2">
-                              <label className="text-[13px]  text-slate-700">{label}</label>
-                              <textarea readOnly defaultValue="I'm a Product Designer based in Melbourne, Australia. I specialise in UX/UI design, brand strategy, and Webflow development." className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2 min-h-[120px] resize-none" />
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                               Institution Mission
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="To provide high-quality technical education and vocational training that meets domestic and international standards, empowering students with the skills needed for the global workforce." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[100px] resize-none no-scrollbar" />
+                              </div>
                             </div>
-                          ))}
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                                Institution Vision
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="To be a center of excellence in technical innovation and vocational training, recognized for producing highly skilled professionals who drive economic growth and sustainability." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[100px] resize-none no-scrollbar" />
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
+                            
+                             Key Objectives
+                              </label>
+                              <div className="relative">
+                                <textarea readOnly defaultValue="1. Maintain 95% student placement rate within 6 months of graduation.&#10;2. Establish 5+ international industry partnerships annually.&#10;3. Continuously upgrade laboratory and workshop facilities to match current industry technologies." className="w-full px-4 py-4 rounded-sm border border-slate-200 text-sm text-slate-600 focus:outline-none bg-white cursor-default leading-relaxed min-h-[120px] resize-none no-scrollbar" />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -432,7 +551,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">275 characters left</div>
                         </div>
                       </div>
-                      <button className="flex items-center gap-2 px-6 py-3.5 bg-[#0A77FF] text-white rounded-sm text-sm  hover:opacity-90 transition-all ">Add Comment<span className="flex items-center justify-center w-4 h-4 border border-white/50 rounded-sm text-[10px]">+</span></button>
+                      <button className="flex items-center gap-2 px-6 py-3 bg-[#0A77FF] text-white rounded-sm text-sm  hover:opacity-90 transition-all cursor-pointer">Add Comment<span className="flex items-center justify-center w-4 h-4 border border-white/50 rounded-sm text-[10px] cursor-pointer">+</span></button>
                     </div>
                   </div>
                 )}
@@ -525,16 +644,19 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       <table className="w-full border-collapse">
                         <thead>
                           <tr className="bg-slate-50/50 border-b border-slate-100">
-                            <th className="px-3 py-3 text-left text-[12px]  text-slate-400 ">File name</th>
-                            <th className="px-3 py-3 text-left text-[12px]  text-slate-400  w-[120px]">Action</th>
-                            <th className="w-10 p-4 text-right">
-                              <div className="h-4 w-4 border border-slate-200 rounded-[3px] ml-auto" />
+                            <th className="w-10 p-4 text-center">
+                              <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
                             </th>
+                            <th className="px-3 py-3 text-left text-[12px] font-normal  text-slate-400 ">File name</th>
+                            <th className="px-3 py-3 text-left text-[12px] font-normal text-slate-400  w-[120px]">Action</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
                           {documentList.map((doc) => (
                             <tr key={doc.id} className="hover:bg-slate-50/30 transition-colors group">
+                              <td className="w-10 p-4 text-center">
+                                <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                              </td>
                               <td className="px-3 py-3">
                                 <div className="flex items-center gap-3">
                                   <div className="relative h-12 w-10 shrink-0">
@@ -556,9 +678,6 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                                   <button className="text-[12px]  text-[#0A77FF] hover:opacity-80 transition-opacity">Open</button>
                                 </div>
                               </td>
-                              <td className="w-10 p-4 text-right">
-                                <div className="h-4 w-4 border border-slate-200 rounded-[3px] ml-auto" />
-                              </td>
                             </tr>
                           ))}
                         </tbody>
@@ -577,7 +696,9 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
 
                     <div className="flex items-center gap-4 w-full mb-10">
                       <button onClick={() => setActiveInternalStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
-                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">
+                        {activeMajorStep === 3 ? "Proceed to  Decision" : "Continue"}
+                      </button>
                     </div>
 
                     <div className="w-full border border-slate-100 rounded-sm overflow-hidden bg-white">
@@ -587,9 +708,9 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                             <th className="w-10 p-4 text-center">
                               <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
                             </th>
-                            <th className="px-3 py-4 text-left text-[11px] font-[normal]  text-slate-400 ">Position & Qualification</th>
-                            <th className="px-3 py-4 text-left text-[11px] font-[normal]  text-slate-400 ">Count</th>
-                            <th className="px-3 py-4 text-left text-[11px] font-[normal] text-slate-400 ">Status</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal  text-slate-400 ">Position & Qualification</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal  text-slate-400 ">Count</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-normal text-slate-400 ">Status</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -641,12 +762,12 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                 )}
 
                 {activeMajorStep === 1 && (
-                  <div className="w-full ml-0 py-8 px-0 flex flex-col items-start">
+                  <div className="w-full py-8 px-0 flex flex-col items-start">
                     <div className="w-full flex gap-12 text-left">
                       {/* Left Column: Institution Location */}
                       <div className="flex-1 max-w-lg">
                         <div className="mb-6">
-                          <h2 className="text-lg font-medium text-slate-900">Institution Location</h2>
+                          <h2 className="text-md font-medium text-slate-900">Institution Location</h2>
                           <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
                         </div>
 
@@ -689,22 +810,68 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       </div>
 
                       {/* Right Column: Date Selection and Evaluator Assignment */}
-                      <div className="flex-1 flex flex-col gap-8">
+                      <div className="flex-1 flex flex-col gap-8 max-w-sm">
                         <div className="space-y-3">
                           <label className="text-sm font-medium text-slate-700">Date Selection</label>
                           <DateRangePicker 
                             value={dateRange} 
                             onChange={setDateRange}
-                            className="w-fit"
+                            className="w-full"
                           />
                         </div>
 
-                        <div className="border border-dashed border-slate-200 rounded-sm p-6 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                        <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
                           <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
                             <UserPlus className="h-5 w-5 text-slate-400" />
                           </div>
                           <div className="text-left">
-                            <h4 className="text-sm text-slate-900 ">Assign Evaluator</h4>
+                            <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
+                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-auto pt-4">
+                          <button 
+                            onClick={() => setActiveMajorStep(0)}
+                            className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button 
+                            onClick={() => setActiveMajorStep(2)}
+                            className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                          >
+                            Schedule Due Diligence
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeMajorStep === 2 && (
+                  <div className="w-full py-8 px-0 flex flex-col items-start">
+                    <div className="w-full flex gap-12 text-left">
+                      {/* Left Column: Date, Hour, Evaluator, Notes */}
+                      <div className="w-[450px] shrink-0 flex flex-col gap-8">
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Date Selection</label>
+                          <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
+                        </div>
+
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Visit Hour</label>
+                          <div className="relative">
+                            <input defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" />
+                          </div>
+                        </div>
+
+                        <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
+                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                            <UserPlus className="h-5 w-5 text-slate-400" />
+                          </div>
+                          <div className="text-left">
+                            <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
                             <p className="text-[11px] text-slate-400">Click to select evaluator</p>
                           </div>
                         </div>
@@ -714,36 +881,139 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           <div className="relative">
                             <textarea
                               placeholder="Text..."
-                              className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none"
+                              value={evaluationNote}
+                              onChange={(e) => setEvaluationNote(e.target.value)}
+                              className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar"
                             />
-                            <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">275 characters left</div>
+                            <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">{275 - evaluationNote.length} characters left</div>
                           </div>
-                          <button className="flex items-center gap-2 px-6 py-3 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-all ">
+                          <button className="flex items-center gap-2 px-8 py-3 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-all cursor-pointer">
                             Add Note
                             <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
                           </button>
                         </div>
+                      </div>
 
-                        <div className="flex items-center gap-4 mt-4 pt-4">
-                          <button 
-                            onClick={() => setActiveMajorStep(0)}
-                            className="flex-1 py-3.5 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-                          >
-                            Cancel
-                          </button>
-                          <button className="flex-1 py-3.5 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity ">
-                            Schedule Due Diligence
-                          </button>
+                      {/* Right Column: Equipment Verification */}
+                      <div className="flex-1 flex flex-col gap-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-slate-500">24 equipment</span>
+                        </div>
+                        <div className="relative max-w-xl">
+                          <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                          <input placeholder="Search" className="w-full pl-11 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:border-[#0A77FF]" />
+                        </div>
+
+                        <div className="flex flex-col gap-3 overflow-y-auto no-scrollbar max-h-[600px] max-w-xl">
+                          {dueDiligenceEquipment.map((item) => (
+                            <div key={item.id} className="border border-slate-100 rounded-sm p-4 bg-white flex items-center gap-4 group hover:border-slate-200 transition-colors">
+                              <div className="h-20 w-32 rounded-sm overflow-hidden bg-slate-100 shrink-0 relative">
+                                <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between mb-1">
+                                  <h4 className="text-sm  text-slate-900">{item.name}</h4>
+                                  <div className="flex items-center gap-1.5 px-2 py-1 rounded-sm text-[10px] text-slate-500 transition-colors">
+                                    Found at Site
+                                    <div className={cn("h-4 w-4 rounded-sm border border-slate-200 flex items-center justify-center transition-all", item.found ? "bg-green-500 border-green-500" : "bg-white")}>
+                                      {item.found && <Check className="h-3 w-3 text-white" strokeWidth={3} />}
+                                    </div>
+                                  </div>
+                                </div>
+                                <p className="text-[11px] text-slate-400">Quantity: {item.quantity}</p>
+                                <div className="flex justify-end mt-2">
+                                  <button className="h-7 w-7 rounded-sm border border-slate-100 flex items-center justify-center hover:bg-slate-50 text-blue-500 transition-colors cursor-pointer">
+                                    <Eye className="h-3.5 w-3.5" />
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     </div>
+
+                    {/* Footer Actions */}
+                    <div className="flex items-center gap-4 mt-12 w-full max-w-sm">
+                      <button 
+                        onClick={() => setActiveMajorStep(1)}
+                        className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                      >
+                        Back
+                      </button>
+                      <button 
+                         onClick={() => {
+                           setActiveMajorStep(3);
+                           setActiveInternalStep(0);
+                           setActiveTab("General");
+                           setIsEvaluating(false);
+                         }}
+                         className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
+                      >
+                        Complete Due Diligence
+                      </button>
+                    </div>
                   </div>
                 )}
-              </div>
-            </div>
+
+                {activeMajorStep === 4 && (
+                  <div className="max-w-xl mx-auto py-12 flex flex-col items-center text-center">
+                    <div className="h-16 w-16 rounded-full bg-blue-50 flex items-center justify-center mb-6">
+                      <CheckCircle2 className="h-8 w-8 text-[#0A77FF]" />
+                    </div>
+                    <h2 className="text-xl font-semibold text-slate-900 mb-2">Final Decision</h2>
+                    <p className="text-sm text-slate-500 mb-10">Review the evaluation summary and provide a final decision for this accreditation application.</p>
+                    
+                    <div className="w-full bg-slate-50 rounded-sm p-6 mb-8 border border-slate-100">
+                      <h4 className="text-[13px] font-medium text-slate-700 mb-4 px-1 uppercase tracking-wider text-left">Evaluation Summary</h4>
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
+                          <span className="text-[13px] text-slate-500">Documents Status</span>
+                          <span className="text-[13px] font-medium text-green-600">All Verified</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
+                          <span className="text-[13px] text-slate-500">Site Visit Hour</span>
+                          <span className="text-[13px] font-medium text-slate-700">10:00 AM</span>
+                        </div>
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-[13px] text-slate-500">Equipment Verified</span>
+                          <span className="text-[13px] font-medium text-slate-700">22/24 Items</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="w-full space-y-4 mb-10 text-left">
+                      <label className="text-sm font-medium text-slate-700 px-1">Action Selection</label>
+                      <div className="grid grid-cols-1 gap-3">
+                        {['Approve Application', 'Request Revision', 'Reject Application'].map((option, idx) => (
+                          <label key={idx} className="flex items-center gap-3 p-4 border border-slate-200 rounded-sm hover:border-[#0A77FF] hover:bg-blue-50/30 transition-all cursor-pointer group">
+                            <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
+                            <span className="text-sm text-slate-700 group-hover:text-[#0A77FF] transition-colors">{option}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="w-full space-y-4 mb-8 text-left">
+                      <label className="text-sm font-medium text-slate-700 px-1">Final Decision Comments</label>
+                      <div className="relative">
+                        <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[120px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-4 w-full mt-4">
+                      <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Back to Review</button>
+                      <button onClick={() => alert("Application Approved with Comment: ")} className="flex-[2] py-3 bg-green-600 text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer">Approve with Comment</button>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>
-    </PageContainer>
+    </div>
+  </div>
+</PageContainer>
   );
 }

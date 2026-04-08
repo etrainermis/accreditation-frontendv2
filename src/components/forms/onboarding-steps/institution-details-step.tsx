@@ -104,7 +104,7 @@ export function InstitutionDetailsStep({
             {certOptions.map(opt => {
               const uploaded = !!files[opt.id];
               return (
-                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-2.5 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
+                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-3 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
                   <div className="flex items-center gap-3">
                     {uploaded ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />

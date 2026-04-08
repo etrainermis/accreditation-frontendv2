@@ -140,7 +140,7 @@ export function DateRangePicker({
               <button 
                 type="button"
                 onClick={() => setLeftMonth(new Date(year, month - 1, 1))}
-                className="p-1 hover:bg-slate-100 rounded-md"
+                className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
               >
                 <ChevronLeft className="h-4 w-4 text-slate-500" />
               </button>
@@ -154,7 +154,7 @@ export function DateRangePicker({
               <button 
                 type="button"
                 onClick={() => setLeftMonth(new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1))}
-                className="p-1 hover:bg-slate-100 rounded-md"
+                className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
               >
                 <ChevronRight className="h-4 w-4 text-slate-500" />
               </button>
@@ -188,7 +188,7 @@ export function DateRangePicker({
                 onMouseEnter={() => range.from && !range.to && setHoverDate(date)}
                 onClick={() => handleDateClick(date)}
                 className={cn(
-                  "h-9 w-9 text-xs flex items-center justify-center transition-all relative group",
+                  "h-9 w-9 text-xs flex items-center justify-center transition-all relative group cursor-pointer",
                   (isFrom || isTo || isHover) && "z-10",
                   isFrom && "bg-[var(--primary)] text-white rounded-full font-bold",
                   isTo && "bg-[var(--primary)] text-white rounded-full font-bold",
@@ -219,7 +219,7 @@ export function DateRangePicker({
       <button 
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-2 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
+        className="flex items-center gap-2 mt-2 cursor-pointer px-3 py-3 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
       >
         <Calendar className="h-4 w-4 text-[#344054]" strokeWidth={1.5} />
         <span className="text-sm font-medium text-[#344054]">
@@ -245,7 +245,7 @@ export function DateRangePicker({
                     const val = p.getValue();
                     setRange(val);
                   }}
-                  className="w-full text-left px-4 py-2 text-[13px] text-slate-600 hover:bg-slate-50 rounded-lg transition-colors"
+                  className="w-full text-left px-4 py-3 text-[13px] text-slate-600 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
                 >
                   {p.label}
                 </button>
@@ -261,11 +261,11 @@ export function DateRangePicker({
               {/* Footer */}
               <div className="mt-auto border-t border-slate-100 p-4 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2">
-                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                  <div className="px-3 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
                     {range.from ? formatDate(range.from) : "Start date"}
                   </div>
                   <span className="text-slate-400">–</span>
-                  <div className="px-3 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
+                  <div className="px-3 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 min-w-[120px]">
                     {range.to ? formatDate(range.to) : "End date"}
                   </div>
                 </div>
@@ -274,14 +274,14 @@ export function DateRangePicker({
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
-                    className="px-6 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors"
+                    className="px-6 py-3 text-sm font-medium text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="button"
                     onClick={handleApply}
-                    className="px-8 py-2 text-sm font-medium text-white bg-[var(--primary)] rounded-sm hover:opacity-90 transition-opacity"
+                    className="px-8 py-3 text-sm font-medium text-white bg-[var(--primary)] rounded-sm hover:opacity-90 transition-opacity cursor-pointer"
                   >
                     Apply
                   </button>

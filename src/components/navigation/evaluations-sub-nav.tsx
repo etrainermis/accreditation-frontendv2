@@ -48,7 +48,7 @@ export function EvaluationsSubNav({ children }: { children?: React.ReactNode }) 
               key={item.href}
               href={item.href as never}
               className={cn(
-                "flex items-center gap-2 px-4 py-2.5 rounded-sm transition-all duration-200 whitespace-nowrap",
+                "flex items-center gap-2 px-4 py-3 rounded-sm transition-all duration-200 whitespace-nowrap",
                 isActive
                   ? "text-[var(--primary)] bg-[#F9FAFB]"
                   : "text-[#353E49]"
