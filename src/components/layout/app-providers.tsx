@@ -5,6 +5,7 @@ import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { useState } from "react";
 import { PageHeaderProvider } from "@/lib/context/page-header-context";
+import { LayoutGroup } from "framer-motion";
 
 // Suppress the React 19 warning for next-themes script tag in development
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
@@ -34,7 +35,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
       <TooltipProvider>
         <PageHeaderProvider>
-          <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+          <QueryClientProvider client={queryClient}>
+            <LayoutGroup>
+              {children}
+            </LayoutGroup>
+          </QueryClientProvider>
         </PageHeaderProvider>
       </TooltipProvider>
     </ThemeProvider>

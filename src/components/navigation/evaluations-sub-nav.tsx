@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
 import {
   NotepadText,
@@ -62,23 +63,30 @@ export function EvaluationsSubNav({ role = "super-admin", children }: Evaluation
               key={item.href}
               href={item.href as never}
               className={cn(
-                "flex items-center gap-2 px-4 py-3 rounded-sm transition-all w-full duration-200 whitespace-nowrap",
+                "relative group flex items-center justify-center gap-2 px-4 py-3 rounded-sm transition-colors w-full duration-200 whitespace-nowrap",
                 isActive
-                  ? "text-[var(--primary)] bg-[#F9FAFB]"
-                  : "text-[#353E49]"
+                  ? "text-[var(--primary)]"
+                  : "text-[#353E49] hover:bg-slate-50 hover:text-[var(--primary)]"
               )}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="subnav-active-pill"
+                  className="absolute inset-0 bg-[#F9FAFB] rounded-sm z-0"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                />
+              )}
               <Icon
                 className={cn(
-                  "h-4 w-4",
-                  isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+                  "relative z-10 h-4 w-4 transition-colors duration-200",
+                  isActive ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]"
                 )}
                 strokeWidth={1}
               />
               <span
                 className={cn(
-                  "text-sm font-medium",
-                  isActive ? "text-[var(--primary)]" : "text-[#353E49]"
+                  "relative z-10 text-sm font-medium transition-colors duration-200",
+                  isActive ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]"
                 )}
               >
                 {item.title}

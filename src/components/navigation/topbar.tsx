@@ -134,11 +134,15 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             </>
           ) : (
             <>
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-[240px]" />
-                <Skeleton className="h-3 w-[320px]" />
+              <div className="flex w-full justify-between items-center gap-10">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-[240px]" />
+                  <Skeleton className="h-3 w-[320px]" />
+                </div>
+                {(role === "super-admin" || role === "evaluator") && (
+                  <Skeleton className="h-9 w-[180px] rounded-sm" />
+                )}
               </div>
-              <Skeleton className="h-9 w-[160px]" />
             </>
           )}
         </div>
