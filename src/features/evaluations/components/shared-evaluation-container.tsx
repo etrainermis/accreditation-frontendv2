@@ -34,14 +34,14 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
           <div key={idx} className="flex flex-col items-start text-start relative flex-1">
             {/* Connector Line Segments */}
             {idx > 0 && (
-              <div 
+              <div
                 className={cn(
                   "absolute top-[12px] left-[-100%] right-[calc(100%-12px)] ml-[12px] h-[1px] z-0",
                   idx <= currentStep ? "bg-[var(--primary)] h-[1.5px]" : "bg-slate-100"
-                )} 
+                )}
               />
             )}
-            
+
             <div className={cn(
               "h-6 w-6 rounded-full border flex items-center justify-center mb-3 transition-all duration-300 shrink-0 relative z-10",
               isActive ? "border-[var(--primary)] bg-[var(--primary)] shadow-[0_0_0_4px_rgba(9,119,255,0.15)]" :
@@ -161,9 +161,9 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const [isEvaluating, setIsEvaluating] = React.useState(false);
   const [activeMajorStep, setActiveMajorStep] = React.useState(0);
   const [mounted, setMounted] = React.useState(false);
-  const [dateRange, setDateRange] = React.useState<DateRange>({ 
-    from: new Date(2024, 0, 6), 
-    to: new Date(2024, 0, 13) 
+  const [dateRange, setDateRange] = React.useState<DateRange>({
+    from: new Date(2024, 0, 6),
+    to: new Date(2024, 0, 13)
   });
   const [evaluationNote, setEvaluationNote] = React.useState("");
 
@@ -216,7 +216,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
     { id: 3, name: "Evaluation Criteria One", size: "200 KB" },
     { id: 4, name: "Evaluation Criteria One", size: "200 KB" },
   ];
-  
+
   const staffAllocationList = [
     { id: 1, position: "Position", qualification: "Qualification", count: 2, status: "Rejected" },
     { id: 2, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
@@ -294,8 +294,8 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           onClick={() => setActiveTab(tab)}
                           className={cn(
                             "py-3 text-sm cursor-pointer transition-all relative",
-                            activeTab === tab 
-                              ? "text-[#0A77FF]" 
+                            activeTab === tab
+                              ? "text-[#0A77FF]"
                               : "text-slate-400 hover:text-slate-600"
                           )}
                         >
@@ -491,7 +491,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                             </div>
                             <div className="space-y-2">
                               <label className="text-[13px] font-medium text-slate-700 flex items-center gap-2">
-                            
+
                              Key Objectives
                               </label>
                               <div className="relative">
@@ -798,8 +798,8 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                       <div className="flex-1 flex flex-col gap-8 max-w-sm">
                         <div className="space-y-3">
                           <label className="text-sm font-medium text-slate-700">Date Selection</label>
-                          <DateRangePicker 
-                            value={dateRange} 
+                          <DateRangePicker
+                            value={dateRange}
                             onChange={setDateRange}
                             className="w-full"
                           />
@@ -816,13 +816,13 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                         </div>
 
                         <div className="flex items-center gap-4 mt-auto pt-4">
-                          <button 
+                          <button
                             onClick={() => setActiveMajorStep(0)}
                             className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                           >
                             Cancel
                           </button>
-                          <button 
+                          <button
                             onClick={() => setActiveMajorStep(2)}
                             className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer"
                           >
@@ -920,13 +920,13 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
 
                     {/* Footer Actions */}
                     <div className="flex items-center gap-4 mt-12 w-full max-w-sm">
-                      <button 
+                      <button
                         onClick={() => setActiveMajorStep(1)}
                         className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                       >
                         Back
                       </button>
-                      <button 
+                      <button
                          onClick={() => {
                            setActiveMajorStep(3);
                            setActiveInternalStep(0);
@@ -1016,7 +1016,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                              </div>
                            </div>
                          </div>
-                         
+
                          <div className="grid grid-cols-2 gap-4 mt-2">
                             <div className="flex items-center gap-3">
                                <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
