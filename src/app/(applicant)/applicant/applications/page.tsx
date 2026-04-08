@@ -24,6 +24,7 @@ import {
   CheckCircle2,
   ChevronUp
 } from "lucide-react";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 const stepsList = [
   {
@@ -229,10 +230,7 @@ export default function ApplicantApplicationsPage() {
             Create and manage your accreditation applications for the selected trades.
           </p>
         </div>
-        <button className="flex h-[38px] items-center justify-center gap-1.5 rounded-lg bg-[#0A77FF] px-4 text-[13px] font-medium text-white transition-colors hover:bg-blue-600">
-          New Application
-          <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
-        </button>
+        <PrimaryButton label="New Application" iconPosition="right" />
       </div>
 
       <div className="mb-4 h-[1px] w-full shrink-0 bg-slate-100" />
@@ -338,16 +336,14 @@ export default function ApplicantApplicationsPage() {
 
                   {/* Footer Actions */}
                   <div className="flex w-full gap-3">
-                    <button className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
-                      Back
-                    </button>
-                    <button
-                      onClick={handleTradeContinue}
-                      disabled={!selectedTrade}
-                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedTrade ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
-                    >
-                      Continue
-                    </button>
+                    <PrimaryButton label="Back" variant="outline" className="flex-1" hideIcon />
+                    <PrimaryButton 
+                      label="Continue" 
+                      onClick={handleTradeContinue} 
+                      disabled={!selectedTrade} 
+                      className="flex-1" 
+                      hideIcon 
+                    />
                   </div>
                 </div>
               </>
@@ -421,16 +417,14 @@ export default function ApplicantApplicationsPage() {
 
                   {/* Footer Actions */}
                   <div className="flex w-full gap-3">
-                    <button onClick={handleCompetencyBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
-                      Back
-                    </button>
-                    <button
-                      onClick={handleCompetencyContinue}
-                      disabled={!selectedCompetency}
-                      className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedCompetency ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
-                    >
-                      Continue
-                    </button>
+                    <PrimaryButton label="Back" onClick={handleCompetencyBack} variant="outline" className="flex-1" hideIcon />
+                    <PrimaryButton 
+                      label="Continue" 
+                      onClick={handleCompetencyContinue} 
+                      disabled={!selectedCompetency} 
+                      className="flex-1" 
+                      hideIcon 
+                    />
                   </div>
                 </div>
               </>
@@ -534,24 +528,22 @@ export default function ApplicantApplicationsPage() {
                     </div>
                   </div>
 
-                  <button
+                  <PrimaryButton
+                    label="Add Equipment"
+                    icon={FolderPlus}
+                    iconPosition="right"
                     onClick={handleAddEquipment}
-                    className="mb-8 flex items-center justify-center gap-2 rounded-lg bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blue-600"
-                  >
-                    Add Equipment
-                    <FolderPlus className="h-4 w-4" />
-                  </button>
+                    className="mb-8 w-fit"
+                  />
 
                   <div className="mb-8 flex w-full gap-3">
-                    <button onClick={handleEquipmentBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
-                      Back
-                    </button>
-                    <button
-                      onClick={handleEquipmentContinue}
-                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]"
-                    >
-                      Continue
-                    </button>
+                    <PrimaryButton label="Back" onClick={handleEquipmentBack} variant="outline" className="flex-1" hideIcon />
+                    <PrimaryButton 
+                      label="Continue" 
+                      onClick={handleEquipmentContinue} 
+                      className="flex-1" 
+                      hideIcon 
+                    />
                   </div>
 
                   {/* Uploaded Equipments */}
@@ -701,16 +693,14 @@ export default function ApplicantApplicationsPage() {
                 )}
 
                 <div className="flex w-full gap-3 mb-8">
-                  <button onClick={handleCurriculumBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">
-                    Back
-                  </button>
-                  <button
-                    onClick={handleCurriculumContinue}
-                    disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)}
-                    className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${(curriculumDocs.length > 0 && curriculumDocs.every(d => d.progress === 100)) ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}
-                  >
-                    Continue
-                  </button>
+                  <PrimaryButton label="Back" onClick={handleCurriculumBack} variant="outline" className="flex-1" hideIcon />
+                  <PrimaryButton 
+                    label="Continue" 
+                    onClick={handleCurriculumContinue} 
+                    disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)} 
+                    className="flex-1" 
+                    hideIcon 
+                  />
                 </div>
               </>
             )}
@@ -840,13 +830,13 @@ export default function ApplicantApplicationsPage() {
                     </div>
                   </div>
 
-                  <button
+                  <PrimaryButton
+                    label="Add Staff"
+                    icon={UserPlus}
+                    iconPosition="right"
                     onClick={handleAddStaff}
-                    className="mb-8 flex items-center justify-center gap-2 rounded-lg bg-[#0A77FF] px-5 py-2.5 text-[13px] font-medium text-white transition-colors hover:bg-blue-600 w-fit"
-                  >
-                    Add Staff
-                    <UserPlus className="h-4 w-4" />
-                  </button>
+                    className="mb-8 w-fit"
+                  />
 
                   {/* Render Staff Allocations */}
                   {allocations.length > 0 && (
@@ -869,15 +859,13 @@ export default function ApplicantApplicationsPage() {
                   )}
 
                   <div className="mb-8 flex w-full gap-3">
-                    <button onClick={() => setCurrentStep(4)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-white bg-white w-full shadow-[0_1px_2px_rgba(0,0,0,0.05)]">
-                      Back
-                    </button>
-                    <button
-                      onClick={() => setCurrentStep(6)}
-                      className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6] w-full"
-                    >
-                      Continue
-                    </button>
+                    <PrimaryButton label="Back" onClick={() => setCurrentStep(4)} variant="outline" className="flex-1 bg-white" hideIcon />
+                    <PrimaryButton 
+                      label="Continue" 
+                      onClick={() => setCurrentStep(6)} 
+                      className="flex-1" 
+                      hideIcon 
+                    />
                   </div>
                 </div>
               </>
@@ -897,12 +885,12 @@ export default function ApplicantApplicationsPage() {
                 </div>
 
                 <div className="mt-6 flex w-full gap-3 mb-8">
-                  <button onClick={() => setCurrentStep(5)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50 bg-white">
-                    Back
-                  </button>
-                  <button className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white transition-colors hover:bg-[#0864d6]">
-                    Submit Application
-                  </button>
+                  <PrimaryButton label="Back" onClick={() => setCurrentStep(5)} variant="outline" className="flex-1 bg-white" hideIcon />
+                  <PrimaryButton 
+                    label="Submit Application" 
+                    className="flex-1" 
+                    hideIcon 
+                  />
                 </div>
 
                 <div className="flex flex-col gap-3">
