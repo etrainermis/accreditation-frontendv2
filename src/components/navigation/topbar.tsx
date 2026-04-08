@@ -59,15 +59,6 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
         </div>
 
         <div className="flex items-center gap-3">
-          {/* Messages */}
-          <div className="relative">
-            <button type="button" className="rounded-sm cursor-pointer border border-[#EAECF0] p-2 text-[#667085] hover:bg-slate-50 transition-colors">
-              <MessageSquareMore className="h-4.5 w-4.5" />
-            </button>
-            <span className="absolute -top-2 -right-2 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#F04438] text-[10px] font-bold text-white border-2 border-white">
-              2
-            </span>
-          </div>
 
           {/* Notifications */}
           <button type="button" className="cursor-pointer p-2 text-[#667085] hover:text-slate-700 transition-colors">
@@ -131,20 +122,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                   <h1 className="text-[18px] font-semibold text-[#101828] leading-tight">{title}</h1>
                   {description && <p className="mt-1 text-[13px] text-[#64748B]">{description}</p>}
                 </div>
-
-                {role === "super-admin" ? (
-                  <button
-                    data-slot="button"
-                    data-variant="default"
-                    data-size="default"
-                    className="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 rounded-sm cursor-pointer px-4 py-3 text-sm font-medium"
-                  >
-                    Start New Evaluation
-                    <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
-                  </button>
-                ) : (
-                  action
-                )}
+                {action}
               </div>
             </>
           ) : (

@@ -67,22 +67,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
       </nav>
 
       <div className="mt-auto space-y-1 pt-4">
-        <button
-          type="button"
-          onClick={() => onCloseMobile?.()}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
-        >
-          <LifeBuoy className="text-[#667085]" strokeWidth={1.5} size={20} />
-          <span className="text-[#344054]">Support</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => onCloseMobile?.()}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
-        >
-          <Settings className="text-[#667085]" strokeWidth={1.5} size={20} />
-          <span className="text-[#344054]">Settings</span>
-        </button>
+
 
         <div className="sticky bottom-0 mt-4 bg-white border-t border-[#EAECF0] items-center gap-3 py-4 flex px-1">
           <div className="h-10 w-10 flex-shrink-0 rounded-full bg-slate-100 flex items-center justify-center">
@@ -94,8 +79,8 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
           </div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button
-                type="button"
+              <button 
+                type="button" 
                 className="text-[#475467] cursor-pointer hover:text-slate-900 transition-colors"
                 aria-label="Log out"
               >
@@ -108,6 +93,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
           </Tooltip>
         </div>
       </div>
+
     </div>
   );
 }
