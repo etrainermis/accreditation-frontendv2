@@ -18,8 +18,8 @@ interface DateRangePickerProps {
 
 const presets = [
   { label: "Today", getValue: () => ({ from: new Date(), to: new Date() }) },
-  { 
-    label: "Yesterday", 
+  {
+    label: "Yesterday",
     getValue: () => {
       const d = new Date();
       d.setDate(d.getDate() - 1);
@@ -55,9 +55,9 @@ const presets = [
     label: "Last month",
     getValue: () => {
       const now = new Date();
-      return { 
-        from: new Date(now.getFullYear(), now.getMonth() - 1, 1), 
-        to: new Date(now.getFullYear(), now.getMonth(), 0) 
+      return {
+        from: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+        to: new Date(now.getFullYear(), now.getMonth(), 0)
       };
     }
   },
@@ -72,9 +72,9 @@ const presets = [
     label: "Last year",
     getValue: () => {
       const now = new Date();
-      return { 
-        from: new Date(now.getFullYear() - 1, 0, 1), 
-        to: new Date(now.getFullYear() - 1, 11, 31) 
+      return {
+        from: new Date(now.getFullYear() - 1, 0, 1),
+        to: new Date(now.getFullYear() - 1, 11, 31)
       };
     }
   },
@@ -90,7 +90,7 @@ export function DateRangePicker({
   const [open, setOpen] = React.useState(false);
   const [leftMonth, setLeftMonth] = React.useState(new Date());
   const [hoverDate, setHoverDate] = React.useState<Date | null>(null);
-  
+
   const [range, setRange] = React.useState<DateRange>(
     value || { from: undefined, to: undefined }
   );
@@ -127,7 +127,7 @@ export function DateRangePicker({
     const month = monthDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
-    
+
     const days = [];
     for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) days.push(null); // Adjust for Mo-Su
     for (let i = 1; i <= daysInMonth; i++) days.push(new Date(year, month, i));
@@ -137,7 +137,7 @@ export function DateRangePicker({
         <div className="flex items-center justify-between mb-4 px-2">
           <div className="flex items-center gap-2">
             {showLeftNav && (
-              <button 
+              <button
                 type="button"
                 onClick={() => setLeftMonth(new Date(year, month - 1, 1))}
                 className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
@@ -151,7 +151,7 @@ export function DateRangePicker({
           </h4>
           <div className="flex items-center gap-2">
             {showRightNav && (
-              <button 
+              <button
                 type="button"
                 onClick={() => setLeftMonth(new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1))}
                 className="p-1 hover:bg-slate-100 rounded-md cursor-pointer"
@@ -171,11 +171,11 @@ export function DateRangePicker({
         <div className="grid grid-cols-7 gap-y-0.5">
           {days.map((date, i) => {
             if (!date) return <div key={i} className="h-9 w-9" />;
-            
+
             const isFrom = range.from && date.toDateString() === range.from.toDateString();
             const isTo = range.to && date.toDateString() === range.to.toDateString();
             const isHover = !range.to && hoverDate && date.toDateString() === hoverDate.toDateString();
-            
+
             const inRange = range.from && (range.to || hoverDate) && (
               (date > range.from && date < (range.to || (hoverDate as Date))) ||
               (date < range.from && date > (range.to || (hoverDate as Date)))
@@ -216,7 +216,7 @@ export function DateRangePicker({
 
   return (
     <div className={cn("relative", className)}>
-      <button 
+      <button
         type="button"
         onClick={() => setOpen(true)}
         className="flex items-center gap-2 mt-2 cursor-pointer px-3 py-3 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
@@ -229,11 +229,11 @@ export function DateRangePicker({
 
       {open && (
         <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-slate-900/80 ">
-          <div 
-            className="absolute inset-0" 
+          <div
+            className="absolute inset-0"
             onClick={() => setOpen(false)}
           />
-          
+
           <div className="relative flex bg-white rounded-sm  border border-slate-200 overflow-hidden max-w-[840px] animate-in fade-in zoom-in-95 duration-200">
             {/* Sidebar Presets */}
             <div className="w-[180px] border-r border-slate-100 p-2 flex flex-col gap-0.5">
@@ -269,7 +269,7 @@ export function DateRangePicker({
                     {range.to ? formatDate(range.to) : "End date"}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <button
                     type="button"

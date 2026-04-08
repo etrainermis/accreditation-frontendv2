@@ -25,12 +25,12 @@ export function InstitutionDetailsStep({
   setFormData,
 }: InstitutionDetailsStepProps) {
   const isOther = formData["Institution Category"] === "Other Institution";
-  const docTypes = isOther 
+  const docTypes = isOther
     ? ["MOU (Signed Memorandum)", "Registration Certificate"]
     : ["MOU (Signed Memorandum)"];
-  
+
   const [selectedDocType, setSelectedDocType] = useState("MOU (Signed Memorandum)");
-  
+
   const certOptions = [
     { id: 'mou', label: 'MOU (Signed Memorandum)' },
     ...(isOther ? [{ id: 'regCert', label: 'Registration Certificate' }] : []),

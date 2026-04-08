@@ -1,11 +1,14 @@
+"use client";
 import Link from "next/link";
 
 import {
   applicantOnboardingSteps,
   type ApplicantOnboardingStepKey,
 } from "@/lib/constants/applicant-onboarding";
+import { useState, useEffect } from "react";
 
 import { InstitutionDetailsStep } from "./onboarding-steps/institution-details-step";
+import { Building, MapPin, User, ClipboardList, Users, CheckCircle } from "lucide-react";
 import { AddressInformationStep } from "./onboarding-steps/address-information-step";
 import { LegalRepresentativesStep, type LegalRep } from "./onboarding-steps/legal-representatives-step";
 import { AboutInstitutionStep } from "./onboarding-steps/about-institution-step";
@@ -68,6 +71,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   const nextStep = getNextStep(step);
   const previousStep = getPreviousStep(step);
   const isLastStep = !nextStep;
+  const currentStepIndex = applicantOnboardingSteps.findIndex((item) => item.key === step);
   const StepIcon = stepIcons[currentStepIndex] || Building;
 
   const renderStep = () => {
