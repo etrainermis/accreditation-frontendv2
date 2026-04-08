@@ -2,6 +2,7 @@ import * as React from "react";
 import Link from "next/link";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
+import { Button } from "@/components/ui/button";
 
 interface PrimaryButtonProps {
   /** Label text shown inside the button */
@@ -14,8 +15,12 @@ interface PrimaryButtonProps {
   type?: "button" | "submit" | "reset";
   /** Set true to hide the leading + icon */
   hideIcon?: boolean;
+  /** Custom Icon component instead of default Plus */
+  icon?: React.ElementType;
   /** Position of the icon relative to the text */
   iconPosition?: "left" | "right";
+  disabled?: boolean;
+  variant?: "primary" | "outline";
 }
 
 export function PrimaryButton({
@@ -25,51 +30,45 @@ export function PrimaryButton({
   onClick,
   type = "button",
   hideIcon = false,
+  icon: customIcon,
   iconPosition = "left",
+  disabled = false,
+  variant = "primary"
 }: PrimaryButtonProps) {
-  const baseClasses = cn(
-    "inline-flex items-center justify-center gap-2.5 rounded-[8px] px-6 py-3",
-    "text-[14px] font-medium leading-none",
-    "transition-all duration-150 cursor-pointer select-none border-none",
-    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A77FF]/50",
-    "hover:opacity-90 active:scale-[0.98]",
-    className,
+  const Icon = customIcon || Plus;
+  const buttonVariant = variant === "primary" ? "default" : "outline";
+  
+  const inner = (
+    <span className={cn("inline-flex items-center", variant === "primary" && "text-white")}>
+      {!hideIcon && iconPosition === "left" && (
+        <Icon className={cn("h-4 w-4 text-white", label && "mr-2")} aria-hidden="true" />
+      )}
+      {label && <span className={cn(variant === "primary" && "text-white font-medium")}>{label}</span>}
+      {!hideIcon && iconPosition === "right" && (
+        <Icon className={cn("h-4 w-4 text-white", label && "ml-2")} aria-hidden="true" />
+      )}
+    </span>
   );
 
-  const style: React.CSSProperties = {
-    backgroundColor: "#0A77FF",
-    color: "#ffffff",
-    fontFamily: "'Nunito Sans', sans-serif",
-    fontWeight: 500,
-  };
-
-  const inner = (
-    <>
-      {!hideIcon && iconPosition === "left" && (
-        <Plus
-          style={{ width: "18px", height: "18px", strokeWidth: 2.25, flexShrink: 0, color: "#ffffff" }}
-        />
-      )}
-      <span style={{ color: "#ffffff", fontWeight: 500 }}>{label}</span>
-      {!hideIcon && iconPosition === "right" && (
-        <Plus
-          style={{ width: "18px", height: "18px", strokeWidth: 2.25, flexShrink: 0, color: "#ffffff" }}
-        />
-      )}
-    </>
+  const buttonClasses = cn(
+    "rounded-sm cursor-pointer",
+    variant === "primary" && "text-white !text-white bg-[#0A77FF]",
+    className
   );
 
   if (href) {
     return (
-      <Link href={href as never} className={baseClasses} style={style}>
-        {inner}
-      </Link>
+      <Button variant={buttonVariant} className={buttonClasses} disabled={disabled} style={variant === "primary" ? { color: "white" } : undefined} asChild>
+        <Link href={href as never} style={variant === "primary" ? { color: "white" } : undefined}>
+          {inner}
+        </Link>
+      </Button>
     );
   }
 
   return (
-    <button type={type} onClick={onClick} className={baseClasses} style={style}>
+    <Button variant={buttonVariant} type={type} onClick={onClick} className={buttonClasses} disabled={disabled} style={variant === "primary" ? { color: "white" } : undefined}>
       {inner}
-    </button>
+    </Button>
   );
 }
