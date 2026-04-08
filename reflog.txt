@@ -1,0 +1,20 @@
+9454e77 HEAD@{0}: commit (merge): Merge origin/dev
+2806738 HEAD@{1}: commit: fix(onboarding): update ReviewApplicationStep to handle separate MOU
+e0813dc HEAD@{2}: reset: moving to HEAD
+e0813dc HEAD@{3}: reset: moving to e0813dc
+9b61e60 HEAD@{4}: reset: moving to HEAD
+9b61e60 HEAD@{5}: pull origin dev: Fast-forward
+e0813dc HEAD@{6}: reset: moving to HEAD
+e0813dc HEAD@{7}: commit: style: fix tailwind css and sidebar layout
+6572647 HEAD@{8}: reset: moving to 6572647
+d46686d HEAD@{9}: merge dev: Fast-forward
+b035169 HEAD@{10}: checkout: moving from dev to emmanuel
+d46686d HEAD@{11}: revert: Revert "Merge pull request #10 from etrainermis/aaron"
+a3a4fe1 HEAD@{12}: reset: moving to origin/dev
+a3a4fe1 HEAD@{13}: checkout: moving from emmanuel to dev
+b035169 HEAD@{14}: reset: moving to b035169
+a3a4fe1 HEAD@{15}: pull origin dev: Fast-forward
+b035169 HEAD@{16}: reset: moving to HEAD@{1}
+a3a4fe1 HEAD@{17}: pull origin dev: Fast-forward
+b035169 HEAD@{18}: pull origin emmanuel --rebase (finish): returning to refs/heads/emmanuel
+b035169 HEAD@{19}: pull origin emmanuel --rebase (pick): feat: redesign certificate upload UI, fix type errors, and add Save as Draft button

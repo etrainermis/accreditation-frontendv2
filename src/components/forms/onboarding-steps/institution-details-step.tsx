@@ -37,12 +37,12 @@ export function InstitutionDetailsStep({
     return (
       <div className="flex flex-col space-y-6">
         <div className="space-y-1.5">
-          <label className="text-[13px] font-medium text-slate-700 block">Select Document Type</label>
           <FormSelect
+            label="Select Document Type"
             value={selectedDocType}
             onChange={(v) => setSelectedDocType(v)}
             options={docTypes.map(type => ({
-              label: type + (type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""),
+              label: `${type}${type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""}`,
               value: type
             }))}
           />
