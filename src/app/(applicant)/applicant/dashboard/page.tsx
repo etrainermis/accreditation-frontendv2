@@ -3,6 +3,8 @@
 import { FileText, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
 import { PageContainer } from "@/components/layout/page-container";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
+import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 const stats = [
   {
@@ -33,17 +35,22 @@ const stats = [
 
 export default function ApplicantDashboardPage() {
   return (
-    <PageContainer 
-      role="applicant" 
-      title="Welcome, John" 
-      description="View and manage your applications."
+    <PageContainer
+      role="applicant"
+      title="Welcome, John"
+      description="View & manage active elders and requests"
+      action={
+        <PrimaryButton
+          label="New Application"
+          href="/applicant/applications"
+          iconPosition="right"
+          className="rounded-[8px] h-10 px-5 text-white"
+        />
+      }
     >
       <div className="space-y-6">
         <StatsGrid items={stats} />
-        {/* Placeholder for local content if any was removed */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* You can add more local dashboard components here */}
-        </div>
+        <DashboardEmptyState />
       </div>
     </PageContainer>
   );

@@ -58,10 +58,15 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
         </div>
         
         <div className="flex items-center gap-3">
-          <button type="button" className="rounded-[5px] cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
-            <MessageSquareMore className="h-4 w-4" />
-          </button>
-          <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50">
+          <div className="relative">
+            <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50 transition-colors">
+              <MessageSquareMore className="h-4 w-4" />
+            </button>
+            <span className="absolute -top-1.5 -right-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-100 text-[10px] font-bold text-red-600 border border-white">
+              2
+            </span>
+          </div>
+          <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50 transition-colors">
             <Bell className="h-4 w-4" />
           </button>
           
@@ -72,7 +77,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             onMouseLeave={handleClose}
           >
             <div 
-              className="h-9 w-9 rounded-full bg-[var(--primary-soft)] cursor-pointer outline-none border border-slate-100 flex items-center justify-center overflow-hidden"
+              className="h-9 w-9 rounded-full bg-[var(--primary-soft)] cursor-pointer outline-none border border-slate-100 flex items-center justify-center overflow-hidden hover:opacity-90 transition-opacity"
               onClick={() => setOpen(!open)}
             >
               <User className="h-5 w-5 text-[var(--primary)]" />
@@ -114,11 +119,13 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             <>
               <div className="flex w-full justify-between items-center gap-10">
                 <div>
-                  <h1 className="text-sm text-[#101828]">{title}</h1>
-                  {description && <p className="mt-1 text-xs text-[#64748B]">{description}</p>}
+                  <h1 className="text-[18px] font-semibold text-[#101828] leading-tight">{title}</h1>
+                  {description && <p className="mt-1 text-[13px] text-[#64748B]">{description}</p>}
                 </div>
 
-                {role === "super-admin" && (
+                {/* Role specific actions can be passed via action prop, 
+                    but here we handle the hardcoded super-admin one from original code */}
+                {role === "super-admin" && !action && (
                   <button 
                     data-slot="button" 
                     data-variant="default" 
@@ -129,8 +136,9 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                     <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
                   </button>
                 )}
+                
+                {action}
               </div>
-              {action}
             </>
           ) : (
             <>
