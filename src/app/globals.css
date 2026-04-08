@@ -34,3 +34,27 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0; /* slate-200 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1; /* slate-300 */
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #e2e8f0 transparent;
+}

@@ -11,9 +11,9 @@ import {
 
 import { InstitutionDetailsStep } from "./onboarding-steps/institution-details-step";
 import { AddressInformationStep } from "./onboarding-steps/address-information-step";
-import { LegalRepresentativesStep } from "./onboarding-steps/legal-representatives-step";
+import { LegalRepresentativesStep, type LegalRep } from "./onboarding-steps/legal-representatives-step";
 import { AboutInstitutionStep } from "./onboarding-steps/about-institution-step";
-import { TechnicalStaffStep } from "./onboarding-steps/technical-staff-step";
+import { TechnicalStaffStep, type TechnicalStaff, type TechnicalStaffEntry } from "./onboarding-steps/technical-staff-step";
 import { ReviewApplicationStep } from "./onboarding-steps/review-step";
 import { DeleteStaffModal } from "./onboarding-steps/delete-staff-modal";
 
@@ -31,23 +31,25 @@ function getPreviousStep(step: ApplicantOnboardingStepKey) {
 
 // Global cached variables to persist data across Next.js route unmounts
 let globalFormData: Record<string, string> = {};
-let globalLegalReps: Record<string, string>[] = [];
-let globalStaffList: Record<string, string | number>[] = [];
+let globalLegalReps: LegalRep[] = [];
+let globalStaffList: TechnicalStaffEntry[] = [];
 let globalAboutText: Record<string, string> = {};
-let globalSelectedFile: File | null = null;
+let globalMouFile: File | null = null;
+let globalRegCertFile: File | null = null;
 
 export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingStepKey }) {
   const [institutionSubStep, setInstitutionSubStep] = useState<1 | 2>(1);
-  const [selectedFile, setSelectedFile] = useState<File | null>(globalSelectedFile);
+  const [mouFile, setMouFile] = useState<File | null>(globalMouFile);
+  const [regCertFile, setRegCertFile] = useState<File | null>(globalRegCertFile);
 
-  const [legalReps, setLegalReps] = useState<Record<string, string>[]>(globalLegalReps);
+  const [legalReps, setLegalReps] = useState<LegalRep[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
-  const [newRep, setNewRep] = useState({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
+  const [newRep, setNewRep] = useState<LegalRep>({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
   const [aboutText, setAboutText] = useState<Record<string, string>>(globalAboutText);
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
-  const [staffList, setStaffList] = useState<Record<string, string | number>[]>(globalStaffList);
-  const [newStaff, setNewStaff] = useState({ qualification: "", position: "", status: "" });
+  const [staffList, setStaffList] = useState<TechnicalStaffEntry[]>(globalStaffList);
+  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", position: "", status: "" });
   const [editingStaffIdx, setEditingStaffIdx] = useState<number | null>(null);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);
@@ -57,7 +59,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   useEffect(() => { globalLegalReps = legalReps; }, [legalReps]);
   useEffect(() => { globalStaffList = staffList; }, [staffList]);
   useEffect(() => { globalAboutText = aboutText; }, [aboutText]);
-  useEffect(() => { globalSelectedFile = selectedFile; }, [selectedFile]);
+  useEffect(() => { globalMouFile = mouFile; }, [mouFile]);
+  useEffect(() => { globalRegCertFile = regCertFile; }, [regCertFile]);
 
   const config = applicantOnboardingSteps.find((item) => item.key === step);
 
@@ -78,8 +81,10 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <InstitutionDetailsStep
             subStep={institutionSubStep}
             setSubStep={setInstitutionSubStep}
-            selectedFile={selectedFile}
-            setSelectedFile={setSelectedFile}
+            mouFile={mouFile}
+            setMouFile={setMouFile}
+            regCertFile={regCertFile}
+            setRegCertFile={setRegCertFile}
             formData={formData}
             setFormData={setFormData}
           />
@@ -108,7 +113,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         return (
           <ReviewApplicationStep
             formData={formData}
-            selectedFile={selectedFile}
+            mouFile={mouFile}
+            regCertFile={regCertFile}
             legalReps={legalReps}
             aboutText={aboutText}
             staffList={staffList}

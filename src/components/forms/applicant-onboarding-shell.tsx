@@ -17,8 +17,8 @@ export function ApplicantOnboardingShell({
   children: React.ReactNode;
 }) {
   return (
-    <main className="grid min-h-screen bg-white lg:grid-cols-[340px_1fr]">
-      <aside className="relative flex flex-col justify-between border-r border-slate-200 bg-[#f8fafc] px-8 pt-8 pb-4 z-10">
+    <main className="flex min-h-screen bg-white">
+      <aside className="fixed top-0 left-0 bottom-0 w-[340px] flex flex-col justify-between border-r border-slate-200 bg-[#f8fafc] px-8 pt-8 pb-4 z-10 overflow-y-auto hidden lg:flex">
         <div className="space-y-10">
           <div className="space-y-6">
             <div className="flex items-center gap-3">
@@ -80,9 +80,9 @@ export function ApplicantOnboardingShell({
         <div className="mt-12 text-xs text-slate-400 font-medium">© RTB {getCurrentYear()}</div>
       </aside>
       
-      <section className="relative w-full h-full bg-white z-0">
+      <section className="relative w-full h-full min-h-screen bg-white z-0 lg:ml-[340px]">
         <DotPatternBackground>
-          <div className="flex min-h-screen items-center justify-center px-4 py-8 relative">
+          <div className="flex min-h-[calc(100vh)] items-center justify-center px-4 py-8 relative">
             <div className="z-10 w-full max-w-[420px] bg-transparent pt-2">
               {children}
             </div>

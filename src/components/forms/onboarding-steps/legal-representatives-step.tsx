@@ -3,11 +3,20 @@
 import { User, Mail, Phone } from "lucide-react";
 import { FormInput, FormSelect, FormPhone } from "@/components/ui/form-field";
 
+export interface LegalRep {
+  firstName: string;
+  lastName: string;
+  position: string;
+  gender: string;
+  email: string;
+  phone: string;
+}
+
 interface LegalRepresentativesStepProps {
   isAddingRep: boolean;
-  legalReps: Record<string, string>[];
-  newRep: Record<string, string>;
-  setNewRep: (rep: Record<string, string>) => void;
+  legalReps: LegalRep[];
+  newRep: LegalRep;
+  setNewRep: (rep: LegalRep | ((prev: LegalRep) => LegalRep)) => void;
 }
 
 export function LegalRepresentativesStep({
