@@ -5,7 +5,8 @@ import {
   ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users, User,
   FileText, HelpCircle, ChevronDown, Building2, Package, Mail, Phone, Database,
   Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File, AlertTriangle, Clock,
-  Calendar, UserPlus, PlusSquare, MapPin, Map, Globe, Flag, Navigation, Target, Activity
+  Calendar, UserPlus, PlusSquare, MapPin, Map, Globe, Flag, Navigation, Target, Activity,
+  CheckCheck, X, RefreshCw
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useRouter } from "next/navigation";
@@ -941,53 +942,103 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeMajorStep === 4 && (
-                  <div className="max-w-xl mx-auto py-12 flex flex-col items-center text-center">
-                    <div className="h-16 w-16 rounded-full bg-blue-50 flex items-center justify-center mb-6">
-                      <CheckCircle2 className="h-8 w-8 text-[#0A77FF]" />
-                    </div>
-                    <h2 className="text-xl font-semibold text-slate-900 mb-2">Final Decision</h2>
-                    <p className="text-sm text-slate-500 mb-10">Review the evaluation summary and provide a final decision for this accreditation application.</p>
-                    
-                    <div className="w-full bg-slate-50 rounded-sm p-6 mb-8 border border-slate-100">
-                      <h4 className="text-[13px] font-medium text-slate-700 mb-4 px-1 uppercase tracking-wider text-left">Evaluation Summary</h4>
-                      <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
-                          <span className="text-[13px] text-slate-500">Documents Status</span>
-                          <span className="text-[13px] font-medium text-green-600">All Verified</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2 border-b border-slate-100/50">
-                          <span className="text-[13px] text-slate-500">Site Visit Hour</span>
-                          <span className="text-[13px] font-medium text-slate-700">10:00 AM</span>
-                        </div>
-                        <div className="flex justify-between items-center py-2">
-                          <span className="text-[13px] text-slate-500">Equipment Verified</span>
-                          <span className="text-[13px] font-medium text-slate-700">22/24 Items</span>
-                        </div>
-                      </div>
-                    </div>
+                  <div className="w-full py-8 px-0 flex flex-col items-start">
+                    <div className="w-full flex gap-12 text-left">
+                       {/* Left Column */}
+                       <div className="w-[450px] shrink-0 flex flex-col gap-6">
+                         <div className="flex items-center justify-between">
+                            <span className="text-sm text-slate-500">24 equipment</span>
+                         </div>
+                         <div className="relative max-w-xl">
+                            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
+                            <input placeholder="Search" className="w-full pl-11 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:border-[#0A77FF]" />
+                         </div>
 
-                    <div className="w-full space-y-4 mb-10 text-left">
-                      <label className="text-sm font-medium text-slate-700 px-1">Action Selection</label>
-                      <div className="grid grid-cols-1 gap-3">
-                        {['Approve Application', 'Request Revision', 'Reject Application'].map((option, idx) => (
-                          <label key={idx} className="flex items-center gap-3 p-4 border border-slate-200 rounded-sm hover:border-[#0A77FF] hover:bg-blue-50/30 transition-all cursor-pointer group">
-                            <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
-                            <span className="text-sm text-slate-700 group-hover:text-[#0A77FF] transition-colors">{option}</span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
+                         {/* Decision Radio Badges */}
+                         <div className="flex gap-4">
+                           <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
+                             <div className="flex items-center gap-2">
+                               <CheckCheck className="h-4 w-4 text-[#0A77FF]" />
+                               <span className="text-sm font-medium text-slate-700">Approved</span>
+                             </div>
+                             <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
+                           </label>
+                           <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
+                             <div className="flex items-center gap-2">
+                               <X className="h-4 w-4 text-[#0A77FF]" />
+                               <span className="text-sm font-medium text-slate-700">Rejected</span>
+                             </div>
+                             <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
+                           </label>
+                           <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
+                             <div className="flex items-center gap-2">
+                               <RefreshCw className="h-4 w-4 text-[#0A77FF]" />
+                               <span className="text-sm font-medium text-slate-700">Reverted</span>
+                             </div>
+                             <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
+                           </label>
+                         </div>
 
-                    <div className="w-full space-y-4 mb-8 text-left">
-                      <label className="text-sm font-medium text-slate-700 px-1">Final Decision Comments</label>
-                      <div className="relative">
-                        <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[120px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
-                      </div>
-                    </div>
+                         {/* Confirm / Cancel Buttons */}
+                         <div className="flex items-center gap-4 w-full mt-2">
+                           <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-2.5 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Cancel</button>
+                           <button onClick={() => alert("Confirm decision")} className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer">Confirm</button>
+                         </div>
 
-                    <div className="flex items-center gap-4 w-full mt-4">
-                      <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Back to Review</button>
-                      <button onClick={() => alert("Application Approved with Comment: ")} className="flex-[2] py-3 bg-green-600 text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer">Approve with Comment</button>
+                         {/* Comment Box */}
+                         <div className="space-y-4 mt-2">
+                           <h4 className="text-sm font-medium text-slate-700">Any addition comment?</h4>
+                           <div className="relative">
+                             <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[100px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
+                             <div className="absolute bottom-[-24px] left-0 text-[11px] text-slate-400">275 characters left</div>
+                           </div>
+                           <button className="flex items-center gap-2 px-6 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-all cursor-pointer mt-8">
+                             Add Note
+                             <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
+                           </button>
+                         </div>
+
+                       </div>
+
+                       {/* Right Column */}
+                       <div className="flex-1 flex flex-col gap-6">
+                         <div className="grid grid-cols-2 gap-4">
+                           <div className="space-y-3">
+                             <label className="text-[13px] font-medium text-slate-700">Date Selection</label>
+                             <div className="relative">
+                                <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
+                             </div>
+                           </div>
+                           <div className="space-y-3">
+                             <label className="text-[13px] font-medium text-slate-700">Visit Hour</label>
+                             <div className="relative">
+                               <input defaultValue="Western" className="w-full px-4 py-[10px] rounded-sm border border-slate-200 text-[13px] text-slate-700 bg-white focus:outline-none focus:border-[#0A77FF]" />
+                             </div>
+                           </div>
+                         </div>
+                         
+                         <div className="grid grid-cols-2 gap-4 mt-2">
+                            <div className="flex items-center gap-3">
+                               <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
+                                 <img src="https://ui-avatars.com/api/?name=Command+R&background=FF8A65&color=fff&rounded=true" alt="logo" className="h-full w-full object-cover" />
+                               </div>
+                               <div className="flex flex-col">
+                                 <span className="text-[13px] font-medium text-slate-900 leading-tight">Command+R</span>
+                                 <span className="text-[11px] text-slate-500">cmdr.ai</span>
+                               </div>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                               <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200">
+                                 <User className="h-4 w-4 text-slate-400 stroke-2" />
+                               </div>
+                               <div className="flex flex-col">
+                                 <span className="text-[11px] text-slate-500 leading-tight">Submitted by</span>
+                                 <span className="text-[13px] font-medium text-slate-900 leading-tight">John Smith</span>
+                               </div>
+                            </div>
+                         </div>
+                       </div>
                     </div>
                   </div>
                 )}
