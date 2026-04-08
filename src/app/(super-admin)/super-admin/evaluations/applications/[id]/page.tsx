@@ -26,7 +26,7 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
   ];
 
   return (
-    <div className="flex items-start justify-between w-full my-3 relative">
+    <div className="flex items-start justify-between w-full my-3 px-1 pt-2 relative overflow-visible">
       {steps.map((step, idx) => {
         const isActive = idx === currentStep;
         const isCompleted = idx < currentStep;
@@ -119,13 +119,13 @@ const ApplicationSidebar = ({
             >
               <div className={cn(
                 "h-9 w-9 rounded-sm border flex items-center justify-center shrink-0 relative z-10 transition-all",
-                isActive ? "border-[var(--primary)] bg-white " :
-                  isCompleted ? "border-green-500 text-green-500 bg-white" : "border-slate-100 bg-white"
+                isActive ? "border-slate-100  " :
+                  isCompleted ? "border-green-500 text-green-500 " : "border-slate-100 "
               )}>
                 {isCompleted ? (
                   <step.icon strokeWidth={1} className="h-5 w-5 text-green-500" />
                 ) : (
-                  <step.icon strokeWidth={1.2} className={cn("h-5 w-5", isActive ? "text-[#0A77FF]" : "text-slate-400")} />
+                  <step.icon strokeWidth={1.2} className={cn("h-5 w-5", isActive ? "text-slate-400" : "text-slate-400")} />
                 )}
               </div>
               <div className="flex flex-col pt-0.5 justify-center">

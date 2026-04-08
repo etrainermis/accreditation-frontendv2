@@ -3,13 +3,23 @@
 import { UserPlus, Plus, Minus, Pencil, Trash2, CheckCheck } from "lucide-react";
 import { FormSelect } from "@/components/ui/form-field";
 
+export interface TechnicalStaff {
+  qualification: string;
+  position: string;
+  status: string;
+}
+
+export interface TechnicalStaffEntry extends TechnicalStaff {
+  number: number;
+}
+
 interface TechnicalStaffStepProps {
-  newStaff: Record<string, string>;
-  setNewStaff: (staff: Record<string, string>) => void;
+  newStaff: TechnicalStaff;
+  setNewStaff: (staff: TechnicalStaff | ((prev: TechnicalStaff) => TechnicalStaff)) => void;
   staffNumber: number;
   setStaffNumber: (num: number | ((prev: number) => number)) => void;
-  staffList: Record<string, string | number>[];
-  setStaffList: (list: Record<string, string | number>[]) => void;
+  staffList: TechnicalStaffEntry[];
+  setStaffList: (list: TechnicalStaffEntry[] | ((prev: TechnicalStaffEntry[]) => TechnicalStaffEntry[])) => void;
   editingStaffIdx: number | null;
   setEditingStaffIdx: (idx: number | null) => void;
   onDeleteStaff: (idx: number) => void;
