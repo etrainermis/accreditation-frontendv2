@@ -10,6 +10,7 @@ import type { UserRole } from "@/types/auth";
 import { PortalBreadcrumbs } from "./portal-breadcrumbs";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { PrimaryButton } from "@/components/ui/primary-button";
 
 export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: () => void }) {
   const { title, description, action } = usePageHeader();
@@ -45,9 +46,9 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
       <div className="flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           {onOpenMobile && (
-            <button 
-              type="button" 
-              onClick={onOpenMobile} 
+            <button
+              type="button"
+              onClick={onOpenMobile}
               className="md:hidden p-1.5 -ml-1 text-slate-500 hover:bg-slate-100 rounded-md transition-colors"
               aria-label="Open sidebar"
             >
@@ -56,20 +57,24 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
           )}
           <PortalBreadcrumbs />
         </div>
-        
+
         <div className="flex items-center gap-3">
+          {/* Messages */}
           <div className="relative">
-            <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50 transition-colors">
-              <MessageSquareMore className="h-4 w-4" />
+            <button type="button" className="rounded-sm cursor-pointer border border-[#EAECF0] p-2 text-[#667085] hover:bg-slate-50 transition-colors">
+              <MessageSquareMore className="h-4.5 w-4.5" />
             </button>
-            <span className="absolute -top-1.5 -right-1.5 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-red-100 text-[10px] font-bold text-red-600 border border-white">
+            <span className="absolute -top-2 -right-2 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-[#F04438] text-[10px] font-bold text-white border-2 border-white">
               2
             </span>
           </div>
-          <button type="button" className="rounded-xl cursor-pointer border border-slate-200 p-2 text-slate-500 hover:bg-slate-50 transition-colors">
-            <Bell className="h-4 w-4" />
+
+          {/* Notifications */}
+          <button type="button" className="cursor-pointer p-2 text-[#667085] hover:text-slate-700 transition-colors">
+            <Bell className="h-4.5 w-4.5" />
           </button>
           
+          {/* User Profile */}
           <div 
             className="relative ml-1" 
             ref={containerRef}
@@ -77,10 +82,14 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             onMouseLeave={handleClose}
           >
             <div 
-              className="h-9 w-9 rounded-full bg-[var(--primary-soft)] cursor-pointer outline-none border border-slate-100 flex items-center justify-center overflow-hidden hover:opacity-90 transition-opacity"
+              className="h-9 w-9 rounded-full cursor-pointer outline-none border border-slate-200 flex items-center justify-center overflow-hidden hover:opacity-90 transition-opacity"
               onClick={() => setOpen(!open)}
             >
-              <User className="h-5 w-5 text-[var(--primary)]" />
+              <img 
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=150&h=150" 
+                alt="User profile" 
+                className="h-full w-full object-cover"
+              />
             </div>
 
             {open && (
@@ -89,8 +98,8 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                 onMouseEnter={handleOpen}
                 onMouseLeave={handleClose}
               >
-                <Link 
-                  href="/profile" 
+                <Link
+                  href="/profile"
                   className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                   onClick={() => setOpen(false)}
                 >
@@ -98,8 +107,8 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                   <span>Profile</span>
                 </Link>
                 <div className="my-1 h-px bg-slate-100" />
-                <Link 
-                  href="/login" 
+                <Link
+                  href="/login"
                   className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-red-600 hover:bg-red-50"
                   onClick={() => setOpen(false)}
                 >
@@ -123,20 +132,18 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                   {description && <p className="mt-1 text-[13px] text-[#64748B]">{description}</p>}
                 </div>
 
-                {/* Role specific actions can be passed via action prop, 
+                {/* Role specific actions can be passed via action prop,
                     but here we handle the hardcoded super-admin one from original code */}
                 {role === "super-admin" && !action && (
-                  <button 
-                    data-slot="button" 
-                    data-variant="default" 
-                    data-size="default" 
-                    className="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 rounded-sm cursor-pointer px-4 py-3 text-sm font-medium"
-                  >
-                    Start New Evaluation
-                    <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
-                  </button>
+                  <PrimaryButton
+                    label="Start New Evaluation"
+                    icon={Plus}
+                    iconPosition="right"
+                    variant="primary"
+                    onClick={() => {}}
+                  />
                 )}
-                
+
                 {action}
               </div>
             </>

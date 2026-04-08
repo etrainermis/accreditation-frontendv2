@@ -40,28 +40,28 @@ export default function ApplicantDashboardPage() {
 
   // Dynamic header content
   const pageTitle = isApplying ? "Apply For Short Course" : "Welcome, John";
-  const pageDescription = isApplying 
-    ? "Create and manage your accreditation applications for the selected trades." 
+  const pageDescription = isApplying
+    ? "Create and manage your accreditation applications for the selected trades."
     : "View & manage active elders and requests";
-  
+
   const breadcrumbs = isApplying ? [
     { label: "Dashboard", href: "/applicant/dashboard" },
     { label: "Short Course Application", href: "#" }
   ] : undefined;
 
   return (
-    <PageContainer 
-      role="applicant" 
+    <PageContainer
+      role="applicant"
       title={pageTitle}
       description={pageDescription}
       breadcrumbs={breadcrumbs}
       action={
         !isApplying && (
-          <PrimaryButton 
-            label="New Application" 
+          <PrimaryButton
+            label="New Application"
             onClick={() => setIsApplying(true)}
             iconPosition="right"
-            className="rounded-[8px] h-10 px-5 text-white"
+            className="h-10 px-5 text-white font-sm"
           />
         )
       }

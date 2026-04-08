@@ -199,13 +199,14 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
         <h2 className="mb-10 text-[15px] font-semibold text-slate-700">
           Short Course Application
         </h2>
-        <button 
+        <PrimaryButton 
+          label="Quit"
           onClick={onQuit}
-          className="mb-12 flex items-center gap-2 text-[13px] font-medium text-[#0A77FF] hover:opacity-80 transition-opacity"
-        >
-          <ArrowLeft className="h-4 w-4" strokeWidth={2} />
-          Quit
-        </button>
+          variant="primary"
+          icon={ArrowLeft}
+          className="mb-12 w-fit px-4"
+          hideIcon={false}
+        />
 
         {/* Stepper */}
         <div className="relative">
@@ -287,8 +288,21 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   })}
                 </div>
                 <div className="flex w-full gap-3">
-                  <button onClick={onQuit} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">Back</button>
-                  <button onClick={handleTradeContinue} disabled={!selectedTrade} className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedTrade ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}>Continue</button>
+                  <PrimaryButton 
+                    label="Back" 
+                    onClick={onQuit} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
+                  <PrimaryButton 
+                    label="Continue" 
+                    onClick={handleTradeContinue} 
+                    disabled={!selectedTrade} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
                 </div>
               </div>
             </div>
@@ -348,8 +362,21 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                   })}
                 </div>
                 <div className="flex w-full gap-3">
-                  <button onClick={handleCompetencyBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 transition-colors hover:bg-slate-50">Back</button>
-                  <button onClick={handleCompetencyContinue} disabled={!selectedCompetency} className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-colors ${selectedCompetency ? "bg-[#0A77FF] hover:bg-[#0864d6]" : "bg-blue-300 cursor-not-allowed"}`}>Continue</button>
+                  <PrimaryButton 
+                    label="Back" 
+                    onClick={handleCompetencyBack} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
+                  <PrimaryButton 
+                    label="Continue" 
+                    onClick={handleCompetencyContinue} 
+                    disabled={!selectedCompetency} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
                 </div>
               </div>
             </div>
@@ -433,8 +460,20 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                           <p className="mt-0.5 text-[11px] text-slate-500 font-medium">Qty: {eq.quantity} Pieces</p>
                         </div>
                         <div className="flex gap-2 mr-1">
-                          <button className="text-[#0A77FF] hover:bg-blue-50 p-2 rounded-lg transition-colors"><Pencil className="h-4 w-4" /></button>
-                          <button onClick={() => removeEquipment(eq.id)} className="text-red-400 hover:bg-red-50 p-2 rounded-lg transition-colors"><X className="h-4 w-4" /></button>
+                          <PrimaryButton 
+                            label="" 
+                            icon={Pencil} 
+                            hideIcon={false} 
+                            className="p-0 h-9 w-9"
+                            onClick={() => {}}
+                          />
+                          <PrimaryButton 
+                            label="" 
+                            icon={X} 
+                            hideIcon={false} 
+                            className="p-0 h-9 w-9 bg-red-500 hover:bg-red-600"
+                            onClick={() => removeEquipment(eq.id)}
+                          />
                         </div>
                       </div>
                     ))}
@@ -497,8 +536,21 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 </div>
               )}
               <div className="flex w-full gap-3 mb-8">
-                <button onClick={handleCurriculumBack} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 bg-white hover:bg-slate-50 shadow-sm">Back</button>
-                <button onClick={handleCurriculumContinue} disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)} className={`flex flex-1 items-center justify-center rounded-xl py-3 text-[13px] font-semibold text-white transition-all ${(curriculumDocs.length > 0 && curriculumDocs.every(d => d.progress === 100)) ? "bg-[#0A77FF] hover:bg-[#0864d6] shadow-md shadow-[#0A77FF]/20" : "bg-blue-300 cursor-not-allowed"}`}>Continue</button>
+                <PrimaryButton 
+                  label="Back" 
+                  onClick={handleCurriculumBack} 
+                  variant="primary" 
+                  className="flex-1" 
+                  hideIcon={true}
+                />
+                <PrimaryButton 
+                  label="Continue" 
+                  onClick={handleCurriculumContinue} 
+                  disabled={curriculumDocs.length === 0 || curriculumDocs.some(d => d.progress < 100)} 
+                  variant="primary" 
+                  className="flex-1" 
+                  hideIcon={true}
+                />
               </div>
             </div>
           )}
@@ -552,14 +604,39 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <PrimaryButton label="Add Staff" icon={UserPlus} iconPosition="right" onClick={handleAddStaff} className="mb-8 w-fit" />
                 {allocations.length > 0 && (
                   <div className="mb-8 w-full flex flex-col gap-3">
-                    {allocations.map(alloc => (
-                      <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm group hover:border-[#0A77FF] transition-colors"><div className="flex justify-between items-start"><div><p className="text-[13px] font-bold text-slate-800">{alloc.position}</p><p className="text-[11px] font-medium text-slate-500">{alloc.qualification} • {alloc.status}</p></div><button onClick={() => removeAllocation(alloc.id)} className="text-slate-300 hover:text-red-500 p-1.5 bg-slate-50 rounded-lg transition-all opacity-0 group-hover:opacity-100"><Trash2 className="h-4 w-4" /></button></div><p className="mt-3 text-[10px] font-bold text-[#0A77FF] uppercase tracking-widest bg-blue-50 w-fit px-2 py-0.5 rounded-full">Qty: {alloc.quantity}</p></div>
-                    ))}
+                      <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm group hover:border-[#0A77FF] transition-colors">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-[13px] font-bold text-slate-800">{alloc.position}</p>
+                            <p className="text-[11px] font-medium text-slate-500">{alloc.qualification} • {alloc.status}</p>
+                          </div>
+                          <PrimaryButton 
+                            label="" 
+                            icon={Trash2} 
+                            hideIcon={false} 
+                            className="h-8 w-8 p-0 bg-red-500 hover:bg-red-600 opacity-0 group-hover:opacity-100"
+                            onClick={() => removeAllocation(alloc.id)}
+                          />
+                        </div>
+                        <p className="mt-3 text-[10px] font-bold text-[#0A77FF] uppercase tracking-widest bg-blue-50 w-fit px-2 py-0.5 rounded-full">Qty: {alloc.quantity}</p>
+                      </div>
                   </div>
                 )}
                 <div className="mb-8 flex w-full gap-3">
-                  <button onClick={() => setCurrentStep(4)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 bg-white hover:bg-slate-50 transition-all shadow-sm">Back</button>
-                  <button onClick={() => setCurrentStep(6)} className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white hover:bg-[#0864d6] transition-all shadow-md shadow-[#0A77FF]/20">Continue</button>
+                  <PrimaryButton 
+                    label="Back" 
+                    onClick={() => setCurrentStep(4)} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
+                  <PrimaryButton 
+                    label="Continue" 
+                    onClick={() => setCurrentStep(6)} 
+                    variant="primary" 
+                    className="flex-1" 
+                    hideIcon={true}
+                  />
                 </div>
               </div>
             </div>
@@ -574,8 +651,20 @@ export function ApplicationWizard({ onQuit }: ApplicationWizardProps) {
                 <p className="mt-1.5 text-[13px] text-slate-500">Review all information provided before submitting your application for evaluation.</p>
               </div>
               <div className="mt-6 flex w-full gap-3 mb-8">
-                <button onClick={() => setCurrentStep(5)} className="flex flex-1 items-center justify-center rounded-xl border border-slate-200 py-3 text-[13px] font-semibold text-slate-700 bg-white hover:bg-slate-50">Back</button>
-                <button className="flex flex-1 items-center justify-center rounded-xl bg-[#0A77FF] py-3 text-[13px] font-semibold text-white hover:bg-[#0864d6] shadow-lg shadow-[#0A77FF]/20">Submit Application</button>
+                <PrimaryButton 
+                  label="Back" 
+                  onClick={() => setCurrentStep(5)} 
+                  variant="primary" 
+                  className="flex-1" 
+                  hideIcon={true}
+                />
+                <PrimaryButton 
+                  label="Submit Application" 
+                  onClick={() => {}} 
+                  variant="primary" 
+                  className="flex-1" 
+                  hideIcon={true}
+                />
               </div>
               <div className="flex flex-col gap-3">
                 {[
