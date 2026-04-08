@@ -2,20 +2,20 @@
 
 import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
-import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 import { SharedApplicationsList } from "@/features/evaluations/components/shared-applications-list";
+import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 
-export default function SuperAdminApplicationsPage() {
+export default function EvaluatorApplicationsPage() {
   return (
     <PageContainer
-      role="super-admin"
+      role="evaluator"
       title="Manage Accreditation Evalutions"
       description="View & manage active elders and requests"
     >
-      <EvaluationsSubNav />
+      <EvaluationsSubNav role="evaluator" />
       <SharedApplicationsList 
-        role="super-admin" 
-        basePath="/super-admin/evaluations/applications" 
+        role="evaluator" 
+        basePath="/evaluator/applications" 
       />
     </PageContainer>
   );

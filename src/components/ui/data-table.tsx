@@ -62,7 +62,7 @@ export function DataTable<T extends { id: string | number }>({
                 placeholder={searchPlaceholder}
                 value={searchValue}
                 onChange={(e) => onSearchChange?.(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-sm rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all border border-slate-100 bg-white" 
+                className="w-full pl-10 pr-4 py-3 text-sm rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] transition-all border border-slate-100 bg-white" 
                 type="text" 
               />
             </div>
@@ -80,7 +80,7 @@ export function DataTable<T extends { id: string | number }>({
                     <span>US, AU, +4</span>
                     <X className="h-3 w-3 text-slate-400 cursor-pointer hover:text-slate-600 transition-colors" />
                   </div>
-                  <button className="flex items-center gap-2 px-3 py-2 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white">
+                  <button className="flex items-center gap-2 px-3 py-3 rounded-sm text-xs text-[#344054] hover:bg-slate-100 transition-colors border border-slate-100 bg-white">
                     <ListFilter className="h-4 w-4 text-slate-500" />
                     <span>More filters</span>
                   </button>
@@ -162,14 +162,14 @@ export function DataTable<T extends { id: string | number }>({
               <button 
                 onClick={() => onPageChange?.(currentPage - 1)}
                 disabled={currentPage <= 1}
-                className="px-4 py-2 text-xs cursor-pointer text-[#344054] rounded-sm bg-slate-50 hover:bg-slate-100 transition-all border border-[#D0D5DD] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-3 text-xs cursor-pointer text-[#344054] rounded-sm bg-slate-50 hover:bg-slate-100 transition-all border border-[#D0D5DD] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Previous
               </button>
               <button 
                 onClick={() => onPageChange?.(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className="px-4 py-2 text-xs cursor-pointer text-[#344054] bg-slate-50 rounded-sm hover:bg-slate-100 transition-all border border-[#D0D5DD] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-3 text-xs cursor-pointer text-[#344054] bg-slate-50 rounded-sm hover:bg-slate-100 transition-all border border-[#D0D5DD] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Next
               </button>

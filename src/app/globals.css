@@ -65,3 +65,12 @@ a {
   scrollbar-width: thin;
   scrollbar-color: #e2e8f0 transparent;
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+}

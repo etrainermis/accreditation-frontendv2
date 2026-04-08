@@ -2,17 +2,17 @@
 
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
-import { EvaluatorsContent } from "@/features/evaluations/components/evaluators-content";
+import { CriteriaContent } from "@/features/evaluations/components/criteria-content";
 
-export default function SuperAdminEvaluatorsPage() {
+export default function EvaluatorCriteriaPage() {
   return (
     <PageContainer
-      role="super-admin"
+      role="evaluator"
       title="Manage Accreditation Evalutions"
       description="View & manage active elders and requests"
     >
-      <EvaluationsSubNav role="super-admin" />
-      <EvaluatorsContent />
+      <EvaluationsSubNav role="evaluator" />
+      <CriteriaContent />
     </PageContainer>
   );
 }

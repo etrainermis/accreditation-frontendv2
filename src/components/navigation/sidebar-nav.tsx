@@ -47,7 +47,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
               href={item.href as never}
               onClick={() => onCloseMobile?.()}
               className={cn(
-                "flex items-center gap-3 rounded-sm px-3 py-2.5 text-sm transition-colors",
+                "flex items-center gap-3 rounded-sm px-3 py-3 text-sm transition-colors",
                 item.isActive
                   ? "bg-[#F9FAFB] text-[var(--primary)]"
                   : "text-slate-500 hover:bg-slate-50 hover:text-slate-800",
@@ -70,7 +70,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
         <button 
           type="button" 
           onClick={() => onCloseMobile?.()}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
+          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
         >
           <LifeBuoy className="text-[#667085]" strokeWidth={1.5} size={20} />
           <span className="text-[#344054]">Support</span>
@@ -78,7 +78,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
         <button 
           type="button" 
           onClick={() => onCloseMobile?.()}
-          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
+          className="flex w-full cursor-pointer items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-500 hover:bg-slate-50 hover:text-slate-800 text-left"
         >
           <Settings className="text-[#667085]" strokeWidth={1.5} size={20} />
           <span className="text-[#344054]">Settings</span>

@@ -28,7 +28,7 @@ export function PrimaryButton({
   iconPosition = "left",
 }: PrimaryButtonProps) {
   const baseClasses = cn(
-    "inline-flex items-center justify-center gap-2.5 rounded-[8px] px-6 py-2.5",
+    "inline-flex items-center justify-center gap-2.5 rounded-[8px] px-6 py-3",
     "text-[14px] font-medium leading-none",
     "transition-all duration-150 cursor-pointer select-none border-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0A77FF]/50",
