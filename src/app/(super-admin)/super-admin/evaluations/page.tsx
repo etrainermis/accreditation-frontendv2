@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function EvaluationsRootPage() {
+export default function SuperAdminEvaluationsRoot() {
   redirect("/super-admin/evaluations/applications");
 }

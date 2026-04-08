@@ -1,100 +1,102 @@
 "use client";
 
-import { useState, Dispatch, SetStateAction } from "react";
-import { Building, FileText, CloudUpload, Package, Mail, Phone, ChevronDown, CheckCircle2, Clock } from "lucide-react";
+import { useState } from "react";
+import { Building, FileText, CloudUpload, Package, Mail, Phone, CheckCircle, Clock, CheckCircle2 } from "lucide-react";
 import { FormInput, FormSelect, FormPhone } from "@/components/ui/form-field";
 
 interface InstitutionDetailsStepProps {
   subStep: 1 | 2;
   setSubStep: (step: 1 | 2) => void;
-  files: Record<string, File | null>;
-  setFiles: Dispatch<SetStateAction<Record<string, File | null>>>;
+  mouFile: File | null;
+  setMouFile: (file: File | null) => void;
+  regCertFile: File | null;
+  setRegCertFile: (file: File | null) => void;
   formData: Record<string, string>;
   setFormData: (data: Record<string, string>) => void;
 }
 
 export function InstitutionDetailsStep({
   subStep,
-  files,
-  setFiles,
+  mouFile,
+  setMouFile,
+  regCertFile,
+  setRegCertFile,
   formData,
   setFormData,
 }: InstitutionDetailsStepProps) {
-  const [selectedType, setSelectedType] = useState<"registration" | "mou">("registration");
+  const isOther = formData["Institution Category"] === "Other Institution";
+  const docTypes = isOther
+    ? ["MOU (Signed Memorandum)", "Registration Certificate"]
+    : ["MOU (Signed Memorandum)"];
+
+  const [selectedDocType, setSelectedDocType] = useState("MOU (Signed Memorandum)");
+
+  const certOptions = [
+    { id: 'mou', label: 'MOU (Signed Memorandum)' },
+    ...(isOther ? [{ id: 'regCert', label: 'Registration Certificate' }] : []),
+  ];
+
+  const files: Record<string, File | null> = {
+    mou: mouFile,
+    regCert: regCertFile,
+  };
 
   if (subStep === 2) {
-    const certOptions = [
-      { id: "registration", label: "Registration Certificate", required: true },
-      { id: "mou", label: "MOU (Signed Memorandum)", required: true },
-    ] as const;
-
-    const currentCert = certOptions.find(opt => opt.id === selectedType)!;
-    const isUploaded = !!files[selectedType];
+    const activeFile = selectedDocType === "MOU (Signed Memorandum)" ? mouFile : regCertFile;
 
     return (
-      <div className="space-y-6">
-        <div className="space-y-3">
-          <label className="text-sm font-medium text-slate-700">Select Document Type</label>
-          <div className="relative group">
-            <select
-              value={selectedType}
-              onChange={(e) => setSelectedType(e.target.value as any)}
-              className="w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-800 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 cursor-pointer"
-            >
-              {certOptions.map(opt => (
-                <option key={opt.id} value={opt.id}>
-                  {opt.label} {opt.required ? "*" : ""} {files[opt.id] ? "✓" : ""}
-                </option>
-              ))}
-            </select>
-            <ChevronDown className="absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 pointer-events-none group-hover:text-slate-600 transition-colors" />
-          </div>
+      <div className="flex flex-col space-y-6">
+        <div className="space-y-1.5">
+          <FormSelect
+            label="Select Document Type"
+            value={selectedDocType}
+            onChange={(v) => setSelectedDocType(v)}
+            options={docTypes.map(type => ({
+              label: type + (type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""),
+              value: type
+            }))}
+          />
         </div>
 
-        <div className="flex flex-col space-y-3">
-          <span className="text-sm font-medium text-slate-700">Upload {currentCert.label}</span>
-          <label htmlFor="file-upload" className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/30 px-6 py-12 text-center transition hover:bg-slate-50 hover:border-blue-300 cursor-pointer group relative overflow-hidden">
+        <div className="space-y-1.5">
+          <span className="text-[13px] font-medium text-slate-700">Upload {selectedDocType}</span>
+          <label htmlFor="certificate-upload" className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center transition hover:bg-slate-50 cursor-pointer group">
             <input
-              id="file-upload"
+              id="certificate-upload"
               type="file"
               accept=".pdf,.doc,.docx"
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) setFiles({ ...files, [selectedType]: file });
+                if (file) {
+                  if (selectedDocType === "MOU (Signed Memorandum)") setMouFile(file);
+                  else setRegCertFile(file);
+                }
               }}
             />
 
-            <div className="relative z-10 flex flex-col items-center">
-              {isUploaded ? (
-                <>
-                  <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-blue-600 shadow-sm transition-transform group-hover:scale-105">
-                    <FileText className="h-8 w-8 stroke-[1.5]" />
-                  </div>
-                  <p className="text-[15px] font-semibold text-slate-800 truncate max-w-[300px]">
-                    {files[selectedType]?.name}
-                  </p>
-                  <p className="mt-2 flex items-center gap-1.5 text-[13px] text-blue-600 font-medium bg-blue-50 px-3 py-1 rounded-full">
-                    <CheckCircle2 className="h-3.5 w-3.5" />
-                    Successfully uploaded
-                  </p>
-                  <p className="mt-4 text-[13px] text-slate-400 font-medium group-hover:text-slate-600">Click to change file</p>
-                </>
-              ) : (
-                <>
-                  <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-2xl border border-slate-100 bg-white shadow-sm transition-transform group-hover:scale-105">
-                    <CloudUpload className="h-8 w-8 text-slate-500 stroke-[1.5]" />
-                  </div>
-                  <p className="text-[16px] text-slate-700">
-                    <span className="font-bold text-blue-600">Click to upload</span> or drag and drop
-                  </p>
-                  <p className="mt-2 text-[13px] text-slate-400 font-medium">PDF or Word documents (max 10MB)</p>
-                </>
-              )}
-            </div>
-            
-            {/* Background decoration */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-slate-50/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+            {activeFile ? (
+              <div className="flex flex-col items-center">
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-blue-50 shadow-sm text-blue-600">
+                  <FileText className="h-6 w-6 stroke-[1.5]" />
+                </div>
+                <p className="text-[14px] font-medium text-slate-800 truncate max-w-[250px]">{activeFile.name}</p>
+                <div className="flex items-center gap-1.5 mt-2 justify-center text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
+                  <CheckCircle className="h-3.5 w-3.5" />
+                  <span className="text-[12px] font-medium">Successfully uploaded</span>
+                </div>
+                <p className="mt-4 text-[13px] text-slate-500 font-medium">Click to change file</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
+                  <CloudUpload className="h-6 w-6 text-slate-600 stroke-[1.5]" />
+                </div>
+                <p className="text-[15px] text-slate-600">
+                  <span className="font-semibold text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
+                </p>
+              </>
+            )}
           </label>
         </div>
 
@@ -104,7 +106,7 @@ export function InstitutionDetailsStep({
             {certOptions.map(opt => {
               const uploaded = !!files[opt.id];
               return (
-                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-2.5 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
+                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-3 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
                   <div className="flex items-center gap-3">
                     {uploaded ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
@@ -177,7 +179,6 @@ export function InstitutionDetailsStep({
         type="email"
         required
         icon={Mail}
-        className="md:col-span-2"
       />
       <FormPhone
         label="Phone Number"

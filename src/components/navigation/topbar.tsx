@@ -132,28 +132,32 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                   {description && <p className="mt-1 text-[13px] text-[#64748B]">{description}</p>}
                 </div>
 
-                {/* Role specific actions can be passed via action prop,
-                    but here we handle the hardcoded super-admin one from original code */}
-                {role === "super-admin" && !action && (
-                  <PrimaryButton
-                    label="Start New Evaluation"
-                    icon={Plus}
-                    iconPosition="right"
-                    variant="primary"
-                    onClick={() => {}}
-                  />
+                {role === "super-admin" ? (
+                  <button
+                    data-slot="button"
+                    data-variant="default"
+                    data-size="default"
+                    className="group/button inline-flex shrink-0 items-center justify-center border border-transparent bg-clip-padding whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/30 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 bg-primary text-primary-foreground hover:bg-primary/80 h-9 gap-1.5 has-data-[icon=inline-end]:pr-2.5 has-data-[icon=inline-start]:pl-2.5 rounded-sm cursor-pointer px-4 py-3 text-sm font-medium"
+                  >
+                    Start New Evaluation
+                    <Plus className="ml-2 h-4 w-4" aria-hidden="true" />
+                  </button>
+                ) : (
+                  action
                 )}
-
-                {action}
               </div>
             </>
           ) : (
             <>
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-[240px]" />
-                <Skeleton className="h-3 w-[320px]" />
+              <div className="flex w-full justify-between items-center gap-10">
+                <div className="space-y-2">
+                  <Skeleton className="h-5 w-[240px]" />
+                  <Skeleton className="h-3 w-[320px]" />
+                </div>
+                {(role === "super-admin" || role === "evaluator") && (
+                  <Skeleton className="h-9 w-[180px] rounded-sm" />
+                )}
               </div>
-              <Skeleton className="h-9 w-[160px]" />
             </>
           )}
         </div>
