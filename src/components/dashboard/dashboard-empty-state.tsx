@@ -7,7 +7,13 @@ export function DashboardEmptyState() {
   return (
     <div className="flex flex-col items-center justify-center py-20 pt-0 -mt-10 px-4">
       {/* Concentric Circles Graphic */}
-      <div className="relative flex items-center justify-center mb-8 h-[240px] w-full max-w-[500px]">
+      <div 
+        className="relative flex items-center justify-center mb-8 h-[240px] w-full max-w-[500px]"
+        style={{ 
+          maskImage: 'radial-gradient(circle, black 30%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(circle, black 30%, transparent 80%)'
+        }}
+      >
         {/* Outer Circles */}
         <div className="absolute h-[320px] w-[320px] rounded-full border border-slate-100/50" />
         <div className="absolute h-[240px] w-[240px] rounded-full border border-slate-100/60" />

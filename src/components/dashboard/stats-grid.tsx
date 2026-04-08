@@ -26,7 +26,7 @@ export function StatsGrid({ items, className, gridCols = 4 }: StatsGridProps) {
   }[gridCols];
 
   return (
-    <div className={cn("grid gap-4 md:grid-cols-2 mb-6 relative z-10", gridColsClass, className)}>
+    <div className={cn("grid gap-4 md:grid-cols-2 mb-6 relative z-10 bg-white shadow-[0_-20px_40px_white,0_20px_40px_white]", gridColsClass, className)}>
       {items.map((item) => {
         const Icon = item.icon;
         
