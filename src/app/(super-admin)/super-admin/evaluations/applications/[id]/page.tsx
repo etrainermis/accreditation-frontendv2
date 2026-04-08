@@ -3,14 +3,16 @@
 import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import {
-  ChevronRight, ArrowLeft, ClipboardCheck, Users,
+  ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users,
   FileText, HelpCircle, ChevronDown, Building2, Package, Mail, Phone, Database,
-  Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File
+  Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File, AlertTriangle, Clock,
+  Calendar, UserPlus, PlusSquare
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useRouter } from "next/navigation";
 
 import { mockApplications } from "@/lib/utils/application-utils";
+import { DateRangePicker, DateRange } from "@/components/ui/date-range-picker";
 
 // --- Components ---
 
@@ -25,33 +27,42 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
 
   return (
     <div className="flex items-start justify-between w-full my-3 relative">
-      {/* Connector Line - Only spans from first to last step */}
-      <div className="absolute top-[11px] left-[11px] right-[calc(100%/5-11px)] h-[1px] bg-slate-200 -z-0" />
-
       {steps.map((step, idx) => {
         const isActive = idx === currentStep;
         const isCompleted = idx < currentStep;
 
         return (
-          <div key={idx} className="flex flex-col items-start text-center relative z-10 flex-1 px-1">
+          <div key={idx} className="flex flex-col items-start text-start relative flex-1">
+            {/* Connector Line Segments */}
+            {idx > 0 && (
+              <div 
+                className={cn(
+                  "absolute top-[12px] left-[-100%] right-[calc(100%-12px)] ml-[12px] h-[1px] z-0",
+                  idx <= currentStep ? "bg-[var(--primary)] h-[1.5px]" : "bg-slate-100"
+                )} 
+              />
+            )}
+            
             <div className={cn(
-              "h-[22px] w-[22px] rounded-full border-2 flex items-center justify-center mb-3 transition-all",
-              isActive ? "border-[var(--primary)] bg-[var(--primary)] shadow-[0_0_0_4px_rgba(9,119,255,0.1)]" :
+              "h-6 w-6 rounded-full border flex items-center justify-center mb-3 transition-all duration-300 shrink-0 relative z-10",
+              isActive ? "border-[var(--primary)] bg-[var(--primary)] shadow-[0_0_0_4px_rgba(9,119,255,0.15)]" :
                 isCompleted ? "border-[var(--primary)] bg-[var(--primary)]" : "border-slate-200 bg-white"
             )}>
-              {(isActive || isCompleted) ? (
+              {isCompleted ? (
+                <Check className="h-3.5 w-3.5 text-white" strokeWidth={3} />
+              ) : isActive ? (
                 <div className="h-1.5 w-1.5 rounded-full bg-white" />
               ) : (
                 <div className="h-1.5 w-1.5 rounded-full bg-slate-200" />
               )}
             </div>
             <span className={cn(
-              "text-[11px]  block mb-0.5 whitespace-nowrap",
+              "text-[11px] font-medium block mb-0.5 whitespace-nowrap",
               idx <= currentStep ? "text-slate-900" : "text-slate-400"
             )}>
               {step.label}
             </span>
-            <span className="text-[10px] text-slate-500 whitespace-nowrap">{step.sub}</span>
+            <span className="text-[10px] text-slate-400 whitespace-nowrap">{step.sub}</span>
           </div>
         );
       })}
@@ -145,6 +156,11 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
   const [completedSteps, setCompletedSteps] = React.useState<number[]>([]);
   const [activeTab, setActiveTab] = React.useState("General");
   const [isEvaluating, setIsEvaluating] = React.useState(false);
+  const [activeMajorStep, setActiveMajorStep] = React.useState(0);
+  const [dateRange, setDateRange] = React.useState<DateRange>({ 
+    from: new Date(2024, 0, 6), 
+    to: new Date(2024, 0, 13) 
+  });
 
   const tabs = ["General", "Address", "Personnel", "About"];
 
@@ -175,6 +191,10 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
       // Transition to Staff Allocation (Step 4)
       setCompletedSteps(prev => [...new Set([...prev, 3])]);
       setActiveInternalStep(4);
+    } else if (activeInternalStep === 4) {
+      // Complete Staff Allocation and move to Phase 2 (Major Step 1)
+      setCompletedSteps(prev => [...new Set([...prev, 4])]);
+      setActiveMajorStep(1);
     }
   };
 
@@ -189,6 +209,14 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
     { id: 2, name: "Evaluation Criteria One", size: "200 KB" },
     { id: 3, name: "Evaluation Criteria One", size: "200 KB" },
     { id: 4, name: "Evaluation Criteria One", size: "200 KB" },
+  ];
+  
+  const staffAllocationList = [
+    { id: 1, position: "Position", qualification: "Qualification", count: 2, status: "Rejected" },
+    { id: 2, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
+    { id: 3, position: "Position", qualification: "Qualification", count: 2, status: "Rejected" },
+    { id: 4, position: "Position", qualification: "Qualification", count: 2, status: "Approved" },
+    { id: 5, position: "Position", qualification: "Qualification", count: 2, status: "Pending" },
   ];
 
   const application = mockApplications.find(app => app.id === id) || mockApplications[0];
@@ -210,24 +238,28 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
           {/* Main Content Area */}
           <div className="flex flex-1 flex-col">
             <div >
-              <HorizontalStepper currentStep={0} />
+              <HorizontalStepper currentStep={activeMajorStep} />
             </div>
 
             <div className="flex flex-1 overflow-hidden">
               {/* Left Internal Nav */}
-              <ApplicationSidebar
-                activeStep={activeInternalStep}
-                completedSteps={completedSteps}
-                onStepChange={setActiveInternalStep}
-              />
+              {activeMajorStep === 0 && (
+                <ApplicationSidebar
+                  activeStep={activeInternalStep}
+                  completedSteps={completedSteps}
+                  onStepChange={setActiveInternalStep}
+                />
+              )}
 
               {/* Form Content */}
-              <div className="flex-1 p-8 bg-white justify-center overflow-y-auto no-scrollbar">
-                {activeInternalStep === 0 && (
+              <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar p-8", activeMajorStep === 0 && "flex flex-col items-center")}>
+                {activeMajorStep === 0 && (
+                  <>
+                    {activeInternalStep === 0 && (
                   <>
                     {/* Top Action Buttons */}
-                    <div className="max-w-md mx-auto flex items-center gap-4 mb-12">
-                      <button className="flex-1 py-2 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => {
+                    <div className="max-w-md mx-auto flex items-center gap-4 mb-12 w-full">
+                      <button className="flex-1 py-3 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => {
                         if (isEvaluating) {
                           const currentIndex = tabs.indexOf(activeTab);
                           if (currentIndex > 0) {
@@ -243,20 +275,20 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       </button>
                       <button
                         onClick={handleNext}
-                        className="flex-1 py-2 bg-[var(--primary)] text-white rounded-sm text-sm  hover:opacity-90 transition-opacity cursor-pointer"
+                        className="flex-1 py-3 bg-[var(--primary)] text-white rounded-sm text-sm  hover:opacity-90 transition-opacity cursor-pointer"
                       >
                         {isEvaluating ? "Next" : "Start Evaluation"}
                       </button>
                     </div>
 
                     {/* Tabs */}
-                    <div className="flex justify-between max-w-md mb-5 overflow-x-auto mx-auto no-scrollbar">
+                    <div className="flex justify-between max-w-md mb-5 overflow-x-auto mx-auto no-scrollbar w-full">
                       {["General", "Address", "Personnel", "About"].map((tab) => (
                         <button
                           key={tab}
                           onClick={() => setActiveTab(tab)}
                           className={cn(
-                            " py-2 text-start text-sm cursor-pointer  transition-all relative",
+                            " py-3 text-start text-sm cursor-pointer  transition-all relative",
                             activeTab === tab ? "text-[var(--primary)]" : "text-slate-400 hover:text-slate-600"
                           )}
                         >
@@ -266,7 +298,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     {/* Form Container */}
-                    <div className="max-w-md mx-auto space-y-8">
+                    <div className="max-w-md mx-auto space-y-8 w-full">
                       {activeTab === "General" && (
                         <div className="grid grid-cols-1 gap-8">
                           {/* Institution Name */}
@@ -277,7 +309,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                                 type="text"
                                 readOnly
                                 defaultValue={application.institution.name}
-                                className="w-full px-4 py-2 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
+                                className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
                               />
                               <Building2 className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                             </div>
@@ -287,7 +319,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                             <div className="space-y-2 text-left">
                               <label className="text-[13px]  text-slate-700">Institution Type</label>
                               <div className="relative mt-2">
-                                <select disabled defaultValue="SPE" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-500 appearance-none bg-white cursor-default">
+                                <select disabled defaultValue="SPE" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-500 appearance-none bg-white cursor-default">
                                   <option value="SPE">SPE</option>
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 pointer-events-none" />
@@ -296,7 +328,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                             <div className="space-y-2">
                               <label className="text-[13px]  text-slate-700">P.O Box</label>
                               <div className="relative mt-2">
-                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
                                 <Package className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                               </div>
                             </div>
@@ -305,7 +337,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           <div className="space-y-2">
                             <label className="text-[13px]  text-slate-700">Email Address</label>
                             <div className="relative mt-2">
-                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
                               <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                             </div>
                           </div>
@@ -314,13 +346,13 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                             <label className="text-[13px]  text-slate-700">Phone Number</label>
                             <div className="flex mt-2">
                               <div className="relative">
-                                <select disabled defaultValue="+250" className="pl-4 pr-10 py-2 rounded-l-sm border border-r-0 border-slate-200 text-sm text-slate-500 bg-slate-50 cursor-default appearance-none">
+                                <select disabled defaultValue="+250" className="pl-4 pr-10 py-3 rounded-l-sm border border-r-0 border-slate-200 text-sm text-slate-500 bg-slate-50 cursor-default appearance-none">
                                   <option>+250</option>
                                 </select>
                                 <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300 pointer-events-none" />
                               </div>
                               <div className="relative flex-1">
-                                <input readOnly defaultValue="791-234-567" className="w-full px-4 py-2 rounded-r-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
+                                <input readOnly defaultValue="791-234-567" className="w-full px-4 py-3 rounded-r-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
                                 <Phone className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                               </div>
                             </div>
@@ -331,18 +363,18 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       {activeTab === "Address" && (
                         <div className="grid grid-cols-1 gap-8">
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Province</label><input readOnly defaultValue="Western" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">District</label><input readOnly defaultValue="Nyabihu" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Province</label><input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">District</label><input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Sector</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Cell</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Sector</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Cell</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Village</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
-                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">City</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">Village</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                            <div className="space-y-2"><label className="text-[13px]  text-slate-700">City</label><input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
                           </div>
-                          <div className="space-y-2"><label className="text-[13px]  text-slate-700">Address Line</label><input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-2 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
+                          <div className="space-y-2"><label className="text-[13px]  text-slate-700">Address Line</label><input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" /></div>
                         </div>
                       )}
 
@@ -370,26 +402,26 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                 )}
 
                 {activeInternalStep === 1 && (
-                  <div className="max-w-xl mx-auto flex flex-col items-center">
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Ungroup className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
                     <h2 className="text-xl  text-slate-900 mb-2">Trade & Module Selected</h2>
                     <p className="text-sm text-slate-500 mb-8">Select the trade you are applying for accreditation in.</p>
                     <div className="flex items-center w-full justify-start gap-4 mb-8">
-                      <div className="flex items-center gap-2 px-4 py-2 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
                         <Ungroup className="h-4 w-4" />Masonry
                         <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center"><ChevronDown className="h-3 w-3 text-white rotate-180" /></div>
                       </div>
                       <ChevronRight className="h-4 w-4 text-slate-300" />
-                      <div className="flex items-center gap-2 px-4 py-2 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
                         <Database className="h-4 w-4" />Data Structures & Algorithms
                         <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center text-[10px] text-white">✓</div>
                       </div>
                     </div>
                     <div className="flex items-center gap-4 w-full mb-12">
-                      <button onClick={() => setActiveInternalStep(0)} className="flex-1 py-2 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
-                      <button onClick={handleNext} className="flex-1 py-2 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Next</button>
+                      <button onClick={() => setActiveInternalStep(0)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Next</button>
                     </div>
                     <div className="w-full space-y-4">
                       <h3 className="text-sm text-slate-800">Add Comment (Optional)</h3>
@@ -400,13 +432,13 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">275 characters left</div>
                         </div>
                       </div>
-                      <button className="flex items-center gap-2 px-6 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm  hover:opacity-90 transition-all ">Add Comment<span className="flex items-center justify-center w-4 h-4 border border-white/50 rounded-sm text-[10px]">+</span></button>
+                      <button className="flex items-center gap-2 px-6 py-3.5 bg-[#0A77FF] text-white rounded-sm text-sm  hover:opacity-90 transition-all ">Add Comment<span className="flex items-center justify-center w-4 h-4 border border-white/50 rounded-sm text-[10px]">+</span></button>
                     </div>
                   </div>
                 )}
 
                 {activeInternalStep === 2 && (
-                  <div className="max-w-xl mx-auto flex flex-col items-center">
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Package className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -414,7 +446,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                     <p className="text-sm text-slate-500 mb-8 text-center px-4">Specify the competencies offered under the selected trade.</p>
 
                     <div className="flex items-center justify-start w-full gap-4 mb-8">
-                      <div className="flex items-center gap-2 px-4 py-2 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
+                      <div className="flex items-center gap-2 px-4 py-3 rounded-sm border border-[#0A77FF] bg-white text-[13px]  text-[#0A77FF]">
                         <Ungroup className="h-4 w-4" />Masonry
                         <div className="h-4 w-4 rounded-full bg-green-500 flex items-center justify-center ml-1">
                           <Check className="h-2.5 w-2.5 text-white" />
@@ -423,8 +455,8 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                     </div>
 
                     <div className="flex items-center gap-4 w-full mb-10">
-                      <button onClick={() => setActiveInternalStep(1)} className="flex-1 py-2 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
-                      <button onClick={handleNext} className="flex-1 py-2 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                      <button onClick={() => setActiveInternalStep(1)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
                     </div>
 
                     <div className="w-full space-y-6">
@@ -436,7 +468,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           <input
                             type="text"
                             placeholder="Search"
-                            className="w-full pl-10 pr-4 py-2 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all"
+                            className="w-full pl-10 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all"
                           />
                           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                         </div>
@@ -449,7 +481,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                               {/* Using a placeholder for the equipment image */}
                               <div className="flex flex-col items-center gap-1 opacity-20 group-hover:opacity-40 transition-opacity">
                                 <Database className="h-6 w-6" />
-                                <span className="text-[8px] uppercase font-bold">Image</span>
+                                <span className="text-[8px]  font-bold">Image</span>
                               </div>
                             </div>
                             <div className="flex-1">
@@ -467,7 +499,7 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                 )}
 
                 {activeInternalStep === 3 && (
-                  <div className="max-w-xl mx-auto flex flex-col items-center">
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <FileText className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -475,8 +507,8 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                     <p className="text-sm text-slate-500 mb-8 text-center px-4">Upload curriculum and training materials.</p>
 
                     <div className="flex items-center gap-4 w-full mb-10">
-                      <button onClick={() => setActiveInternalStep(2)} className="flex-1 py-2 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
-                      <button onClick={handleNext} className="flex-1 py-2 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                      <button onClick={() => setActiveInternalStep(2)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
                     </div>
 
                     <div className="w-full border border-slate-100 rounded-sm overflow-hidden bg-white ">
@@ -493,8 +525,8 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                       <table className="w-full border-collapse">
                         <thead>
                           <tr className="bg-slate-50/50 border-b border-slate-100">
-                            <th className="px-3 py-2 text-left text-[12px]  text-slate-400 ">File name</th>
-                            <th className="px-3 py-2 text-left text-[12px]  text-slate-400  w-[120px]">Action</th>
+                            <th className="px-3 py-3 text-left text-[12px]  text-slate-400 ">File name</th>
+                            <th className="px-3 py-3 text-left text-[12px]  text-slate-400  w-[120px]">Action</th>
                             <th className="w-10 p-4 text-right">
                               <div className="h-4 w-4 border border-slate-200 rounded-[3px] ml-auto" />
                             </th>
@@ -531,6 +563,179 @@ export default function ApplicationDetailsPage({ params }: { params: Promise<{ i
                           ))}
                         </tbody>
                       </table>
+                    </div>
+                  </div>
+                )}
+
+                {activeInternalStep === 4 && (
+                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                    <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                      <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                    </div>
+                    <h2 className="text-xl text-slate-900 mb-2">Staff Allocation</h2>
+                    <p className="text-sm text-slate-500 mb-8 text-center px-4">Indicate staff availability for the selected trade.</p>
+
+                    <div className="flex items-center gap-4 w-full mb-10">
+                      <button onClick={() => setActiveInternalStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm  text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
+                      <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm  hover:opacity-90 transition-opacity ">Continue</button>
+                    </div>
+
+                    <div className="w-full border border-slate-100 rounded-sm overflow-hidden bg-white">
+                      <table className="w-full border-collapse">
+                        <thead>
+                          <tr className="bg-slate-50/50 border-b border-slate-100">
+                            <th className="w-10 p-4 text-center">
+                              <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                            </th>
+                            <th className="px-3 py-4 text-left text-[11px] font-[normal]  text-slate-400 ">Position & Qualification</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-[normal]  text-slate-400 ">Count</th>
+                            <th className="px-3 py-4 text-left text-[11px] font-[normal] text-slate-400 ">Status</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-slate-100">
+                          {staffAllocationList.map((item) => (
+                            <tr key={item.id} className="hover:bg-slate-50/30 transition-colors group">
+                              <td className="w-10 p-4 text-center">
+                                <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />
+                              </td>
+                              <td className="px-3 py-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+                                    <Users className="h-4 w-4 text-slate-500" />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-sm  text-slate-900">{item.position}</span>
+                                    <span className="text-[11px] text-slate-400">{item.qualification}</span>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="px-3 py-4 text-sm text-slate-600">{item.count}</td>
+                              <td className="px-3 py-4">
+                                {item.status === "Approved" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-green-100  text-[10px] text-green-600">
+                                    Approved
+                                    <Check className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                                {item.status === "Pending" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-blue-100  text-[10px] text-blue-600">
+                                    Pending
+                                    <Clock className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                                {item.status === "Rejected" && (
+                                  <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-sm border border-red-100  text-[10px] text-red-600">
+                                    Rejected
+                                    <AlertTriangle className="h-2.5 w-2.5" />
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+                  </>
+                )}
+
+                {activeMajorStep === 1 && (
+                  <div className="w-full ml-0 py-8 px-0 flex flex-col items-start">
+                    <div className="w-full flex gap-12 text-left">
+                      {/* Left Column: Institution Location */}
+                      <div className="flex-1 max-w-lg">
+                        <div className="mb-6">
+                          <h2 className="text-lg font-medium text-slate-900">Institution Location</h2>
+                          <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-6">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5 ">
+                              <label className="text-[13px] text-slate-700">Province</label>
+                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">District</label>
+                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Sector</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Cell</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">Village</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                            <div className="space-y-1.5">
+                              <label className="text-[13px] text-slate-700">City</label>
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            </div>
+                          </div>
+                          <div className="space-y-1.5">
+                            <label className="text-[13px] text-slate-700">Address Line</label>
+                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Column: Date Selection and Evaluator Assignment */}
+                      <div className="flex-1 flex flex-col gap-8">
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-slate-700">Date Selection</label>
+                          <DateRangePicker 
+                            value={dateRange} 
+                            onChange={setDateRange}
+                            className="w-fit"
+                          />
+                        </div>
+
+                        <div className="border border-dashed border-slate-200 rounded-sm p-6 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                            <UserPlus className="h-5 w-5 text-slate-400" />
+                          </div>
+                          <div className="text-left">
+                            <h4 className="text-sm text-slate-900 ">Assign Evaluator</h4>
+                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <h4 className="text-sm font-medium text-slate-700">Addition Evaluation Note?</h4>
+                          <div className="relative">
+                            <textarea
+                              placeholder="Text..."
+                              className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none"
+                            />
+                            <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">275 characters left</div>
+                          </div>
+                          <button className="flex items-center gap-2 px-6 py-3 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-all ">
+                            Add Note
+                            <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
+                          </button>
+                        </div>
+
+                        <div className="flex items-center gap-4 mt-4 pt-4">
+                          <button 
+                            onClick={() => setActiveMajorStep(0)}
+                            className="flex-1 py-3.5 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                          >
+                            Cancel
+                          </button>
+                          <button className="flex-1 py-3.5 px-4 bg-[#0A77FF] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity ">
+                            Schedule Due Diligence
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
