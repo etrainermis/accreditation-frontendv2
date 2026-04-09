@@ -7,8 +7,10 @@ import type { LegalRep } from "./legal-representatives-step";
 
 interface ReviewApplicationStepProps {
   formData: Record<string, string>;
-  mouFile: File | null;
-  regCertFile: File | null;
+  files: {
+    registration: File | null;
+    mou: File | null;
+  };
   legalReps: LegalRep[];
   aboutText: Record<string, string>;
   staffList: TechnicalStaffEntry[];
@@ -16,8 +18,7 @@ interface ReviewApplicationStepProps {
 
 export function ReviewApplicationStep({
   formData,
-  mouFile,
-  regCertFile,
+  files,
   legalReps,
   aboutText,
   staffList,
@@ -58,31 +59,29 @@ export function ReviewApplicationStep({
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
 
-            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 grid grid-cols-2 gap-x-6">
+            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
               <div className="space-y-1">
-                <span className="text-[12px] text-slate-500 block">MOU File</span>
-                {mouFile ? (
+                <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
+                {files.registration ? (
                   <div className="flex items-center gap-2 text-slate-700 mt-1">
                     <FileText className="h-4 w-4 text-blue-500" />
-                    <span className="text-[13.5px] font-medium truncate max-w-[200px]">{mouFile.name}</span>
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.registration.name}</span>
                   </div>
                 ) : (
                   <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
                 )}
               </div>
-              {formData["Institution Category"] === "Other Organisation" && (
-                <div className="space-y-1">
-                  <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
-                  {regCertFile ? (
-                    <div className="flex items-center gap-2 text-slate-700 mt-1">
-                      <FileText className="h-4 w-4 text-blue-500" />
-                      <span className="text-[13.5px] font-medium truncate max-w-[200px]">{regCertFile.name}</span>
-                    </div>
-                  ) : (
-                    <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
-                  )}
-                </div>
-              )}
+              <div className="space-y-1">
+                <span className="text-[12px] text-slate-500 block">MOU (Signed)</span>
+                {files.mou ? (
+                  <div className="flex items-center gap-2 text-slate-700 mt-1">
+                    <FileText className="h-4 w-4 text-emerald-500" />
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.mou.name}</span>
+                  </div>
+                ) : (
+                  <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
+                )}
+              </div>
             </div>
           </div>
         </div>
