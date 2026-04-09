@@ -2,12 +2,22 @@
 
 import { User, Mail, Phone } from "lucide-react";
 import { FormInput, FormSelect, FormPhone } from "@/components/ui/form-field";
+import { FormCard } from "../form-card";
+
+export interface LegalRep {
+  firstName: string;
+  lastName: string;
+  position: string;
+  gender: string;
+  email: string;
+  phone: string;
+}
 
 interface LegalRepresentativesStepProps {
   isAddingRep: boolean;
-  legalReps: Record<string, string>[];
-  newRep: Record<string, string>;
-  setNewRep: (rep: Record<string, string>) => void;
+  legalReps: LegalRep[];
+  newRep: LegalRep;
+  setNewRep: (rep: LegalRep | ((prev: LegalRep) => LegalRep)) => void;
 }
 
 export function LegalRepresentativesStep({
@@ -82,7 +92,7 @@ export function LegalRepresentativesStep({
   return (
     <div className="space-y-4">
       {legalReps.map((rep, idx) => (
-        <div key={idx} className="flex gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <FormCard key={idx} className="flex gap-4 items-start">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[15px] font-medium text-slate-600 uppercase">
             {rep.firstName?.[0] || "?"}{rep.lastName?.[0] || "?"}
           </div>
@@ -99,7 +109,7 @@ export function LegalRepresentativesStep({
               <span className="text-slate-500">Tel:</span> <span>+250-{rep.phone || "XXX-XXX-XXX"}</span>
             </div>
           </div>
-        </div>
+        </FormCard>
       ))}
     </div>
   );

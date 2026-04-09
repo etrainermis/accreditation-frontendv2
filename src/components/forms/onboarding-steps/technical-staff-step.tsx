@@ -2,14 +2,25 @@
 
 import { UserPlus, Plus, Minus, Pencil, Trash2, CheckCheck } from "lucide-react";
 import { FormSelect } from "@/components/ui/form-field";
+import { FormCard } from "../form-card";
+
+export interface TechnicalStaff {
+  qualification: string;
+  position: string;
+  status: string;
+}
+
+export interface TechnicalStaffEntry extends TechnicalStaff {
+  number: number;
+}
 
 interface TechnicalStaffStepProps {
-  newStaff: Record<string, string>;
-  setNewStaff: (staff: Record<string, string>) => void;
+  newStaff: TechnicalStaff;
+  setNewStaff: (staff: TechnicalStaff | ((prev: TechnicalStaff) => TechnicalStaff)) => void;
   staffNumber: number;
   setStaffNumber: (num: number | ((prev: number) => number)) => void;
-  staffList: Record<string, string | number>[];
-  setStaffList: (list: Record<string, string | number>[]) => void;
+  staffList: TechnicalStaffEntry[];
+  setStaffList: (list: TechnicalStaffEntry[] | ((prev: TechnicalStaffEntry[]) => TechnicalStaffEntry[])) => void;
   editingStaffIdx: number | null;
   setEditingStaffIdx: (idx: number | null) => void;
   onDeleteStaff: (idx: number) => void;
@@ -28,7 +39,7 @@ export function TechnicalStaffStep({
 }: TechnicalStaffStepProps) {
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4 shadow-sm">
+      <FormCard>
         <FormSelect
           label="Qualification"
           value={newStaff.qualification}
@@ -101,7 +112,7 @@ export function TechnicalStaffStep({
             ]}
           />
         </div>
-      </div>
+      </FormCard>
 
       <div className="flex justify-start gap-4">
         <button
@@ -121,7 +132,7 @@ export function TechnicalStaffStep({
             }
           }}
           disabled={!newStaff.qualification || !newStaff.position || !newStaff.status || staffNumber === 0}
-          className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-2 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-3 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {editingStaffIdx !== null ? "Update Staff" : "Add Staff"} <UserPlus className="h-4 w-4" />
         </button>
@@ -134,7 +145,7 @@ export function TechnicalStaffStep({
               setNewStaff({ qualification: "", position: "", status: "" });
               setStaffNumber(0);
             }}
-            className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
+            className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
           >
             Cancel
           </button>
@@ -145,7 +156,7 @@ export function TechnicalStaffStep({
         <div className="space-y-4 pt-4">
           <div className="space-y-3">
             {staffList.map((staff, idx) => (
-              <div key={idx} className="rounded-sm border border-slate-200 bg-white p-5 space-y-5 shadow-sm transition hover:border-slate-300">
+              <FormCard key={idx} className="transition hover:border-slate-300">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <span className="text-[12px] text-slate-500">Qualification</span>
@@ -189,7 +200,7 @@ export function TechnicalStaffStep({
                     </button>
                   </div>
                 </div>
-              </div>
+              </FormCard>
             ))}
           </div>
         </div>

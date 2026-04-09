@@ -11,29 +11,33 @@ const stepIcons = [Building, MapPin, User, ClipboardList, Users, CheckCircle];
 
 export function ApplicantOnboardingShell({
   currentStep,
+  showLogo = true,
   children,
 }: {
   currentStep: string;
+  showLogo?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <main className="grid min-h-screen bg-white lg:grid-cols-[340px_1fr]">
-      <aside className="relative flex flex-col justify-between border-r border-slate-200 bg-[#f8fafc] px-8 pt-8 pb-4 z-10">
+    <main className="flex min-h-screen bg-white">
+      <aside className="fixed top-0 left-0 bottom-0 w-[340px] flex flex-col justify-between border-r border-slate-200 bg-[#f8fafc] px-8 pt-8 pb-4 z-10 overflow-y-auto hidden lg:flex">
         <div className="space-y-10">
           <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <Image 
-                src="/images/branding/rtb-logo.png" 
-                alt="RTB Logo" 
-                width={55} 
-                height={35} 
-                className="object-contain mix-blend-multiply" 
-              />
-              <div className="flex flex-col">
-                <span className="text-[15px] font-medium text-slate-700 leading-tight">RTB</span>
-                <span className="text-[15px] text-slate-600 leading-tight">Accreditation</span>
+            {showLogo && (
+              <div className="flex items-center gap-3">
+                <Image 
+                  src="/images/branding/rtb-logo.png" 
+                  alt="RTB Logo" 
+                  width={55} 
+                  height={35} 
+                  className="object-contain mix-blend-multiply" 
+                />
+                <div className="flex flex-col">
+                  <span className="text-[15px] font-medium text-slate-700 leading-tight">RTB</span>
+                  <span className="text-[15px] text-slate-600 leading-tight">Accreditation</span>
+                </div>
               </div>
-            </div>
+            )}
 
             <Link href="/login" className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700">
               <ArrowLeft className="h-3.5 w-3.5" /> Go back
@@ -50,7 +54,7 @@ export function ApplicantOnboardingShell({
                 <div key={step.key} className="flex gap-3">
                   <div className="flex flex-col items-center">
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
+                      className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
                         isActive
                           ? "border-slate-200 bg-white text-slate-800 shadow-sm"
                           : isComplete
@@ -80,9 +84,9 @@ export function ApplicantOnboardingShell({
         <div className="mt-12 text-xs text-slate-400 font-medium">© RTB {getCurrentYear()}</div>
       </aside>
       
-      <section className="relative w-full h-full bg-white z-0">
+      <section className="relative w-full h-full min-h-screen bg-white z-0 lg:ml-[340px]">
         <DotPatternBackground>
-          <div className="flex min-h-screen items-center justify-center px-4 py-8 relative">
+          <div className="flex min-h-[calc(100vh)] items-center justify-center px-4 py-8 relative">
             <div className="z-10 w-full max-w-[420px] bg-transparent pt-2">
               {children}
             </div>

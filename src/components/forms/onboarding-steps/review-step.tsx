@@ -2,18 +2,22 @@
 
 import Link from "next/link";
 import { CheckCircle, FileText } from "lucide-react";
+import type { TechnicalStaffEntry } from "./technical-staff-step";
+import type { LegalRep } from "./legal-representatives-step";
 
 interface ReviewApplicationStepProps {
   formData: Record<string, string>;
-  selectedFile: File | null;
-  legalReps: Record<string, string>[];
+  mouFile: File | null;
+  regCertFile: File | null;
+  legalReps: LegalRep[];
   aboutText: Record<string, string>;
-  staffList: Record<string, string | number>[];
+  staffList: TechnicalStaffEntry[];
 }
 
 export function ReviewApplicationStep({
   formData,
-  selectedFile,
+  mouFile,
+  regCertFile,
   legalReps,
   aboutText,
   staffList,
@@ -53,19 +57,32 @@ export function ReviewApplicationStep({
               <span className="text-[12px] text-slate-500 block mb-1">Phone Number</span>
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
-            
-            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
+
+            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 grid grid-cols-2 gap-x-6">
               <div className="space-y-1">
-                <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
-                {selectedFile ? (
+                <span className="text-[12px] text-slate-500 block">MOU File</span>
+                {mouFile ? (
                   <div className="flex items-center gap-2 text-slate-700 mt-1">
                     <FileText className="h-4 w-4 text-blue-500" />
-                    <span className="text-[13.5px] font-medium truncate max-w-[200px]">{selectedFile.name}</span>
+                    <span className="text-[13.5px] font-medium truncate max-w-[200px]">{mouFile.name}</span>
                   </div>
                 ) : (
                   <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
                 )}
               </div>
+              {formData["Institution Category"] === "Other Organisation" && (
+                <div className="space-y-1">
+                  <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
+                  {regCertFile ? (
+                    <div className="flex items-center gap-2 text-slate-700 mt-1">
+                      <FileText className="h-4 w-4 text-blue-500" />
+                      <span className="text-[13.5px] font-medium truncate max-w-[200px]">{regCertFile.name}</span>
+                    </div>
+                  ) : (
+                    <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>
