@@ -48,7 +48,7 @@ export function CriteriaHeader({ title, description }: { title: string, descript
   return (
     <div className="flex items-center justify-between py-6 px-1 border-t border-slate-100 mt-8 first:mt-4 first:border-0">
       <div>
-        <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+        <h2 className="text-lg  text-slate-900">{title}</h2>
         <p className="text-sm text-slate-500 mt-0.5">{description}</p>
       </div>
       <button className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-900">

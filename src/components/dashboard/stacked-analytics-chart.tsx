@@ -38,7 +38,7 @@ export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
   return (
     <Card className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden text-[#101828] animate-slide-up">
       <div className="flex items-center justify-between px-6 py-4">
-        <h3 className="text-base font-semibold">Applications Trend</h3>
+        <h3 className="text-base ">Applications Trend</h3>
         <MoreHorizontal className="h-5 w-5 text-slate-400 cursor-pointer" />
       </div>
 
@@ -125,21 +125,21 @@ export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
                             <div className="h-1.5 w-1.5 rounded-full bg-[#0A77FF]" />
                             <span className="text-slate-400">Rejected</span>
                           </div>
-                          <span className="font-semibold text-white">{d.rejected}</span>
+                          <span className=" text-white">{d.rejected}</span>
                         </div>
                         <div className="flex items-center justify-between gap-4">
                           <div className="flex items-center gap-1.5">
                             <div className="h-1.5 w-1.5 rounded-full bg-[#59A8FF]" />
                             <span className="text-slate-400">Approved</span>
                           </div>
-                          <span className="font-semibold text-white">{d.approved}</span>
+                          <span className=" text-white">{d.approved}</span>
                         </div>
                         <div className="flex items-center justify-between gap-4">
                           <div className="flex items-center gap-1.5">
                             <div className="h-1.5 w-1.5 rounded-full bg-[#E0EFFF]" />
                             <span className="text-slate-400">Pending</span>
                           </div>
-                          <span className="font-semibold text-white">{d.pending}</span>
+                          <span className=" text-white">{d.pending}</span>
                         </div>
                       </div>
                       {/* Tooltip Arrow */}

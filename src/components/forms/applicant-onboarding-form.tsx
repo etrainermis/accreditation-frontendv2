@@ -174,25 +174,25 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
           if (step === "institution-details" && institutionSubStep === 2) {
             secondaryBtn = (
-              <button type="button" onClick={() => setInstitutionSubStep(1)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
+              <button type="button" onClick={() => setInstitutionSubStep(1)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm  text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
                 Back
               </button>
             );
           } else if (step === "about-the-institution" && aboutSubStep > 1) {
             secondaryBtn = (
-              <button type="button" onClick={() => setAboutSubStep((prev) => (prev - 1) as 1 | 2 | 3)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
+              <button type="button" onClick={() => setAboutSubStep((prev) => (prev - 1) as 1 | 2 | 3)} className="flex w-1/2 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm  text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
                 Back
               </button>
             );
           } else if (step === "legal-representatives" && isAddingRep && legalReps.length > 0) {
             secondaryBtn = (
-              <button type="button" onClick={() => setIsAddingRep(false)} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
+              <button type="button" onClick={() => setIsAddingRep(false)} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm  text-slate-600 shadow-sm transition hover:bg-slate-50 cursor-pointer">
                 Cancel
               </button>
             );
           } else if (previousStep) {
             secondaryBtn = (
-              <Link href={`/applicant/onboarding/${previousStep.key}`} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition hover:bg-slate-50">
+              <Link href={`/applicant/onboarding/${previousStep.key}`} className="flex w-1/3 items-center justify-center rounded-sm border border-slate-200 bg-white px-4 py-2.5 text-sm  text-slate-600 shadow-sm transition hover:bg-slate-50">
                 Back
               </Link>
             );
@@ -202,13 +202,13 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
           if (step === "institution-details" && institutionSubStep === 1) {
             primaryBtn = (
-              <button type="button" onClick={() => setInstitutionSubStep(2)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
+              <button type="button" onClick={() => setInstitutionSubStep(2)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm  !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
                 Continue
               </button>
             );
           } else if (step === "about-the-institution" && aboutSubStep < 3) {
             primaryBtn = (
-              <button type="button" onClick={() => setAboutSubStep((prev) => (prev + 1) as 1 | 2 | 3)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
+              <button type="button" onClick={() => setAboutSubStep((prev) => (prev + 1) as 1 | 2 | 3)} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm  !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
                 Continue
               </button>
             );
@@ -221,14 +221,14 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
                   setIsAddingRep(false);
                   setNewRep({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
                 }}
-                className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}
+                className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm  !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}
               >
                 Save Representative
               </button>
             );
           } else {
             primaryBtn = (
-              <Link href={isLastStep ? "/applicant/dashboard" : `/applicant/onboarding/${nextStep.key}`} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
+              <Link href={isLastStep ? "/applicant/dashboard" : `/applicant/onboarding/${nextStep.key}`} className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm  !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}>
                 {isLastStep ? "Confirm and Submit" : "Continue"}
               </Link>
             );

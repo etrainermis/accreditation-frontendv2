@@ -28,7 +28,7 @@ export function DashboardEmptyState() {
 
       {/* Text Content */}
       <div className="text-center max-w-[440px] mx-auto mb-8">
-        <h3 className="text-[17px] font-semibold text-slate-900 mb-2">
+        <h3 className="text-[17px]  text-slate-900 mb-2">
           No Applications Yet!
         </h3>
         <p className="text-[13px] leading-relaxed text-slate-500">
