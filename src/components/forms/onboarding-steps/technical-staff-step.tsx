@@ -2,6 +2,7 @@
 
 import { UserPlus, Plus, Minus, Pencil, Trash2, CheckCheck } from "lucide-react";
 import { FormSelect } from "@/components/ui/form-field";
+import { FormCard } from "../form-card";
 
 export interface TechnicalStaff {
   qualification: string;
@@ -38,7 +39,7 @@ export function TechnicalStaffStep({
 }: TechnicalStaffStepProps) {
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-4 shadow-sm">
+      <FormCard>
         <FormSelect
           label="Qualification"
           value={newStaff.qualification}
@@ -111,7 +112,7 @@ export function TechnicalStaffStep({
             ]}
           />
         </div>
-      </div>
+      </FormCard>
 
       <div className="flex justify-start gap-4">
         <button
@@ -155,7 +156,7 @@ export function TechnicalStaffStep({
         <div className="space-y-4 pt-4">
           <div className="space-y-3">
             {staffList.map((staff, idx) => (
-              <div key={idx} className="rounded-sm border border-slate-200 bg-white p-5 space-y-5 shadow-sm transition hover:border-slate-300">
+              <FormCard key={idx} className="transition hover:border-slate-300">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
                     <span className="text-[12px] text-slate-500">Qualification</span>
@@ -199,7 +200,7 @@ export function TechnicalStaffStep({
                     </button>
                   </div>
                 </div>
-              </div>
+              </FormCard>
             ))}
           </div>
         </div>
