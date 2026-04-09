@@ -4,6 +4,13 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-destructive: var(--destructive);
   --font-sans: var(--font-manrope);
   --font-mono: var(--font-ibm-plex-mono);
   --radius-sm: calc(var(--radius) - 0.5rem);
@@ -23,8 +30,8 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.1), transparent 28%),
-    radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 24%),
+    radial-gradient(circle at top left, rgba(0, 136, 255, 0.08), transparent 28%),
+    radial-gradient(circle at top right, rgba(0, 136, 255, 0.12), transparent 24%),
     var(--background);
   color: var(--foreground);
   font-family: var(--font-manrope), sans-serif;
@@ -57,4 +64,29 @@ a {
 * {
   scrollbar-width: thin;
   scrollbar-color: #e2e8f0 transparent;
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+
+  &::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  @keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
 }

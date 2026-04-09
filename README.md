@@ -25,6 +25,65 @@ Build the frontend according to the approved design, keep the portals clearly se
 - React Hook Form
 - Zod
 
+## UI And Styling Setup
+
+The component and styling setup is already prepared in this codebase.
+
+Collaborators should continue using the same stack and not introduce a different UI system.
+
+### Use these styling tools
+
+- Tailwind CSS for layout, spacing, sizing, and utility styling
+- Radix UI primitives for accessible component behavior
+- `lucide-react` for icons
+- Existing reusable UI components from `src/components/ui`
+- Existing shared layout components from `src/components/layout` and `src/components/navigation`
+
+### Important note about shadcn/ui
+
+This project is already structured in a `shadcn`-style way manually.
+
+That means:
+
+- reusable UI components already exist in `src/components/ui`
+- the team should keep following the same pattern
+- if new components are added later, they should match the current structure and styling approach
+
+### Brand color
+
+The main blue used in this project is:
+
+```text
+#0088FF
+```
+
+Use this blue consistently for:
+
+- primary buttons
+- active sidebar states
+- focused inputs
+- highlights
+- key chart accents
+- onboarding progress states
+
+### Shared image assets already added
+
+The following shared assets are already available in the project:
+
+- Logo: `public/images/branding/rtb-logo.png`
+- Login or auth banner: `public/images/auth/sider-banner-login.png`
+
+Use these existing assets instead of re-uploading duplicates.
+
+Example usage:
+
+```tsx
+import Image from "next/image";
+
+<Image src="/images/branding/rtb-logo.png" alt="RTB Logo" width={120} height={80} />
+<Image src="/images/auth/sider-banner-login.png" alt="Login banner" width={432} height={768} />
+```
+
 ## Getting Started
 
 ### 1. Clone the repository into the current root folder
@@ -58,7 +117,6 @@ Examples:
 git checkout -b emmanuel
 git checkout -b kelia
 git checkout -b tresor
-git checkout -b aaron
 ```
 
 Do not work directly on `main`.
@@ -145,6 +203,10 @@ src/
   hooks/
   types/
   styles/
+public/
+  images/
+    branding/
+    auth/
 ```
 
 ### `src/app`
@@ -211,6 +273,23 @@ Contains shared TypeScript types and interfaces.
 
 Contains shared styling tokens and global style support.
 
+Important files here include:
+
+- `src/styles/tokens.css` for design tokens and shared color values
+- `src/app/globals.css` for global app styling
+
+### `public`
+
+Contains static assets used directly by the frontend.
+
+Use this folder for:
+
+- logos
+- banners
+- illustrations
+- mock images
+- other shared visual assets
+
 ## Implementation Guidance For Contributors
 
 When you start work:
@@ -219,9 +298,11 @@ When you start work:
 2. Identify the correct portal.
 3. Work inside your own branch.
 4. Add code in the correct folder based on responsibility.
-5. Keep shared components minimal and reusable.
-6. Keep role-specific logic inside the correct portal or feature area.
-7. Merge into `dev` before anything goes to `main`.
+5. Reuse the current styling system instead of creating a new one.
+6. Use the existing blue `#0088FF` as the primary action color.
+7. Use the shared assets already placed in `public/images` where appropriate.
+8. Keep role-specific logic inside the correct portal or feature area.
+9. Merge into `dev` before anything goes to `main`.
 
 ## Scripts
 
@@ -237,6 +318,7 @@ When you start work:
 - Avoid backend assumptions unless the frontend needs a lightweight placeholder.
 - Keep the portals separate by role.
 - Keep implementation aligned with the Figma design.
+- Keep using the current component and styling system already present in the repo.
 
 ## Additional Docs
 

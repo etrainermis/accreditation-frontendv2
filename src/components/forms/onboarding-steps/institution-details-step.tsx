@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Building, FileText, CloudUpload, Package, Mail, Phone, CheckCircle, Clock } from "lucide-react";
+import { Building, FileText, CloudUpload, Package, Mail, Phone, CheckCircle, Clock, CheckCircle2 } from "lucide-react";
 import { FormInput, FormSelect, FormPhone } from "@/components/ui/form-field";
 
 interface InstitutionDetailsStepProps {
@@ -25,11 +25,24 @@ export function InstitutionDetailsStep({
   setFormData,
 }: InstitutionDetailsStepProps) {
   const isOther = formData["Institution Category"] === "Other Institution";
-  const docTypes = isOther 
+  const docTypes = isOther
+  const docTypes = isOther
     ? ["MOU (Signed Memorandum)", "Registration Certificate"]
     : ["MOU (Signed Memorandum)"];
-  
+
+
   const [selectedDocType, setSelectedDocType] = useState("MOU (Signed Memorandum)");
+
+
+  const certOptions = [
+    { id: 'mou', label: 'MOU (Signed Memorandum)' },
+    ...(isOther ? [{ id: 'regCert', label: 'Registration Certificate' }] : []),
+  ];
+
+  const files: Record<string, File | null> = {
+    mou: mouFile,
+    regCert: regCertFile,
+  };
 
   if (subStep === 2) {
     const activeFile = selectedDocType === "MOU (Signed Memorandum)" ? mouFile : regCertFile;
@@ -90,34 +103,33 @@ export function InstitutionDetailsStep({
           </label>
         </div>
 
-        <div className="rounded-xl border border-slate-200 bg-slate-50/50 p-5 mt-2">
-          <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-4">UPLOAD STATUS</h4>
-          <div className="space-y-2.5">
-            {isOther && (
-              <div className={`flex items-center justify-between rounded-lg border p-3 ${regCertFile ? 'border-green-200 bg-green-50' : 'border-slate-200 bg-white'}`}>
-                <div className="flex items-center gap-2.5">
-                  {regCertFile ? <CheckCircle className="h-4 w-4 text-green-500" /> : <Clock className="h-4 w-4 text-slate-400" />}
-                  <span className={`text-[13px] font-medium ${regCertFile ? 'text-green-700' : 'text-slate-600'}`}>Registration Certificate</span>
+        <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 space-y-3">
+          <h4 className="text-[12px] font-bold text-slate-500 uppercase tracking-wider px-1">Upload Status</h4>
+          <div className="grid gap-2">
+            {certOptions.map(opt => {
+              const uploaded = !!files[opt.id];
+              return (
+                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-3 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
+                  <div className="flex items-center gap-3">
+                    {uploaded ? (
+                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                    ) : (
+                      <Clock className="h-4 w-4 text-slate-300" />
+                    )}
+                    <span className="text-[13.5px] font-medium">{opt.label}</span>
+                  </div>
+                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tight ${uploaded ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                    {uploaded ? 'Uploaded' : 'Pending'}
+                  </span>
                 </div>
-                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${regCertFile ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
-                  {regCertFile ? 'UPLOADED' : 'PENDING'}
-                </span>
-              </div>
-            )}
-            <div className={`flex items-center justify-between rounded-lg border p-3 ${mouFile ? 'border-green-200 bg-green-50' : 'border-slate-200 bg-white'}`}>
-              <div className="flex items-center gap-2.5">
-                {mouFile ? <CheckCircle className="h-4 w-4 text-green-500" /> : <Clock className="h-4 w-4 text-slate-400" />}
-                <span className={`text-[13px] font-medium ${mouFile ? 'text-green-700' : 'text-slate-600'}`}>MOU (Signed Memorandum)</span>
-              </div>
-              <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${mouFile ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-500'}`}>
-                {mouFile ? 'UPLOADED' : 'PENDING'}
-              </span>
-            </div>
+              );
+            })}
           </div>
         </div>
       </div>
     );
   }
+
 
   return (
     <div className="grid gap-x-4 gap-y-4 md:grid-cols-2">
@@ -160,6 +172,7 @@ export function InstitutionDetailsStep({
         onChange={(v) => setFormData({ ...formData, "P.O Box": v })}
         placeholder="e.g. P.O. Box 1234, K..."
         icon={Package}
+        className="md:col-span-2"
       />
       <FormInput
         label="Email"

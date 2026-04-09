@@ -35,7 +35,7 @@ export function FormInput({
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-sm border border-slate-200 px-3 py-2 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 placeholder:text-slate-400"
+          className="w-full rounded-sm border border-slate-200 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 placeholder:text-slate-400"
           placeholder={placeholder}
         />
         {Icon && (
@@ -75,7 +75,7 @@ export function FormSelect({
         <select
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className={`w-full appearance-none rounded-sm border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 ${
+          className={`w-full appearance-none rounded-sm border border-slate-200 bg-white px-3 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 ${
             !value ? "text-slate-400" : "text-slate-600"
           }`}
         >
@@ -124,7 +124,7 @@ export function FormPhone({
         <input
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="flex-1 w-full bg-transparent px-3 py-2 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+          className="flex-1 w-full bg-transparent px-3 py-3 text-sm text-slate-700 outline-none placeholder:text-slate-400"
           placeholder="XXX-XXX-XXX"
         />
         {Icon && (

@@ -1,58 +1,16 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PageContainer } from "@/components/layout/page-container";
+"use client";
 
-const stats = [
-  { label: "Applications", value: "2,203" },
-  { label: "Pending", value: "1,003" },
-  { label: "Evaluated", value: "1,190" },
-  { label: "Rejected", value: "10" },
-];
+import { PageContainer } from "@/components/layout/page-container";
+import { SharedDashboardContainer } from "@/features/dashboard/components/shared-dashboard-container";
 
 export default function EvaluatorDashboardPage() {
   return (
-    <PageContainer role="evaluator" title="Manage Accreditation Evaluations" description="View and manage evaluations.">
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {stats.map((item) => (
-          <Card key={item.label} className="rounded-2xl border border-slate-200 bg-white shadow-none">
-            <CardContent className="space-y-3 p-6">
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="text-2xl font-semibold text-slate-900">{item.value}</p>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-        <CardHeader>
-          <CardTitle className="text-base">All Applications</CardTitle>
-          <CardDescription>Minimal list</CardDescription>
-        </CardHeader>
-        <CardContent className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-left text-sm">
-            <thead className="text-slate-400">
-              <tr className="border-b border-slate-200">
-                <th className="pb-3 font-medium">Applicant</th>
-                <th className="pb-3 font-medium">Institution</th>
-                <th className="pb-3 font-medium">Status</th>
-                <th className="pb-3 font-medium">Stage</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ["Jane Smith", "Command+R", "Pending", "Initial Review"],
-                ["Jane Smith", "Command+R", "Pending", "Due Diligence"],
-                ["Jane Smith", "Command+R", "Approved", "Certified"],
-              ].map((row) => (
-                <tr key={row.join("-")} className="border-b border-slate-100 text-slate-600 last:border-0">
-                  {row.map((cell) => (
-                    <td key={cell} className="py-4">{cell}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </CardContent>
-      </Card>
+    <PageContainer 
+      role="evaluator" 
+      title="Manage Accreditation Evaluations" 
+      description="View and manage evaluations."
+    >
+      <SharedDashboardContainer role="evaluator" userName="Evaluator" />
     </PageContainer>
   );
 }

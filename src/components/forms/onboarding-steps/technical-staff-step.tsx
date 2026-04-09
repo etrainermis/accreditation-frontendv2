@@ -132,7 +132,7 @@ export function TechnicalStaffStep({
             }
           }}
           disabled={!newStaff.qualification || !newStaff.position || !newStaff.status || staffNumber === 0}
-          className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-2 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+          className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-3 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {editingStaffIdx !== null ? "Update Staff" : "Add Staff"} <UserPlus className="h-4 w-4" />
         </button>
@@ -145,7 +145,7 @@ export function TechnicalStaffStep({
               setNewStaff({ qualification: "", position: "", status: "" });
               setStaffNumber(0);
             }}
-            className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
+            className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
           >
             Cancel
           </button>
@@ -180,11 +180,11 @@ export function TechnicalStaffStep({
                       type="button"
                       onClick={() => {
                         setNewStaff({
-                          qualification: staff.qualification,
-                          position: staff.position,
-                          status: staff.status,
+                          qualification: String(staff.qualification),
+                          position: String(staff.position),
+                          status: String(staff.status),
                         });
-                        setStaffNumber(staff.number);
+                        setStaffNumber(typeof staff.number === 'number' ? staff.number : 0);
                         setEditingStaffIdx(idx);
                       }}
                       className="text-blue-600 hover:text-blue-700 transition-colors active:scale-95 cursor-pointer"
