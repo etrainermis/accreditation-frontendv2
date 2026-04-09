@@ -26,7 +26,6 @@ export function InstitutionDetailsStep({
 }: InstitutionDetailsStepProps) {
   const isOther = formData["Institution Category"] === "Other Institution";
   const docTypes = isOther
-  const docTypes = isOther
     ? ["MOU (Signed Memorandum)", "Registration Certificate"]
     : ["MOU (Signed Memorandum)"];
 
