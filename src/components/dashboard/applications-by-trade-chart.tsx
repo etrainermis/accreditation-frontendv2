@@ -37,7 +37,7 @@ export function ApplicationsByTradeChart() {
             {trades.map((trade) => (
               <div key={trade.name} className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full" style={{ backgroundColor: trade.color }} />
-                <span className="text-[11px] text-slate-500 font-semibold truncate max-w-[140px]">
+                <span className="text-[11px] text-slate-500  truncate max-w-[140px]">
                   {trade.name}
                 </span>
               </div>
@@ -46,7 +46,7 @@ export function ApplicationsByTradeChart() {
         </div>
 
         <div className="mt-8 space-y-1">
-          <h4 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Applications By Trade</h4>
+          <h4 className="text-xs  text-slate-900 uppercase tracking-wider">Applications By Trade</h4>
           <p className="text-[11px] text-slate-400 font-medium">Total Applications</p>
           <div className="flex items-baseline gap-3 pt-1">
             <span className="text-2xl font-bold text-slate-900">230</span>
@@ -58,7 +58,7 @@ export function ApplicationsByTradeChart() {
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-100 flex justify-end">
-          <button className="px-4 py-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-[6px] hover:bg-slate-50 transition-colors">
+          <button className="px-4 py-1.5 text-xs  text-slate-600 border border-slate-200 rounded-[6px] hover:bg-slate-50 transition-colors">
             View full report
           </button>
         </div>

@@ -47,7 +47,7 @@ export function DashboardFilledState() {
       {/* Left Column: Your Applications */}
       <div>
         <div className="mb-6">
-          <h2 className="text-[15px] font-semibold text-slate-800">Your Applications</h2>
+          <h2 className="text-[15px]  text-slate-800">Your Applications</h2>
           <p className="text-[12px] text-slate-500 mt-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
         </div>
 
@@ -63,7 +63,7 @@ export function DashboardFilledState() {
               )}
             >
               <div className="flex justify-between items-start mb-3">
-                <h3 className="text-[14px] font-semibold text-[#0A77FF]">{app.title}</h3>
+                <h3 className="text-[14px]  text-[#0A77FF]">{app.title}</h3>
                 <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-sm border border-emerald-100 bg-emerald-50/50 text-emerald-600">
                   <Check className="h-3 w-3" strokeWidth={3} />
                   <span className="text-[10px] font-bold uppercase tracking-wider">{app.status}</span>
@@ -91,10 +91,10 @@ export function DashboardFilledState() {
       <div className="bg-white/50 rounded-2xl p-2">
         <div className="flex justify-between items-center mb-6 px-2">
           <div>
-            <h2 className="text-[14px] font-semibold text-[#0A77FF]">Javascript Short Course Application</h2>
+            <h2 className="text-[14px]  text-[#0A77FF]">Javascript Short Course Application</h2>
             <p className="text-[11px] text-slate-500 mt-1">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.</p>
           </div>
-          <button className="flex items-center gap-1.5 text-[12px] font-semibold text-[#0A77FF] hover:opacity-80 transition-opacity">
+          <button className="flex items-center gap-1.5 text-[12px]  text-[#0A77FF] hover:opacity-80 transition-opacity">
             View Details
             <ChevronRight className="h-4 w-4" />
           </button>
@@ -111,7 +111,7 @@ export function DashboardFilledState() {
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-center">
-                  <h4 className="text-[13px] font-semibold text-slate-700">{item.title}</h4>
+                  <h4 className="text-[13px]  text-slate-700">{item.title}</h4>
                   <ChevronRight className="h-4 w-4 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                 </div>
                 <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">

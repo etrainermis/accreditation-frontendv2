@@ -55,7 +55,7 @@ export function FileUpload({ onFileSelect, className }: FileUploadProps) {
 
       <div className="text-center">
         <p className="text-sm font-medium text-slate-700">
-          <span className="text-[var(--primary)] font-semibold">Click to upload</span> or drag and drop
+          <span className="text-[var(--primary)] ">Click to upload</span> or drag and drop
         </p>
         <p className="mt-1 text-xs text-slate-500">
           SVG, PNG, JPG or GIF (max. 800x400px)
