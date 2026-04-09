@@ -56,9 +56,6 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
               <Icon
                 className={cn(item.isActive ? "text-[var(--primary)]" : "text-[#84888C]")}
                 strokeWidth={1.5}
-              <Icon
-                className={cn(item.isActive ? "text-[var(--primary)]" : "text-[#84888C]")}
-                strokeWidth={1.5}
                 size={20}
               />
               <span className={cn(item.isActive ? "text-[var(--primary)]" : "text-[#353E49]")}>
