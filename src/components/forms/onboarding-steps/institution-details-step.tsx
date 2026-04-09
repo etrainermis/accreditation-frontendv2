@@ -95,7 +95,7 @@ export function InstitutionDetailsStep({
                   <CloudUpload className="h-6 w-6 text-slate-600 stroke-[1.5]" />
                 </div>
                 <p className="text-[15px] text-slate-600">
-                  <span className="font-semibold text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
+                  <span className=" text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
                 </p>
               </>
             )}

@@ -21,7 +21,7 @@ export function PortalBreadcrumbs() {
               <li key={`${crumb.href}-${index}`} className="flex items-center gap-2">
                 {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
                 {isLast ? (
-                  <span className="font-semibold text-[#0A77FF]">
+                  <span className=" text-[#0A77FF]">
                     {crumb.label}
                   </span>
                 ) : (
@@ -113,7 +113,7 @@ export function PortalBreadcrumbs() {
             <li key={rawPath} className="flex items-center gap-2">
               {index > 0 && <ChevronRight className="h-4 text-[#D0D5DD] w-4" />}
               {isLast ? (
-                <span className="font-semibold text-[#0A77FF]">
+                <span className=" text-[#0A77FF]">
                   {title}
                 </span>
               ) : (
