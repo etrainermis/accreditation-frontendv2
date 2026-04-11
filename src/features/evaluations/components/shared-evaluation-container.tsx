@@ -805,15 +805,53 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           />
                         </div>
 
-                        <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
-                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                            <UserPlus className="h-5 w-5 text-slate-400" />
+                        {role === "super-admin" && (
+                          <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-700">Assign Evaluating Team</h4>
+                            
+                            <div className="border border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:border-[#0A77FF]/50 transition-colors cursor-pointer group bg-slate-50/50">
+                              <div className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-[#0A77FF] transition-colors shrink-0">
+                                <UserPlus className="h-4 w-4 text-[#0A77FF]" />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-sm text-slate-900">Principal Evaluator</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
+                              </div>
+                              <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>
+                            </div>
+
+                            <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                              <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                                <UserPlus className="h-4 w-4 text-slate-400" />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-[13px] font-medium text-slate-900">Secondary Evaluator 1</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                              </div>
+                            </div>
+
+                            <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                              <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                                <UserPlus className="h-4 w-4 text-slate-400" />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-[13px] font-medium text-slate-900">Secondary Evaluator 2</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-left">
-                            <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
-                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                        )}
+                        {role !== "super-admin" && (
+                          <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                              <UserPlus className="h-5 w-5 text-slate-400" />
+                            </div>
+                            <div className="text-left">
+                              <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
+                              <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         <div className="flex items-center gap-4 mt-auto pt-4">
                           <button
@@ -851,15 +889,67 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           </div>
                         </div>
 
-                        <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
-                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                            <UserPlus className="h-5 w-5 text-slate-400" />
+                        {role === "super-admin" && (
+                          <div className="space-y-4">
+                            <h4 className="text-sm font-medium text-slate-700">Due Diligence Consensus</h4>
+                            
+                            <div className="border border-slate-200 rounded-sm p-4 flex w-full flex-col gap-3 bg-white">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-5 w-5 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[13px] font-bold text-slate-900">Principal Evaluator</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 bg-green-50 px-2 py-0.5 rounded-sm border border-green-100">Accept</span>
+                                  </div>
+                                  <p className="text-[12px] text-slate-600 mt-1">Infrastructure meets all minimum requirements. Validated the networking lab.</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="border border-slate-100 rounded-sm p-4 flex w-full flex-col gap-3 bg-slate-50/50">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-4 w-4 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[12px] font-bold text-slate-700">Secondary Evaluator 1</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 bg-green-50 px-2 py-0.5 rounded-sm border border-green-100">Accept</span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-1">Confirmed all PC models match invoices.</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="border border-slate-100 rounded-sm p-4 flex w-full flex-col gap-3 bg-slate-50/50">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-4 w-4 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[12px] font-bold text-slate-700">Secondary Evaluator 2</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-100">Comment</span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-1">Building ventilation needs slight improvement.</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-left">
-                            <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
-                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                        )}
+                        {role !== "super-admin" && (
+                          <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
+                            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                              <UserPlus className="h-5 w-5 text-slate-400" />
+                            </div>
+                            <div className="text-left">
+                              <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
+                              <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         <div className="space-y-4">
                           <h4 className="text-sm font-medium text-slate-700">Addition Evaluation Note?</h4>
