@@ -13,6 +13,8 @@ export default function SuperAdminApplicationDetailsPage({ params }: { params: P
     <PageContainer
       role="super-admin"
       hideSidebar={false}
+      noPadding={true}
+      noScroll={true}
       title={`${application.institution.name} ${application.trade.name} Accreditation Application`}
       description="Create and manage your accreditation applications for the selected trades."
       breadcrumbs={[

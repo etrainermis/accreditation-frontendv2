@@ -2,8 +2,8 @@
 
 import React from "react";
 import {
-  ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users, User,
-  FileText, HelpCircle, ChevronDown, Building2, Package, Mail, Phone, Database,
+  ChevronRight, ChevronLeft, ArrowLeft, UngroupIcon, Users, User,
+  Files, ToolCase, ChevronDown, Building2, Package, Mail, Phone, Database,
   Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File, AlertTriangle, Clock,
   Calendar, UserPlus, PlusSquare, MapPin, Map, Globe, Flag, Navigation, Target, Activity,
   CheckCheck, X, RefreshCw
@@ -25,7 +25,7 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
   ];
 
   return (
-    <div className="flex items-start justify-between w-full my-3 px-1 pt-2 relative overflow-visible">
+    <div className="flex items-start justify-between w-full mt-4 mb-6 px-1 pt-1 relative overflow-visible">
       {steps.map((step, idx) => {
         const isActive = idx === currentStep;
         const isCompleted = idx < currentStep;
@@ -80,9 +80,9 @@ const ApplicationSidebar = ({
 }) => {
   const sidebarSteps = [
     { label: "Institution Details", sub: "Select the trade(s) you are applying for", icon: Building2 },
-    { label: "Trade & Competency", sub: "Select the trade(s) you are applying for", icon: ClipboardCheck },
-    { label: "Equipment and Facilities", sub: "List available equipment and upload proof", icon: HelpCircle },
-    { label: "Curriculum Documents", sub: "Upload curriculum and training materials", icon: FileText },
+    { label: "Trade & Competency", sub: "Select the trade(s) you are applying for", icon: UngroupIcon },
+    { label: "Equipment and Facilities", sub: "List available equipment and upload proof", icon: ToolCase },
+    { label: "Curriculum Documents", sub: "Upload curriculum and training materials", icon: Files },
     { label: "Staff Allocation", sub: "Indicate staff availability for the selected trade", icon: Users },
   ];
 
@@ -100,9 +100,7 @@ const ApplicationSidebar = ({
       </div>
 
       <div className="flex flex-col gap-6 relative">
-        {/* Vertical Line */}
-        <div className="absolute left-[17.5px] top-4 bottom-4 w-[1.5px] bg-slate-100" />
-
+     
         {sidebarSteps.map((step, idx) => {
           const isCompleted = completedSteps.includes(idx);
           const isActive = idx === activeStep;
@@ -234,14 +232,14 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const application = mockApplications.find(app => app.id === id) || mockApplications[0];
 
   return (
-    <div className="flex flex-col bg-white overflow-hidden h-[calc(100vh-150px)]">
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex flex-1 flex-col">
-          <div>
+    <div className="flex flex-col bg-white h-full overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-h-0">
+        <div className="flex flex-1 flex-col min-h-0 mx-6">
+          <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm">
             <HorizontalStepper currentStep={activeMajorStep} />
           </div>
 
-          <div className="flex flex-1 overflow-hidden">
+          <div className="flex flex-1 overflow-hidden min-h-0">
             {(activeMajorStep === 0 || activeMajorStep === 3) && (
               <ApplicationSidebar
                 activeStep={activeInternalStep}
@@ -250,7 +248,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
               />
             )}
 
-            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar", (activeMajorStep === 0 || activeMajorStep === 3) && "flex flex-col items-center")}>
+            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar min-h-0", (activeMajorStep === 0 || activeMajorStep === 3) && "flex flex-col items-center")}>
               {!mounted ? (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A77FF]" />
@@ -287,7 +285,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
 
                     {/* Tabs */}
                     {/* Tabs */}
-                    <div className="flex justify-start mb-4 gap-10 w-full max-w-md">
+                    <div className="flex justify-between mb-4 gap-10 w-full max-w-md">
                       {tabs.map((tab) => (
                         <button
                           key={tab}
@@ -335,7 +333,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                             <div className="space-y-2">
                               <label className="text-[13px]  text-slate-700">P.O Box</label>
                               <div className="relative mt-2">
-                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
                                 <Package className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                               </div>
                             </div>
@@ -344,7 +342,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           <div className="space-y-2">
                             <label className="text-[13px]  text-slate-700">Email Address</label>
                             <div className="relative mt-2">
-                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
                               <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                             </div>
                           </div>
@@ -506,7 +504,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 1 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Ungroup className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -542,7 +540,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 2 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Package className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -603,9 +601,9 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 3 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
-                      <FileText className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                      <Files className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
                     <h2 className="text-xl text-slate-900 mb-2">Curriculum Documents</h2>
                     <p className="text-sm text-slate-500 mb-8 text-center px-4">Upload curriculum and training materials.</p>
@@ -672,7 +670,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 4 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -760,36 +758,36 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5 ">
                               <label className="text-[13px] text-slate-700">Province</label>
-                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">District</label>
-                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Sector</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Cell</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Village</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">City</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-[13px] text-slate-700">Address Line</label>
-                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                           </div>
                         </div>
                       </div>
