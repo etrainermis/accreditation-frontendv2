@@ -73,8 +73,9 @@ a {
   &::-webkit-scrollbar {
     display: none !important;
   }
+}
 
-  @keyframes slideUp {
+@keyframes slideUp {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -89,4 +90,3 @@ a {
   animation: slideUp 0.5s ease-out forwards;
 }
 
-}

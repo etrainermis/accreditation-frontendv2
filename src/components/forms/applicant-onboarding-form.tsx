@@ -35,13 +35,11 @@ let globalFormData: Record<string, string> = {};
 let globalLegalReps: LegalRep[] = [];
 let globalStaffList: TechnicalStaffEntry[] = [];
 let globalAboutText: Record<string, string> = {};
-let globalMouFile: File | null = null;
-let globalRegCertFile: File | null = null;
+let globalCertificates: Record<string, File | File[] | null> = {};
 
 export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingStepKey }) {
   const [institutionSubStep, setInstitutionSubStep] = useState<1 | 2>(1);
-  const [mouFile, setMouFile] = useState<File | null>(globalMouFile);
-  const [regCertFile, setRegCertFile] = useState<File | null>(globalRegCertFile);
+  const [certificates, setCertificates] = useState<Record<string, File | File[] | null>>(globalCertificates);
 
   const [legalReps, setLegalReps] = useState<LegalRep[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
@@ -60,8 +58,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   useEffect(() => { globalLegalReps = legalReps; }, [legalReps]);
   useEffect(() => { globalStaffList = staffList; }, [staffList]);
   useEffect(() => { globalAboutText = aboutText; }, [aboutText]);
-  useEffect(() => { globalMouFile = mouFile; }, [mouFile]);
-  useEffect(() => { globalRegCertFile = regCertFile; }, [regCertFile]);
+  useEffect(() => { globalCertificates = certificates; }, [certificates]);
+
 
   const config = applicantOnboardingSteps.find((item) => item.key === step);
 
@@ -82,10 +80,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <InstitutionDetailsStep
             subStep={institutionSubStep}
             setSubStep={setInstitutionSubStep}
-            mouFile={mouFile}
-            setMouFile={setMouFile}
-            regCertFile={regCertFile}
-            setRegCertFile={setRegCertFile}
+            certificates={certificates}
+            setCertificates={setCertificates}
             formData={formData}
             setFormData={setFormData}
           />
@@ -114,13 +110,13 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         return (
           <ReviewApplicationStep
             formData={formData}
-            mouFile={mouFile}
-            regCertFile={regCertFile}
+            certificates={certificates}
             legalReps={legalReps}
             aboutText={aboutText}
             staffList={staffList}
           />
         );
+
       default:
         return (
           <div className="grid gap-4 md:grid-cols-2">

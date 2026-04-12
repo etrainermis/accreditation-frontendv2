@@ -59,6 +59,12 @@ export const applicantOnboardingSteps = [
       "Supporting Notes",
     ],
   },
+  {
+    key: "review-application",
+    title: "Review Application",
+    description: "Review all the information provided before submitting your application.",
+    fields: [],
+  },
 ] as const;
 
 export type ApplicantOnboardingStepKey = (typeof applicantOnboardingSteps)[number]["key"];
