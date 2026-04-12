@@ -119,7 +119,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
             <>
               <div className="flex w-full justify-between items-center gap-10">
                 <div>
-                  <h1 className="text-[18px] font-semibold text-[#101828] leading-tight">{title}</h1>
+                  <h1 className="text-[18px]  text-[#101828] leading-tight">{title}</h1>
                   {description && <p className="mt-1 text-[13px] text-[#64748B]">{description}</p>}
                 </div>
                 {action}

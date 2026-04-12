@@ -18,7 +18,7 @@ export function MostRequestedModules() {
       <CardContent className="h-full p-4 flex flex-col">
         <div className="flex items-start  justify-between ">
           <div className="space-y-1 w-full">
-            <h3 className="text-sm font-semibold text-slate-900">Most Requested Modules</h3>
+            <h3 className="text-sm  text-slate-900">Most Requested Modules</h3>
             <p className="text-[11px] text-slate-400 font-medium   min-w-[240px] leading-snug">
               Manage your team members and their account permissions here.
             </p>
@@ -52,7 +52,7 @@ export function MostRequestedModules() {
         </div>
 
         <div className="mt-auto pt-6 border-t border-slate-100 flex justify-end">
-          <button className="px-4 py-1.5 text-xs font-semibold text-slate-600 border border-slate-200 rounded-[6px] hover:bg-slate-50 transition-colors">
+          <button className="px-4 py-1.5 text-xs  text-slate-600 border border-slate-200 rounded-[6px] hover:bg-slate-50 transition-colors">
             View full report
           </button>
         </div>

@@ -48,8 +48,14 @@ export function InstitutionDetailsStep({
   formData,
   setFormData,
 }: InstitutionDetailsStepProps) {
-  const isSchool = formData["Institution Category"] === "School";
-  const docTypes = isSchool ? SCHOOL_DOCS : OTHER_INSTITUTION_DOCS;
+  const isOther = formData["Institution Category"] === "Other Institution";
+  const docTypes = isOther
+    ? ["MOU (Signed Memorandum)", "Registration Certificate"]
+    : ["MOU (Signed Memorandum)"];
+
+
+  const [selectedDocType, setSelectedDocType] = useState("MOU (Signed Memorandum)");
+
 
   const [selectedDocId, setSelectedDocId] = useState(docTypes[0].id);
   const activeDoc = docTypes.find(d => d.id === selectedDocId) || docTypes[0];
@@ -123,8 +129,8 @@ export function InstitutionDetailsStep({
                 <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
                   <CloudUpload className="h-5 w-5 text-slate-600 stroke-[1.5]" />
                 </div>
-                <p className="text-[14px] text-slate-600">
-                  <span className="font-semibold text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
+                <p className="text-[15px] text-slate-600">
+                  <span className=" text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
                 </p>
                 <p className="mt-1 text-[11px] text-slate-400">PDF, DOC, Images supported</p>
               </>

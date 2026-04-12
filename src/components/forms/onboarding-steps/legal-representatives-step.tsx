@@ -98,7 +98,7 @@ export function LegalRepresentativesStep({
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold text-slate-800">
+              <span className="text-sm  text-slate-800">
                 {rep.firstName} {rep.lastName}
               </span>
               <span className="text-[13px] text-slate-500">{rep.position || "N/A"}</span>

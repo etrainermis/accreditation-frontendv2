@@ -67,7 +67,7 @@ export function SharedProfileContainer({
                 </div>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-slate-900">Profile Picture</h3>
+                <h3 className="text-sm  text-slate-900">Profile Picture</h3>
                 <p className="text-xs text-slate-500 mt-1 max-w-sm">
                   Upload a high-resolution image to represent your account. Recommended size: 256x256px.
                 </p>
@@ -122,7 +122,7 @@ export function SharedProfileContainer({
 
         {activeTab === "security" && (
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-4">Update Password</h3>
+            <h3 className="text-sm  text-slate-900 border-b border-slate-100 pb-4">Update Password</h3>
             <div className="space-y-5 max-w-md">
               <div className="space-y-1.5">
                 <label className="text-xs text-[#344054] font-medium">Current Password</label>
@@ -156,7 +156,7 @@ export function SharedProfileContainer({
 
         {activeTab === "notifications" && (
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-4">Email Preferences</h3>
+            <h3 className="text-sm  text-slate-900 border-b border-slate-100 pb-4">Email Preferences</h3>
             <div className="space-y-4 max-w-xl">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" className="mt-0.5 rounded-sm border-slate-300 text-[var(--primary)] focus:ring-[var(--primary)] bg-white h-4 w-4" defaultChecked />
