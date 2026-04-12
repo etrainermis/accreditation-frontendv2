@@ -7,118 +7,160 @@ import { FormInput, FormSelect, FormPhone } from "@/components/ui/form-field";
 interface InstitutionDetailsStepProps {
   subStep: 1 | 2;
   setSubStep: (step: 1 | 2) => void;
-  mouFile: File | null;
-  setMouFile: (file: File | null) => void;
-  regCertFile: File | null;
-  setRegCertFile: (file: File | null) => void;
+  certificates: Record<string, File | File[] | null>;
+  setCertificates: (certs: Record<string, File | File[] | null>) => void;
   formData: Record<string, string>;
   setFormData: (data: Record<string, string>) => void;
 }
 
+interface DocRequirement {
+  id: string;
+  label: string;
+  required: boolean;
+  multiple?: boolean;
+}
+
+const SCHOOL_DOCS: DocRequirement[] = [
+  { id: "appLetter", label: "Application Letter", required: true },
+  { id: "trainContent", label: "Training Content", required: true },
+  { id: "nesaAccred", label: "Accreditation from NESA", required: true },
+  { id: "mou", label: "Signed MOU with Partners", required: false },
+  { id: "other", label: "Other Necessary Documents", required: false },
+];
+
+const OTHER_INSTITUTION_DOCS: DocRequirement[] = [
+  { id: "appLetter", label: "Application Letter", required: true },
+  { id: "trainContent", label: "Training Content / Curriculum", required: true },
+  { id: "regCert", label: "Recognized Registration Certificate", required: true },
+  { id: "infraPhotos", label: "Photographs of Infrastructures", required: true, multiple: true },
+  { id: "equipOwnership", label: "Proof of ownership of training equipment", required: true },
+  { id: "premiseOwnership", label: "Proof of ownership/renting of training premises", required: true },
+  { id: "skillsGap", label: "Signed skills gap report", required: false },
+  { id: "mou", label: "Signed MOU with Partners", required: false },
+  { id: "other", label: "Other Necessary Documents", required: false },
+];
+
+
 export function InstitutionDetailsStep({
   subStep,
-  mouFile,
-  setMouFile,
-  regCertFile,
-  setRegCertFile,
+  certificates,
+  setCertificates,
   formData,
   setFormData,
 }: InstitutionDetailsStepProps) {
-  const isOther = formData["Institution Category"] === "Other Institution";
-  const docTypes = isOther
-    ? ["MOU (Signed Memorandum)", "Registration Certificate"]
-    : ["MOU (Signed Memorandum)"];
+  const isSchool = formData["Institution Category"] === "School";
+  const docTypes = isSchool ? SCHOOL_DOCS : OTHER_INSTITUTION_DOCS;
 
+  const [selectedDocId, setSelectedDocId] = useState(docTypes[0].id);
+  const activeDoc = docTypes.find(d => d.id === selectedDocId) || docTypes[0];
+  const activeFile = certificates[selectedDocId];
 
-  const [selectedDocType, setSelectedDocType] = useState("MOU (Signed Memorandum)");
-
-
-  const certOptions = [
-    { id: 'mou', label: 'MOU (Signed Memorandum)' },
-    ...(isOther ? [{ id: 'regCert', label: 'Registration Certificate' }] : []),
-  ];
-
-  const files: Record<string, File | null> = {
-    mou: mouFile,
-    regCert: regCertFile,
-  };
 
   if (subStep === 2) {
-    const activeFile = selectedDocType === "MOU (Signed Memorandum)" ? mouFile : regCertFile;
-
     return (
       <div className="flex flex-col space-y-6">
         <div className="space-y-1.5">
           <FormSelect
             label="Select Document Type"
-            value={selectedDocType}
-            onChange={(v) => setSelectedDocType(v)}
-            options={docTypes.map(type => ({
-              label: `${type}${type === "MOU (Signed Memorandum)" && mouFile ? " ✔" : type === "Registration Certificate" && regCertFile ? " ✔" : ""}`,
-              value: type
+            value={selectedDocId}
+            onChange={(v) => setSelectedDocId(v)}
+            options={docTypes.map(doc => ({
+              label: `${doc.label}${certificates[doc.id] ? " ✔" : ""}${doc.required ? " *" : ""}`,
+              value: doc.id
             }))}
           />
         </div>
 
         <div className="space-y-1.5">
-          <span className="text-[13px] font-medium text-slate-700">Upload {selectedDocType}</span>
-          <label htmlFor="certificate-upload" className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-10 text-center transition hover:bg-slate-50 cursor-pointer group">
+          <div className="flex justify-between items-end mb-1">
+            <span className="text-[13px] font-medium text-slate-700">
+              Upload {activeDoc.label} {activeDoc.required && <span className="text-red-500">*</span>}
+            </span>
+            {activeDoc.multiple && (
+              <span className="text-[11px] text-slate-400 font-medium">You can select multiple files</span>
+            )}
+          </div>
+          <label htmlFor="certificate-upload" className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-8 text-center transition hover:bg-slate-50 cursor-pointer group">
             <input
               id="certificate-upload"
               type="file"
-              accept=".pdf,.doc,.docx"
+              accept="*"
+              multiple={activeDoc.multiple}
               className="hidden"
               onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) {
-                  if (selectedDocType === "MOU (Signed Memorandum)") setMouFile(file);
-                  else setRegCertFile(file);
+                const files = e.target.files;
+                if (files && files.length > 0) {
+                  if (activeDoc.multiple) {
+                    const existing = Array.isArray(certificates[selectedDocId]) ? certificates[selectedDocId] : [];
+                    setCertificates({
+                      ...certificates,
+                      [selectedDocId]: [...existing, ...Array.from(files)]
+                    });
+                  } else {
+                    setCertificates({ ...certificates, [selectedDocId]: files[0] });
+                  }
                 }
               }}
             />
 
             {activeFile ? (
               <div className="flex flex-col items-center">
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-200 bg-blue-50 shadow-sm text-blue-600">
-                  <FileText className="h-6 w-6 stroke-[1.5]" />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-blue-50 shadow-sm text-blue-600">
+                  <FileText className="h-5 w-5 stroke-[1.5]" />
                 </div>
-                <p className="text-[14px] font-medium text-slate-800 truncate max-w-[250px]">{activeFile.name}</p>
+                {activeDoc.multiple && Array.isArray(activeFile) ? (
+                  <p className="text-[14px] font-medium text-slate-800">{activeFile.length} files selected</p>
+                ) : (
+                  <p className="text-[14px] font-medium text-slate-800 truncate max-w-[250px]">{(!Array.isArray(activeFile) && activeFile?.name) || 'File selected'}</p>
+                )}
                 <div className="flex items-center gap-1.5 mt-2 justify-center text-blue-600 bg-blue-50 px-3 py-1 rounded-full border border-blue-100">
-                  <CheckCircle className="h-3.5 w-3.5" />
-                  <span className="text-[12px] font-medium">Successfully uploaded</span>
+                  <CheckCircle className="h-3 w-3" />
+                  <span className="text-[11px] font-medium">Successfully uploaded</span>
                 </div>
-                <p className="mt-4 text-[13px] text-slate-500 font-medium">Click to change file</p>
+                <p className="mt-3 text-[12px] text-slate-500 font-medium italic">Click to {activeDoc.multiple ? 'add more' : 'change file'}</p>
               </div>
             ) : (
               <>
-                <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
-                  <CloudUpload className="h-6 w-6 text-slate-600 stroke-[1.5]" />
+                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
+                  <CloudUpload className="h-5 w-5 text-slate-600 stroke-[1.5]" />
                 </div>
                 <p className="text-[15px] text-slate-600">
                   <span className=" text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
                 </p>
+                <p className="mt-1 text-[11px] text-slate-400">PDF, DOC, Images supported</p>
               </>
             )}
           </label>
         </div>
 
         <div className="rounded-xl border border-slate-100 bg-slate-50/50 p-4 space-y-3">
-          <h4 className="text-[12px] font-bold text-slate-500 uppercase tracking-wider px-1">Upload Status</h4>
+          <div className="flex items-center justify-between px-1">
+            <h4 className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Required Documents</h4>
+            <span className="text-[10px] text-slate-400 italic">* Required</span>
+          </div>
           <div className="grid gap-2">
-            {certOptions.map(opt => {
-              const uploaded = !!files[opt.id];
+            {docTypes.map(doc => {
+              const file = certificates[doc.id];
+              const uploaded = Array.isArray(file) ? file.length > 0 : !!file;
               return (
-                <div key={opt.id} className={`flex items-center justify-between rounded-lg border px-3.5 py-3 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
-                  <div className="flex items-center gap-3">
+                <div key={doc.id} className={`flex items-center justify-between rounded-lg border px-3 py-2.5 transition-colors ${uploaded ? 'bg-white border-emerald-100 text-emerald-900 shadow-sm' : 'bg-white/50 border-slate-200 text-slate-500'}`}>
+                  <div className="flex items-center gap-2.5">
                     {uploaded ? (
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />
                     ) : (
-                      <Clock className="h-4 w-4 text-slate-300" />
+                      <Clock className="h-3.5 w-3.5 text-slate-300" />
                     )}
-                    <span className="text-[13.5px] font-medium">{opt.label}</span>
+                    <div className="flex flex-col">
+                      <span className="text-[13px] font-medium leading-none">
+                        {doc.label} {doc.required && <span className="text-red-400 transition-opacity">*</span>}
+                      </span>
+                      {uploaded && Array.isArray(file) && (
+                        <span className="text-[10px] text-slate-400 mt-1">{file.length} files</span>
+                      )}
+                    </div>
                   </div>
-                  <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full uppercase tracking-tight ${uploaded ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
-                    {uploaded ? 'Uploaded' : 'Pending'}
+                  <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-tight ${uploaded ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'}`}>
+                    {uploaded ? 'Uploaded' : doc.required ? 'Missing' : 'Optional'}
                   </span>
                 </div>
               );
@@ -128,6 +170,7 @@ export function InstitutionDetailsStep({
       </div>
     );
   }
+
 
 
   return (
@@ -181,6 +224,7 @@ export function InstitutionDetailsStep({
         type="email"
         required
         icon={Mail}
+        className="md:col-span-2"
       />
       <FormPhone
         label="Phone Number"
