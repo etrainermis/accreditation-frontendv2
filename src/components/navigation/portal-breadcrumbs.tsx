@@ -65,7 +65,7 @@ export function PortalBreadcrumbs() {
 
   // Map of segments to specific default internal redirects
   const SEGMENT_HREF_MAP: Record<string, string> = {
-    evaluations: `/${role}/evaluations/applications`,
+    evaluations: role === "applicant" ? "/applicant/evaluations" : `/${role}/evaluations/applications`,
   };
 
   // Helper to find title from navigation config
