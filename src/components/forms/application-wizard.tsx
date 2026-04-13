@@ -29,14 +29,14 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 const stepsList = [
   {
     id: 1,
-    title: "Trade Selection",
-    subtitle: "Select the trade(s) you are applying for",
+    title: "Training Program(s) Selection",
+    subtitle: "Select the training program(s) you are applying for",
     icon: Blocks,
   },
   {
     id: 2,
     title: "Competencies",
-    subtitle: "Specify the competencies offered under the selected trade",
+    subtitle: "Specify the competencies offered under the selected training program(s)",
     icon: Hexagon,
   },
   {
@@ -54,7 +54,7 @@ const stepsList = [
   {
     id: 5,
     title: "Staff Allocation",
-    subtitle: "Indicate staff availability for the selected trade",
+    subtitle: "Indicate staff availability for the selected training program(s)",
     icon: Users,
   },
 ];
@@ -94,10 +94,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
 
   // Step 3 state
   const [equipmentName, setEquipmentName] = useState("");
+  const [equipmentStatus, setEquipmentStatus] = useState("");
   const [equipmentNumber, setEquipmentNumber] = useState(1);
   const [equipmentProof, setEquipmentProof] = useState<string | null>(null);
   const [equipmentProofName, setEquipmentProofName] = useState<string | null>(null);
-  const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; proof: string | null }>>([]);
+  const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; status: string; proof: string | null }>>([]);
 
   // Step 4 state
   const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
@@ -131,9 +132,10 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   };
 
   const handleAddEquipment = () => {
-    if (equipmentName.trim() && equipmentNumber > 0) {
-      setEquipments([...equipments, { id: Math.random().toString(), name: equipmentName, quantity: equipmentNumber, proof: equipmentProof }]);
+    if (equipmentName.trim() && equipmentNumber > 0 && equipmentStatus) {
+      setEquipments([...equipments, { id: Math.random().toString(), name: equipmentName, quantity: equipmentNumber, status: equipmentStatus, proof: equipmentProof }]);
       setEquipmentName("");
+      setEquipmentStatus("");
       setEquipmentNumber(1);
       setEquipmentProof(null);
       setEquipmentProofName(null);
@@ -249,14 +251,14 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <Blocks className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px]  text-slate-900">Trade Selection</h2>
+                <h2 className="text-[17px]  text-slate-900">Training Program(s) Selection</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">
-                  Select the trade you are applying for accreditation in.
+                  Select the training program(s) you are applying for accreditation in.
                 </p>
               </div>
 
               <div className="mt-10">
-                <p className="mb-3 text-[12px] text-slate-500">24 trades available for you to choose</p>
+                <p className="mb-3 text-[12px] text-slate-500">24 training program(s) available for you to choose</p>
                 <div className="relative mb-6">
                   <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
@@ -316,7 +318,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   <Hexagon className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
                 <h2 className="text-[17px]  text-slate-900">Competencies</h2>
-                <p className="mt-1.5 text-[13px] text-slate-500">Specify the competencies offered under the selected trade.</p>
+                <p className="mt-1.5 text-[13px] text-slate-500">Specify the competencies offered under the selected training program(s).</p>
               </div>
               <div className="col-span-full mt-8 flex flex-col items-center">
                 <div className="mb-8 flex w-fit min-w-[140px] items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-4 ring-[#0A77FF]/5">
@@ -330,7 +332,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 </div>
               </div>
               <div className="mt-2">
-                <p className="mb-3 text-[12px] text-slate-500">24 competencies under this trade</p>
+                <p className="mb-3 text-[12px] text-slate-500">24 competencies under this training program(s)</p>
                 <div className="relative mb-6">
                   <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
@@ -417,9 +419,15 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
               </div>
               <div className="mt-2 text-left">
                 <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                  <div className="mb-5">
-                    <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Equipment Name <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder="Select ..." value={equipmentName} onChange={(e) => setEquipmentName(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Equipment Name <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder="Select ..." value={equipmentName} onChange={(e) => setEquipmentName(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Status <span className="text-red-500">*</span></label>
+                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={equipmentStatus} onChange={(e) => setEquipmentStatus(e.target.value)}><option value="" disabled>Select ..</option><option value="In good condition">In good condition</option><option value="Not working">Not working</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
@@ -469,7 +477,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                         </div>
                         <div className="flex-1">
                           <p className="text-[14px]  text-slate-800">{eq.name}</p>
-                          <p className="mt-0.5 text-[11px] text-slate-400 font-medium whitespace-nowrap">Quantity: {eq.quantity} Pieces</p>
+                          <p className="mt-0.5 text-[11px] text-slate-400 font-medium whitespace-nowrap">Quantity: {eq.quantity} • Status: {eq.status}</p>
                         </div>
                         {/* Action Icons */}
                         <div className="absolute top-3 right-3">
@@ -680,11 +688,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
               </div>
               <div className="flex flex-col gap-3">
                 {[
-                  { id: 1, title: "Trade Selection Completed", desc: "Select the trade(s) you are applying for" },
-                  { id: 2, title: "Competencies Selected", desc: "Specify the competencies offered under the selected trade" },
+                  { id: 1, title: "Training Program(s) Selection Completed", desc: "Select the training program(s) you are applying for" },
+                  { id: 2, title: "Competencies Selected", desc: "Specify the competencies offered under the selected training program(s)" },
                   { id: 3, title: "Equipment and Facilities Added", desc: "List available equipment and upload proof" },
                   { id: 4, title: "Curriculum Documents", desc: "Upload curriculum and training materials" },
-                  { id: 5, title: "Staff Allocation", desc: "Indicate staff availability for the selected trade" },
+                  { id: 5, title: "Staff Allocation", desc: "Indicate staff availability for the selected training program(s)" },
                 ].map((section) => {
                   const isExpanded = expandedReviewSection === section.id;
                   return (
@@ -698,9 +706,9 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       </button>
                       {isExpanded && (
                         <div className="border-t border-slate-100 bg-slate-50/20 p-6 animate-in slide-in-from-top-2 duration-200">
-                          {section.id === 1 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Trade</p><p className="text-[14px] text-slate-800 ">{selectedTradeName}</p></div>)}
+                          {section.id === 1 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Training Program(s)</p><p className="text-[14px] text-slate-800 ">{selectedTradeName}</p></div>)}
                           {section.id === 2 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Competency</p><p className="text-[14px] text-slate-800 ">{selectedCompetencyName}</p></div>)}
-                          {section.id === 3 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Allocated Equipment</p>{equipments.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No equipment added.</p>) : (<ul className="space-y-3">{equipments.map(eq => (<li key={eq.id} className="flex items-center gap-4 bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm"><div className="h-10 w-14 shrink-0 overflow-hidden rounded bg-slate-100">{eq.proof && <img src={eq.proof} alt="" className="h-full w-full object-cover" />}</div><div><p className="text-[13px] font-bold text-slate-800 leading-none mb-1">{eq.name}</p><p className="text-[11px] font-medium text-slate-500">Qty: {eq.quantity}</p></div></li>))}</ul>)}</div>)}
+                          {section.id === 3 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Allocated Equipment</p>{equipments.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No equipment added.</p>) : (<ul className="space-y-3">{equipments.map(eq => (<li key={eq.id} className="flex items-center gap-4 bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm"><div className="h-10 w-14 shrink-0 overflow-hidden rounded bg-slate-100">{eq.proof && <img src={eq.proof} alt="" className="h-full w-full object-cover" />}</div><div><p className="text-[13px] font-bold text-slate-800 leading-none mb-1">{eq.name}</p><p className="text-[11px] font-medium text-slate-500">Qty: {eq.quantity} • {eq.status}</p></div></li>))}</ul>)}</div>)}
                           {section.id === 4 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Curriculum Documents</p>{curriculumDocs.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No documents uploaded.</p>) : (<ul className="space-y-2">{curriculumDocs.map(doc => (<li key={doc.id} className="flex justify-between items-center bg-white border border-slate-100 p-3 rounded-xl shadow-sm"><span className="text-[13px] font-bold text-slate-700">{doc.name}</span><span className="text-slate-400 text-[11px] font-bold uppercase">{doc.size}</span></li>))}</ul>)}</div>)}
                           {section.id === 5 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Staff Allocations</p>{allocations.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No staff members allocated.</p>) : (<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{allocations.map(alloc => (<div key={alloc.id} className="bg-white border border-slate-100 p-3.5 rounded-xl shadow-sm"><p className="text-[13px] font-bold text-slate-800 leading-none mb-1">{alloc.position}</p><p className="text-[11px] text-slate-500 font-medium mb-2">{alloc.qualification}</p><p className="text-[10px] font-bold text-white uppercase tracking-widest bg-[#0A77FF] w-fit px-2 py-0.5 rounded-full">{alloc.status} • {alloc.quantity}</p></div>))}</div>)}</div>)}
                         </div>
