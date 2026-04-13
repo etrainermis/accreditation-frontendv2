@@ -1,12 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { PageContainer } from "@/components/layout/page-container";
+import { NotificationsContent } from "@/features/notifications/components/notifications-content";
 
 export default function ApplicantNotificationsPage() {
   return (
-    <PageContainer role="applicant" title="Notifications" description="Latest updates.">
-      <Card className="rounded-2xl border border-slate-200 bg-white shadow-none">
-        <CardContent className="p-6 text-sm text-slate-500">No notifications</CardContent>
-      </Card>
+    <PageContainer role="applicant" title="Notifications" description="Stay updated with the latest activity on your applications.">
+      <NotificationsContent role="applicant" />
     </PageContainer>
   );
 }
