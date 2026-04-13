@@ -22,7 +22,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     items: [
       { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: House, match: "exact" },
       { title: "Applications", href: "/applicant/applications", description: "", icon: FileSpreadsheet },
-      { title: "Evaluations", href: "/applicant/certificates", description: "", icon: CalendarCheck },
+      { title: "Evaluations", href: "/applicant/evaluations", description: "", icon: CalendarCheck },
       { title: "Profile", href: "/applicant/profile", description: "", icon: User },
       { title: "Notifications", href: "/applicant/notifications", description: "", icon: Bell },
     ],
