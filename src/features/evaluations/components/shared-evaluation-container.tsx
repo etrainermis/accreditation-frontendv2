@@ -72,11 +72,13 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
 const ApplicationSidebar = ({
   activeStep,
   completedSteps,
-  onStepChange
+  onStepChange,
+  onExit
 }: {
   activeStep: number,
   completedSteps: number[],
-  onStepChange: (idx: number) => void
+  onStepChange: (idx: number) => void,
+  onExit?: () => void
 }) => {
   const sidebarSteps = [
     { label: "Institution Details", sub: "Select the trade(s) you are applying for", icon: Building2 },
@@ -91,7 +93,7 @@ const ApplicationSidebar = ({
       <div className="mb-10">
         <h2 className="text-sm text-slate-800 mb-9 mt-3">Application Details</h2>
         <button
-          onClick={() => window.history.back()}
+          onClick={onExit || (() => window.history.back())}
           className="flex items-center gap-2 text-[12px] text-[var(--primary)] hover:opacity-80 transition-opacity cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -164,6 +166,16 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
     to: new Date(2024, 0, 13)
   });
   const [evaluationNote, setEvaluationNote] = React.useState("");
+  const [assignedPrincipal, setAssignedPrincipal] = React.useState<string | null>(null);
+  const [assignedSecondary1, setAssignedSecondary1] = React.useState<string | null>(null);
+  const [assignedSecondary2, setAssignedSecondary2] = React.useState<string | null>(null);
+  const [showInitialReview, setShowInitialReview] = React.useState(false);
+  const [showConsensus, setShowConsensus] = React.useState(false);
+  const [initialReviewConsensus, setInitialReviewConsensus] = React.useState([
+    { name: "Principal Evaluator", status: "Accept", comment: "Documents look correct and complete." },
+    { name: "Secondary Evaluator 1", status: "Accept", comment: "No issues found in the trade modules." },
+    { name: "Secondary Evaluator 2", status: "Comment", comment: "Curriculum needs minor clarification on workshop hours." },
+  ]);
 
   React.useEffect(() => {
     setMounted(true);
@@ -240,15 +252,23 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
           </div>
 
           <div className="flex flex-1 overflow-hidden min-h-0">
-            {(activeMajorStep === 0 || activeMajorStep === 3) && (
+            {((activeMajorStep === 0 && showInitialReview) || activeMajorStep === 3) && (
               <ApplicationSidebar
                 activeStep={activeInternalStep}
                 completedSteps={completedSteps}
                 onStepChange={setActiveInternalStep}
+                onExit={() => {
+                  if (activeMajorStep === 0) {
+                    setShowInitialReview(false);
+                    setIsEvaluating(false);
+                  } else {
+                    window.history.back();
+                  }
+                }}
               />
             )}
 
-            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar min-h-0", (activeMajorStep === 0 || activeMajorStep === 3) && "flex flex-col items-center")}>
+            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar min-h-0", ((activeMajorStep === 0 && showInitialReview) || activeMajorStep === 3) && "flex flex-col items-center")}>
               {!mounted ? (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A77FF]" />
@@ -256,6 +276,120 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
               ) : (
                   <>
                     {(activeMajorStep === 0 || activeMajorStep === 3) && (
+                      <>
+                    {activeMajorStep === 0 && !showInitialReview ? (
+                      <div className="max-w-xl mx-auto py-12 px-6 w-full flex flex-col items-center">
+                        <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                          <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                        </div>
+                        <h2 className="text-xl text-slate-900 mb-1">Assign Evaluators</h2>
+                        <p className="text-sm text-slate-500 mb-10 text-center">
+                          Assign evaluators to the application. You can optionally review the documents before scheduling.
+                        </p>
+
+                        <div className="w-full space-y-4 mb-10">
+                          <h4 className="text-sm font-medium text-slate-700">Assign Evaluating Team</h4>
+                          
+                          <div 
+                            className={cn(
+                              "border rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedPrincipal ? "border-[var(--primary)] bg-blue-50/30" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
+                            )}
+                            onClick={() => setAssignedPrincipal("Principal Evaluator")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-[#0A77FF] transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-[#0A77FF]" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-sm text-slate-900">{assignedPrincipal || "Principal Evaluator"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
+                            </div>
+                            {!assignedPrincipal && <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>}
+                          </div>
+
+                          <div 
+                            className={cn(
+                              "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedSecondary1 ? "border-solid border-[var(--primary)] bg-blue-50/30" : "border-slate-200 hover:bg-slate-50"
+                            )}
+                            onClick={() => setAssignedSecondary1("Secondary Evaluator 1")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-slate-400" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary1 || "Secondary Evaluator 1"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                            </div>
+                          </div>
+
+                          <div 
+                            className={cn(
+                              "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedSecondary2 ? "border-solid border-[var(--primary)] bg-blue-50/30" : "border-slate-200 hover:bg-slate-50"
+                            )}
+                            onClick={() => setAssignedSecondary2("Secondary Evaluator 2")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-slate-400" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary2 || "Secondary Evaluator 2"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {assignedPrincipal && (
+                          <div className="w-full space-y-4 mb-10 p-6 bg-slate-50 border border-slate-100 rounded-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-medium text-slate-700">Initial Review Consensus</h4>
+                              <div className="flex items-center gap-2 px-2 py-0.5 rounded-sm bg-green-50 border border-green-100 text-[10px] font-bold text-green-600 uppercase tracking-widest">
+                                Majority: Accept
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              {initialReviewConsensus.map((resp, idx) => (
+                                <div key={idx} className="flex flex-col gap-1 p-3 bg-white border border-slate-100 rounded-sm">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[12px] font-bold text-slate-700">{resp.name}</span>
+                                    <span className={cn(
+                                      "text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border",
+                                      resp.status === "Accept" ? "text-green-500 bg-green-50 border-green-100" :
+                                      resp.status === "Rejected" ? "text-red-500 bg-red-50 border-red-100" :
+                                      "text-blue-500 bg-blue-50 border-blue-100"
+                                    )}>
+                                      {resp.status}
+                                    </span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 italic">"{resp.comment}"</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex flex-col gap-3 w-full">
+                          <button 
+                            onClick={() => setActiveMajorStep(1)}
+                            disabled={!assignedPrincipal}
+                            className="w-full py-4 bg-[var(--primary)] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                          >
+                            Proceed to Scheduling
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setShowInitialReview(true);
+                              setIsEvaluating(false);
+                            }}
+                            className="w-full py-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            View Initial Review (Optional)
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
                       <>
                     {activeInternalStep === 0 && (
                   <>
@@ -268,9 +402,18 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                             setActiveTab(tabs[currentIndex - 1]);
                           } else {
                             setIsEvaluating(false);
+                            if (activeMajorStep === 0) {
+                              setShowInitialReview(false);
+                            } else {
+                              window.history.back();
+                            }
                           }
                         } else {
-                          window.history.back();
+                          if (activeMajorStep === 0) {
+                            setShowInitialReview(false);
+                          } else {
+                            window.history.back();
+                          }
                         }
                       }}>
                         Back
@@ -742,7 +885,10 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                   </div>
                 )}
                   </>
-                )}
+                )
+              }
+                </>
+              )}
 
                 {activeMajorStep === 1 && (
                   <div className="w-full py-8 px-0 flex flex-col items-start">
@@ -807,33 +953,60 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           <div className="space-y-3">
                             <h4 className="text-sm font-medium text-slate-700">Assign Evaluating Team</h4>
                             
-                            <div className="border border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:border-[#0A77FF]/50 transition-colors cursor-pointer group bg-slate-50/50">
-                              <div className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-[#0A77FF] transition-colors shrink-0">
-                                <UserPlus className="h-4 w-4 text-[#0A77FF]" />
+                            <div 
+                              className={cn(
+                                "border rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedPrincipal ? "border-[var(--primary)] bg-white border-solid" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
+                              )}
+                              onClick={() => setAssignedPrincipal("Principal Evaluator")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full border flex items-center justify-center transition-colors shrink-0",
+                                assignedPrincipal ? "bg-blue-50 border-[var(--primary)]" : "bg-white border-slate-200 group-hover:border-[#0A77FF]"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedPrincipal ? "text-[var(--primary)]" : "text-[#0A77FF]")} />
                               </div>
                               <div className="text-left flex-1">
-                                <h4 className="text-sm text-slate-900">Principal Evaluator</h4>
+                                <h4 className="text-sm text-slate-900">{assignedPrincipal || "Principal Evaluator"}</h4>
                                 <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
                               </div>
-                              <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>
+                              {!assignedPrincipal && <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>}
                             </div>
 
-                            <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
-                              <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
-                                <UserPlus className="h-4 w-4 text-slate-400" />
+                            <div 
+                              className={cn(
+                                "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedSecondary1 ? "border-solid border-[var(--primary)] bg-white" : "border-slate-200 hover:bg-slate-50"
+                              )}
+                              onClick={() => setAssignedSecondary1("Secondary Evaluator 1")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full flex items-center justify-center transition-colors shrink-0",
+                                assignedSecondary1 ? "bg-blue-50 border-[var(--primary)] border" : "bg-slate-100 group-hover:bg-slate-200"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedSecondary1 ? "text-[var(--primary)]" : "text-slate-400")} />
                               </div>
                               <div className="text-left flex-1">
-                                <h4 className="text-[13px] font-medium text-slate-900">Secondary Evaluator 1</h4>
+                                <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary1 || "Secondary Evaluator 1"}</h4>
                                 <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                               </div>
                             </div>
 
-                            <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
-                              <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
-                                <UserPlus className="h-4 w-4 text-slate-400" />
+                            <div 
+                              className={cn(
+                                "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedSecondary2 ? "border-solid border-[var(--primary)] bg-white" : "border-slate-200 hover:bg-slate-50"
+                              )}
+                              onClick={() => setAssignedSecondary2("Secondary Evaluator 2")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full flex items-center justify-center transition-colors shrink-0",
+                                assignedSecondary2 ? "bg-blue-50 border-[var(--primary)] border" : "bg-slate-100 group-hover:bg-slate-200"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedSecondary2 ? "text-[var(--primary)]" : "text-slate-400")} />
                               </div>
                               <div className="text-left flex-1">
-                                <h4 className="text-[13px] font-medium text-slate-900">Secondary Evaluator 2</h4>
+                                <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary2 || "Secondary Evaluator 2"}</h4>
                                 <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                               </div>
                             </div>
@@ -853,7 +1026,10 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
 
                         <div className="flex items-center gap-4 mt-auto pt-4">
                           <button
-                            onClick={() => setActiveMajorStep(0)}
+                            onClick={() => {
+                              setActiveMajorStep(0);
+                              setShowInitialReview(false);
+                            }}
                             className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                           >
                             Cancel
