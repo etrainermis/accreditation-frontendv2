@@ -1,13 +1,14 @@
 "use client";
 
-import { UserPlus, Plus, Minus, Pencil, Trash2, CheckCheck } from "lucide-react";
-import { FormSelect } from "@/components/ui/form-field";
+import { UserPlus, Plus, Minus, Pencil, Trash2, CheckCheck, FileText, CloudUpload } from "lucide-react";
+import { FormSelect, FormInput } from "@/components/ui/form-field";
 import { FormCard } from "../form-card";
 
 export interface TechnicalStaff {
   qualification: string;
-  position: string;
+  specialization: string;
   status: string;
+  document?: File | null;
 }
 
 export interface TechnicalStaffEntry extends TechnicalStaff {
@@ -46,26 +47,22 @@ export function TechnicalStaffStep({
           onChange={(v) => setNewStaff({ ...newStaff, qualification: v })}
           required
           options={[
-            { label: "PhD", value: "PhD" },
-            { label: "Master's Degree", value: "Master's Degree" },
-            { label: "Bachelor's Degree", value: "Bachelor's Degree" },
-            { label: "Diploma", value: "Diploma" },
             { label: "Certificate", value: "Certificate" },
+            { label: "A3", value: "A3" },
+            { label: "A2", value: "A2" },
+            { label: "A1", value: "A1" },
+            { label: "A0", value: "A0" },
+            { label: "Bachelors", value: "Bachelors" },
+            { label: "Masters", value: "Masters" },
+            { label: "PhD", value: "PhD" },
           ]}
         />
-        <FormSelect
-          label="Position"
-          value={newStaff.position}
-          onChange={(v) => setNewStaff({ ...newStaff, position: v })}
+        <FormInput
+          label="Specialization"
+          value={newStaff.specialization}
+          onChange={(v) => setNewStaff({ ...newStaff, specialization: v })}
+          placeholder="e.g. Senior Lecturer, Technician, Administrator"
           required
-          options={[
-            { label: "Professor", value: "Professor" },
-            { label: "Senior Lecturer", value: "Senior Lecturer" },
-            { label: "Lecturer", value: "Lecturer" },
-            { label: "Assistant Lecturer", value: "Assistant Lecturer" },
-            { label: "Administrator", value: "Administrator" },
-            { label: "Technician", value: "Technician" },
-          ]}
         />
 
         <div className="grid grid-cols-2 gap-4">
@@ -112,13 +109,53 @@ export function TechnicalStaffStep({
             ]}
           />
         </div>
+
+        <div className="space-y-1.5">
+          <span className="text-[13px] font-medium text-slate-700">
+            Upload Supporting Training Program Document
+          </span>
+          <label htmlFor="training-doc-upload" className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-200 bg-white px-6 py-6 text-center transition hover:bg-slate-50 cursor-pointer group">
+            <input
+              id="training-doc-upload"
+              type="file"
+              accept="*"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) {
+                  setNewStaff({ ...newStaff, document: file });
+                }
+              }}
+            />
+
+            {newStaff.document ? (
+              <div className="flex flex-col items-center">
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-blue-50 shadow-sm text-blue-600">
+                  <FileText className="h-4 w-4 stroke-[1.5]" />
+                </div>
+                <p className="text-[13px] font-medium text-slate-800 truncate max-w-[250px]">{newStaff.document.name}</p>
+                <p className="mt-2 text-[11px] text-slate-500 font-medium italic">Click to change file</p>
+              </div>
+            ) : (
+              <>
+                <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-100 bg-white shadow-sm">
+                  <CloudUpload className="h-4 w-4 text-slate-600 stroke-[1.5]" />
+                </div>
+                <p className="text-[13px] text-slate-600">
+                  <span className="text-blue-500 group-hover:text-blue-600 transition-colors">Click to upload</span> or drag and drop
+                </p>
+                <p className="mt-1 text-[10px] text-slate-400">PDF, DOC, Images supported</p>
+              </>
+            )}
+          </label>
+        </div>
       </FormCard>
 
       <div className="flex justify-start gap-4">
         <button
           type="button"
           onClick={() => {
-            if (newStaff.qualification && newStaff.position && newStaff.status && staffNumber > 0) {
+            if (newStaff.qualification && newStaff.specialization && newStaff.status && staffNumber > 0) {
               if (editingStaffIdx !== null) {
                 const updatedList = [...staffList];
                 updatedList[editingStaffIdx] = { ...newStaff, number: staffNumber };
@@ -127,11 +164,11 @@ export function TechnicalStaffStep({
               } else {
                 setStaffList([...staffList, { ...newStaff, number: staffNumber }]);
               }
-              setNewStaff({ qualification: "", position: "", status: "" });
+              setNewStaff({ qualification: "", specialization: "", status: "", document: null });
               setStaffNumber(0);
             }
           }}
-          disabled={!newStaff.qualification || !newStaff.position || !newStaff.status || staffNumber === 0}
+          disabled={!newStaff.qualification || !newStaff.specialization || !newStaff.status || staffNumber === 0}
           className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-3 text-sm !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {editingStaffIdx !== null ? "Update Staff" : "Add Staff"} <UserPlus className="h-4 w-4" />
@@ -142,7 +179,7 @@ export function TechnicalStaffStep({
             type="button"
             onClick={() => {
               setEditingStaffIdx(null);
-              setNewStaff({ qualification: "", position: "", status: "" });
+              setNewStaff({ qualification: "", specialization: "", status: "", document: null });
               setStaffNumber(0);
             }}
             className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
@@ -163,8 +200,8 @@ export function TechnicalStaffStep({
                     <p className="text-[13.5px] font-medium text-slate-800">{staff.qualification}</p>
                   </div>
                   <div className="space-y-1">
-                    <span className="text-[12px] text-slate-500">Position</span>
-                    <p className="text-[13.5px] font-medium text-slate-800">{staff.position}</p>
+                    <span className="text-[12px] text-slate-500">Specialization</span>
+                    <p className="text-[13.5px] font-medium text-slate-800">{staff.specialization}</p>
                   </div>
                 </div>
                 <div className="flex items-center justify-between">
@@ -181,8 +218,9 @@ export function TechnicalStaffStep({
                       onClick={() => {
                         setNewStaff({
                           qualification: String(staff.qualification),
-                          position: String(staff.position),
+                          specialization: String(staff.specialization),
                           status: String(staff.status),
+                          document: staff.document || null,
                         });
                         setStaffNumber(typeof staff.number === 'number' ? staff.number : 0);
                         setEditingStaffIdx(idx);
