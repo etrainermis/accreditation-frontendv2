@@ -11,7 +11,7 @@ export default function ApplicantApplicationsPage() {
     <PageContainer
       role="applicant"
       title="Apply For Short Course"
-      description="Create and manage your accreditation applications for the selected trades."
+      description="Create and manage your accreditation applications for the selected training program(s)."
       breadcrumbs={[
         { label: "Dashboard", href: "/applicant/dashboard" },
         { label: "Short Course Application", href: "#" }

@@ -34,7 +34,7 @@ const applications = [
 ];
 
 const details = [
-  { id: 1, title: "Trade Selection Completed", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.", completed: true },
+  { id: 1, title: "Training Program(s) Selection Completed", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.", completed: true },
   { id: 2, title: "Competencies Selected", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.", completed: true },
   { id: 3, title: "Equipment and Facilities Added with Proofs", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.", completed: true },
   { id: 4, title: "Curriculum Documents", description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquid pariatur, ipsum dolor.", completed: true },

@@ -46,7 +46,7 @@ export function ApplicationsByTradeChart() {
         </div>
 
         <div className="mt-8 space-y-1">
-          <h4 className="text-xs  text-slate-900 uppercase tracking-wider">Applications By Trade</h4>
+          <h4 className="text-xs  text-slate-900 uppercase tracking-wider">Applications By Training Program(s)</h4>
           <p className="text-[11px] text-slate-400 font-medium">Total Applications</p>
           <div className="flex items-baseline gap-3 pt-1">
             <span className="text-2xl font-bold text-slate-900">230</span>

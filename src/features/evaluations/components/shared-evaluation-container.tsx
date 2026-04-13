@@ -2,8 +2,8 @@
 
 import React from "react";
 import {
-  ChevronRight, ChevronLeft, ArrowLeft, ClipboardCheck, Users, User,
-  FileText, HelpCircle, ChevronDown, Building2, Package, Mail, Phone, Database,
+  ChevronRight, ChevronLeft, ArrowLeft, UngroupIcon, Users, User,
+  Files, ToolCase, ChevronDown, Building2, Package, Mail, Phone, Database,
   Ungroup, Search, Eye, CheckCircle2, Check, MoreVertical, File, AlertTriangle, Clock,
   Calendar, UserPlus, PlusSquare, MapPin, Map, Globe, Flag, Navigation, Target, Activity,
   CheckCheck, X, RefreshCw
@@ -25,7 +25,7 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
   ];
 
   return (
-    <div className="flex items-start justify-between w-full my-3 px-1 pt-2 relative overflow-visible">
+    <div className="flex items-start justify-between w-full mt-4 mb-6 px-1 pt-1 relative overflow-visible">
       {steps.map((step, idx) => {
         const isActive = idx === currentStep;
         const isCompleted = idx < currentStep;
@@ -72,17 +72,19 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
 const ApplicationSidebar = ({
   activeStep,
   completedSteps,
-  onStepChange
+  onStepChange,
+  onExit
 }: {
   activeStep: number,
   completedSteps: number[],
-  onStepChange: (idx: number) => void
+  onStepChange: (idx: number) => void,
+  onExit?: () => void
 }) => {
   const sidebarSteps = [
     { label: "Institution Details", sub: "Select the trade(s) you are applying for", icon: Building2 },
-    { label: "Trade & Competency", sub: "Select the trade(s) you are applying for", icon: ClipboardCheck },
-    { label: "Equipment and Facilities", sub: "List available equipment and upload proof", icon: HelpCircle },
-    { label: "Curriculum Documents", sub: "Upload curriculum and training materials", icon: FileText },
+    { label: "Trade & Competency", sub: "Select the trade(s) you are applying for", icon: UngroupIcon },
+    { label: "Equipment and Facilities", sub: "List available equipment and upload proof", icon: ToolCase },
+    { label: "Curriculum Documents", sub: "Upload curriculum and training materials", icon: Files },
     { label: "Staff Allocation", sub: "Indicate staff availability for the selected trade", icon: Users },
   ];
 
@@ -91,7 +93,7 @@ const ApplicationSidebar = ({
       <div className="mb-10">
         <h2 className="text-sm text-slate-800 mb-9 mt-3">Application Details</h2>
         <button
-          onClick={() => window.history.back()}
+          onClick={onExit || (() => window.history.back())}
           className="flex items-center gap-2 text-[12px] text-[var(--primary)] hover:opacity-80 transition-opacity cursor-pointer"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -100,9 +102,7 @@ const ApplicationSidebar = ({
       </div>
 
       <div className="flex flex-col gap-6 relative">
-        {/* Vertical Line */}
-        <div className="absolute left-[17.5px] top-4 bottom-4 w-[1.5px] bg-slate-100" />
-
+     
         {sidebarSteps.map((step, idx) => {
           const isCompleted = completedSteps.includes(idx);
           const isActive = idx === activeStep;
@@ -166,6 +166,16 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
     to: new Date(2024, 0, 13)
   });
   const [evaluationNote, setEvaluationNote] = React.useState("");
+  const [assignedPrincipal, setAssignedPrincipal] = React.useState<string | null>(null);
+  const [assignedSecondary1, setAssignedSecondary1] = React.useState<string | null>(null);
+  const [assignedSecondary2, setAssignedSecondary2] = React.useState<string | null>(null);
+  const [showInitialReview, setShowInitialReview] = React.useState(false);
+  const [showConsensus, setShowConsensus] = React.useState(false);
+  const [initialReviewConsensus, setInitialReviewConsensus] = React.useState([
+    { name: "Principal Evaluator", status: "Accept", comment: "Documents look correct and complete." },
+    { name: "Secondary Evaluator 1", status: "Accept", comment: "No issues found in the trade modules." },
+    { name: "Secondary Evaluator 2", status: "Comment", comment: "Curriculum needs minor clarification on workshop hours." },
+  ]);
 
   React.useEffect(() => {
     setMounted(true);
@@ -234,23 +244,31 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const application = mockApplications.find(app => app.id === id) || mockApplications[0];
 
   return (
-    <div className="flex flex-col bg-white overflow-hidden h-[calc(100vh-150px)]">
-      <div className="flex flex-1 overflow-hidden">
-        <div className="flex flex-1 flex-col">
-          <div>
+    <div className="flex flex-col bg-white h-full overflow-hidden">
+      <div className="flex flex-1 overflow-hidden min-h-0">
+        <div className="flex flex-1 flex-col min-h-0 mx-6">
+          <div className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm">
             <HorizontalStepper currentStep={activeMajorStep} />
           </div>
 
-          <div className="flex flex-1 overflow-hidden">
-            {(activeMajorStep === 0 || activeMajorStep === 3) && (
+          <div className="flex flex-1 overflow-hidden min-h-0">
+            {((activeMajorStep === 0 && showInitialReview) || activeMajorStep === 3) && (
               <ApplicationSidebar
                 activeStep={activeInternalStep}
                 completedSteps={completedSteps}
                 onStepChange={setActiveInternalStep}
+                onExit={() => {
+                  if (activeMajorStep === 0) {
+                    setShowInitialReview(false);
+                    setIsEvaluating(false);
+                  } else {
+                    window.history.back();
+                  }
+                }}
               />
             )}
 
-            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar", (activeMajorStep === 0 || activeMajorStep === 3) && "flex flex-col items-center")}>
+            <div className={cn("flex-1 bg-white overflow-y-auto no-scrollbar min-h-0", ((activeMajorStep === 0 && showInitialReview) || activeMajorStep === 3) && "flex flex-col items-center")}>
               {!mounted ? (
                 <div className="flex-1 flex items-center justify-center">
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#0A77FF]" />
@@ -258,6 +276,120 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
               ) : (
                   <>
                     {(activeMajorStep === 0 || activeMajorStep === 3) && (
+                      <>
+                    {activeMajorStep === 0 && !showInitialReview ? (
+                      <div className="max-w-xl mx-auto py-12 px-6 w-full flex flex-col items-center">
+                        <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                          <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                        </div>
+                        <h2 className="text-xl text-slate-900 mb-1">Assign Evaluators</h2>
+                        <p className="text-sm text-slate-500 mb-10 text-center">
+                          Assign evaluators to the application. You can optionally review the documents before scheduling.
+                        </p>
+
+                        <div className="w-full space-y-4 mb-10">
+                          <h4 className="text-sm font-medium text-slate-700">Assign Evaluating Team</h4>
+                          
+                          <div 
+                            className={cn(
+                              "border rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedPrincipal ? "border-[var(--primary)] bg-blue-50/30" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
+                            )}
+                            onClick={() => setAssignedPrincipal("Principal Evaluator")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-[#0A77FF] transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-[#0A77FF]" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-sm text-slate-900">{assignedPrincipal || "Principal Evaluator"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
+                            </div>
+                            {!assignedPrincipal && <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>}
+                          </div>
+
+                          <div 
+                            className={cn(
+                              "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedSecondary1 ? "border-solid border-[var(--primary)] bg-blue-50/30" : "border-slate-200 hover:bg-slate-50"
+                            )}
+                            onClick={() => setAssignedSecondary1("Secondary Evaluator 1")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-slate-400" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary1 || "Secondary Evaluator 1"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                            </div>
+                          </div>
+
+                          <div 
+                            className={cn(
+                              "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                              assignedSecondary2 ? "border-solid border-[var(--primary)] bg-blue-50/30" : "border-slate-200 hover:bg-slate-50"
+                            )}
+                            onClick={() => setAssignedSecondary2("Secondary Evaluator 2")}
+                          >
+                            <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                              <UserPlus className="h-4 w-4 text-slate-400" />
+                            </div>
+                            <div className="text-left flex-1">
+                              <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary2 || "Secondary Evaluator 2"}</h4>
+                              <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        {assignedPrincipal && (
+                          <div className="w-full space-y-4 mb-10 p-6 bg-slate-50 border border-slate-100 rounded-sm">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="text-sm font-medium text-slate-700">Initial Review Consensus</h4>
+                              <div className="flex items-center gap-2 px-2 py-0.5 rounded-sm bg-green-50 border border-green-100 text-[10px] font-bold text-green-600 uppercase tracking-widest">
+                                Majority: Accept
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              {initialReviewConsensus.map((resp, idx) => (
+                                <div key={idx} className="flex flex-col gap-1 p-3 bg-white border border-slate-100 rounded-sm">
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-[12px] font-bold text-slate-700">{resp.name}</span>
+                                    <span className={cn(
+                                      "text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-sm border",
+                                      resp.status === "Accept" ? "text-green-500 bg-green-50 border-green-100" :
+                                      resp.status === "Rejected" ? "text-red-500 bg-red-50 border-red-100" :
+                                      "text-blue-500 bg-blue-50 border-blue-100"
+                                    )}>
+                                      {resp.status}
+                                    </span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 italic">"{resp.comment}"</p>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex flex-col gap-3 w-full">
+                          <button 
+                            onClick={() => setActiveMajorStep(1)}
+                            disabled={!assignedPrincipal}
+                            className="w-full py-4 bg-[var(--primary)] text-white rounded-sm text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                          >
+                            Proceed to Scheduling
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setShowInitialReview(true);
+                              setIsEvaluating(false);
+                            }}
+                            className="w-full py-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            View Initial Review (Optional)
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
                       <>
                     {activeInternalStep === 0 && (
                   <>
@@ -270,9 +402,18 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                             setActiveTab(tabs[currentIndex - 1]);
                           } else {
                             setIsEvaluating(false);
+                            if (activeMajorStep === 0) {
+                              setShowInitialReview(false);
+                            } else {
+                              window.history.back();
+                            }
                           }
                         } else {
-                          window.history.back();
+                          if (activeMajorStep === 0) {
+                            setShowInitialReview(false);
+                          } else {
+                            window.history.back();
+                          }
                         }
                       }}>
                         Back
@@ -287,7 +428,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
 
                     {/* Tabs */}
                     {/* Tabs */}
-                    <div className="flex justify-start mb-4 gap-10 w-full max-w-md">
+                    <div className="flex justify-between mb-4 gap-10 w-full max-w-md">
                       {tabs.map((tab) => (
                         <button
                           key={tab}
@@ -335,7 +476,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                             <div className="space-y-2">
                               <label className="text-[13px]  text-slate-700">P.O Box</label>
                               <div className="relative mt-2">
-                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                                <input readOnly defaultValue="P.O. Box 1234, Kigali" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
                                 <Package className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                               </div>
                             </div>
@@ -344,7 +485,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           <div className="space-y-2">
                             <label className="text-[13px]  text-slate-700">Email Address</label>
                             <div className="relative mt-2">
-                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue={application.applicant.email} className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default" />
                               <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                             </div>
                           </div>
@@ -506,7 +647,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 1 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Ungroup className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -542,7 +683,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 2 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Package className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -603,9 +744,9 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 3 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
-                      <FileText className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
+                      <Files className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
                     <h2 className="text-xl text-slate-900 mb-2">Curriculum Documents</h2>
                     <p className="text-sm text-slate-500 mb-8 text-center px-4">Upload curriculum and training materials.</p>
@@ -672,7 +813,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                 )}
 
                 {activeInternalStep === 4 && (
-                  <div className="max-w-3xl mx-auto flex flex-col items-center">
+                  <div className="max-w-4xl  mx-auto flex flex-col items-center">
                     <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
                       <Users className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
                     </div>
@@ -744,7 +885,10 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                   </div>
                 )}
                   </>
-                )}
+                )
+              }
+                </>
+              )}
 
                 {activeMajorStep === 1 && (
                   <div className="w-full py-8 px-0 flex flex-col items-start">
@@ -760,36 +904,36 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5 ">
                               <label className="text-[13px] text-slate-700">Province</label>
-                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">District</label>
-                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Sector</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Cell</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">Village</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                             <div className="space-y-1.5">
                               <label className="text-[13px] text-slate-700">City</label>
-                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                              <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                             </div>
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-[13px] text-slate-700">Address Line</label>
-                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default mt-2" />
+                            <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
                           </div>
                         </div>
                       </div>
@@ -805,19 +949,87 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           />
                         </div>
 
-                        <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
-                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                            <UserPlus className="h-5 w-5 text-slate-400" />
+                        {role === "super-admin" && (
+                          <div className="space-y-3">
+                            <h4 className="text-sm font-medium text-slate-700">Assign Evaluating Team</h4>
+                            
+                            <div 
+                              className={cn(
+                                "border rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedPrincipal ? "border-[var(--primary)] bg-white border-solid" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
+                              )}
+                              onClick={() => setAssignedPrincipal("Principal Evaluator")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full border flex items-center justify-center transition-colors shrink-0",
+                                assignedPrincipal ? "bg-blue-50 border-[var(--primary)]" : "bg-white border-slate-200 group-hover:border-[#0A77FF]"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedPrincipal ? "text-[var(--primary)]" : "text-[#0A77FF]")} />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-sm text-slate-900">{assignedPrincipal || "Principal Evaluator"}</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
+                              </div>
+                              {!assignedPrincipal && <span className="text-[10px] uppercase font-bold text-slate-400">Required</span>}
+                            </div>
+
+                            <div 
+                              className={cn(
+                                "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedSecondary1 ? "border-solid border-[var(--primary)] bg-white" : "border-slate-200 hover:bg-slate-50"
+                              )}
+                              onClick={() => setAssignedSecondary1("Secondary Evaluator 1")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full flex items-center justify-center transition-colors shrink-0",
+                                assignedSecondary1 ? "bg-blue-50 border-[var(--primary)] border" : "bg-slate-100 group-hover:bg-slate-200"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedSecondary1 ? "text-[var(--primary)]" : "text-slate-400")} />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary1 || "Secondary Evaluator 1"}</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                              </div>
+                            </div>
+
+                            <div 
+                              className={cn(
+                                "border border-dashed rounded-sm p-4 flex w-full items-center justify-left gap-3 transition-colors cursor-pointer group",
+                                assignedSecondary2 ? "border-solid border-[var(--primary)] bg-white" : "border-slate-200 hover:bg-slate-50"
+                              )}
+                              onClick={() => setAssignedSecondary2("Secondary Evaluator 2")}
+                            >
+                              <div className={cn(
+                                "h-10 w-10 rounded-full flex items-center justify-center transition-colors shrink-0",
+                                assignedSecondary2 ? "bg-blue-50 border-[var(--primary)] border" : "bg-slate-100 group-hover:bg-slate-200"
+                              )}>
+                                <UserPlus className={cn("h-4 w-4", assignedSecondary2 ? "text-[var(--primary)]" : "text-slate-400")} />
+                              </div>
+                              <div className="text-left flex-1">
+                                <h4 className="text-[13px] font-medium text-slate-900">{assignedSecondary2 || "Secondary Evaluator 2"}</h4>
+                                <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-left">
-                            <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
-                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                        )}
+                        {role !== "super-admin" && (
+                          <div className="border border-dashed border-slate-200 rounded-sm p-4 flex w-full items-center justify-left gap-3 hover:bg-slate-50 transition-colors cursor-pointer group">
+                            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                              <UserPlus className="h-5 w-5 text-slate-400" />
+                            </div>
+                            <div className="text-left">
+                              <h4 className="text-sm text-slate-900  ">Assign Evaluator</h4>
+                              <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         <div className="flex items-center gap-4 mt-auto pt-4">
                           <button
-                            onClick={() => setActiveMajorStep(0)}
+                            onClick={() => {
+                              setActiveMajorStep(0);
+                              setShowInitialReview(false);
+                            }}
                             className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
                           >
                             Cancel
@@ -851,15 +1063,67 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                           </div>
                         </div>
 
-                        <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
-                          <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                            <UserPlus className="h-5 w-5 text-slate-400" />
+                        {role === "super-admin" && (
+                          <div className="space-y-4">
+                            <h4 className="text-sm font-medium text-slate-700">Due Diligence Consensus</h4>
+                            
+                            <div className="border border-slate-200 rounded-sm p-4 flex w-full flex-col gap-3 bg-white">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-5 w-5 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[13px] font-bold text-slate-900">Principal Evaluator</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 bg-green-50 px-2 py-0.5 rounded-sm border border-green-100">Accept</span>
+                                  </div>
+                                  <p className="text-[12px] text-slate-600 mt-1">Infrastructure meets all minimum requirements. Validated the networking lab.</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="border border-slate-100 rounded-sm p-4 flex w-full flex-col gap-3 bg-slate-50/50">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-4 w-4 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[12px] font-bold text-slate-700">Secondary Evaluator 1</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-500 bg-green-50 px-2 py-0.5 rounded-sm border border-green-100">Accept</span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-1">Confirmed all PC models match invoices.</p>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="border border-slate-100 rounded-sm p-4 flex w-full flex-col gap-3 bg-slate-50/50">
+                              <div className="flex items-start gap-3 w-full">
+                                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center shrink-0 border border-slate-200">
+                                  <User className="h-4 w-4 text-slate-400" />
+                                </div>
+                                <div className="flex-1">
+                                  <div className="flex items-center justify-between">
+                                    <h4 className="text-[12px] font-bold text-slate-700">Secondary Evaluator 2</h4>
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-blue-500 bg-blue-50 px-2 py-0.5 rounded-sm border border-blue-100">Comment</span>
+                                  </div>
+                                  <p className="text-[11px] text-slate-500 mt-1">Building ventilation needs slight improvement.</p>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-left">
-                            <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
-                            <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                        )}
+                        {role !== "super-admin" && (
+                          <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
+                            <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                              <UserPlus className="h-5 w-5 text-slate-400" />
+                            </div>
+                            <div className="text-left">
+                              <h4 className="text-sm  text-slate-900">Assign Evaluator</h4>
+                              <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+                            </div>
                           </div>
-                        </div>
+                        )}
 
                         <div className="space-y-4">
                           <h4 className="text-sm font-medium text-slate-700">Addition Evaluation Note?</h4>
