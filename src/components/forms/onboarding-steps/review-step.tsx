@@ -184,7 +184,7 @@ export function ReviewApplicationStep({
                 {staffList.map((staff, idx) => (
                   <div key={idx} className="flex items-center justify-between bg-slate-50 rounded-lg p-3 border border-slate-100">
                     <div>
-                      <p className="text-[13.5px]  text-slate-800">{staff.position}</p>
+                      <p className="text-[13.5px]  text-slate-800">{staff.specialization}</p>
                       <p className="text-[12px] text-slate-500">{staff.qualification} • {staff.status}</p>
                     </div>
                     <div className="px-3 py-1 bg-white border border-slate-200 rounded-sm text-[12px]  text-slate-600 shadow-sm">
