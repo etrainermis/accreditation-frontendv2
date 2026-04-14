@@ -44,46 +44,46 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
             <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid mt-10 grid-cols-1 gap-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Province</label>
+                <label className="text-[13px] mt-2 text-slate-700">Province</label>
                 <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">District</label>
+                <label className="text-[13px] mt-2 text-slate-700">District</label>
                 <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Sector</label>
+                <label className="text-[13px] mt-2 text-slate-700">Sector</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Cell</label>
+                <label className="text-[13px] mt-2 text-slate-700">Cell</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Village</label>
+                <label className="text-[13px] mt-2 text-slate-700">Village</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">City</label>
+                <label className="text-[13px] mt-2 text-slate-700">City</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[13px] text-slate-700">Address Line</label>
+              <label className="text-[13px] mt-2 text-slate-700">Address Line</label>
               <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
             </div>
           </div>
         </div>
 
         {/* Right Column: Date Selection and Evaluator Assignment */}
-        <div className="flex-1 flex flex-col w-full">
+        <div className="flex-1 flex flex-col w-[50%]">
           <div className="space-y-3">
             <label className="text-sm text-slate-700">Date Selection</label>
             <DateRangePicker
@@ -96,11 +96,11 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
           {role === "super-admin" && (
             <div className="space-y-3 mt-4">
               <h4 className="text-sm text-slate-700">Assign Evaluating Team</h4>
-              
+
               {/* Principal Evaluator Card */}
-              <div 
+              <div
                 className={cn(
-                  "border rounded-sm p-4 w-full transition-colors cursor-pointer group",
+                  "border rounded-sm p-3 w-full transition-colors cursor-pointer group",
                   assignedScheduledPrincipal ? "border-[var(--primary)] bg-blue-50/10" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
                 )}
                 onClick={() => setPendingEvaluatorRole("Scheduled Principal")}
@@ -118,19 +118,12 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-sm text-slate-900">{assignedScheduledPrincipal || "Principal Evaluator"}</h4>
-                      {assignedScheduledPrincipalStatus && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledPrincipalStatus === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledPrincipalStatus}
-                        </span>
-                      )}
+                 
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
                   </div>
                 </div>
-                
+
                 {assignedScheduledPrincipalStatus === 'accepted' && (
                   <div className="mt-3 pt-3 border-t border-slate-100">
                     <div className="flex items-center justify-between mb-1">
@@ -143,7 +136,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               </div>
 
               {/* Secondary Evaluator 1 Card */}
-              <div 
+              <div
                 className={cn(
                   "border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group",
                   assignedScheduledSecondary1 ? "border-solid border-[var(--primary)] bg-blue-50/10" : "border-slate-200 hover:bg-slate-50"
@@ -163,14 +156,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary1 || "Secondary Evaluator 1"}</h4>
-                      {assignedScheduledSecondary1Status && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledSecondary1Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledSecondary1Status}
-                        </span>
-                      )}
+                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
@@ -188,7 +174,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               </div>
 
               {/* Secondary Evaluator 2 Card */}
-              <div 
+              <div
                 className={cn(
                   "border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group",
                   assignedScheduledSecondary2 ? "border-solid border-[var(--primary)] bg-blue-50/10" : "border-slate-200 hover:bg-slate-50"
@@ -208,19 +194,12 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary2 || "Secondary Evaluator 2"}</h4>
-                      {assignedScheduledSecondary2Status && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledSecondary2Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledSecondary2Status}
-                        </span>
-                      )}
+                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
                 </div>
-                
+
                 {assignedScheduledSecondary2Status === 'accepted' && (
                   <div className="mt-3 pt-3 border-t border-slate-100">
                     <div className="flex items-center justify-between mb-1">
