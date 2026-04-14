@@ -49,7 +49,7 @@ export function SharedApplicationsList({ role, basePath }: SharedApplicationsLis
         showPagination={true}
         currentPage={1}
         totalPages={10}
-        onRowClick={(item) => router.push(`${basePath}/${item.id}`)}
+        onRowClick={isReadOnly ? undefined : (item) => router.push(`${basePath}/${item.id}`)}
       />
     </div>
   );
