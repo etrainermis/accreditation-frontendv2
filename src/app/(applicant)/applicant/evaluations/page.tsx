@@ -5,8 +5,8 @@ export default function ApplicantEvaluationsPage() {
   return (
     <PageContainer
       role="applicant"
-      title="My Evaluations"
-      description="Track the evaluation progress of your submitted accreditation applications and view reviewer feedback."
+      title="Manage Accreditation Evaluations"
+      description="View & manage active applications and requests"
     >
       <ApplicantEvaluationsView />
     </PageContainer>
