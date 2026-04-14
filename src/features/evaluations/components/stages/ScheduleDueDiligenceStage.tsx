@@ -38,7 +38,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
     <div className="w-full py-8 px-0 flex flex-col items-start">
       <div className="w-full flex gap-12 px-6 text-left">
         {/* Left Column: Institution Location */}
-        <div className="flex-1">
+        <div className="flex-1 max-w-lg">
           <div className="mb-6">
             <h2 className="text-md text-slate-900">Institution Location</h2>
             <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
@@ -83,33 +83,22 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
         </div>
 
         {/* Right Column: Date Selection and Evaluator Assignment */}
-        <div className="w-[450px] shrink-0 flex flex-col gap-8">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-3">
-              <label className="text-sm text-slate-700">Date Selection</label>
-              <DateRangePicker
-                value={dateRange}
-                onChange={setDateRange}
-                className="w-full"
-              />
-            </div>
-            <div className="flex-1 space-y-3">
-              <label className="text-sm text-slate-700">Visit Hour</label>
-              <div className="relative">
-                <input 
-                  className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" 
-                  defaultValue="09:00 AM" 
-                />
-              </div>
-            </div>
+        <div className="flex-1 flex flex-col w-[50%]">
+          <div className="space-y-3">
+            <label className="text-sm text-slate-700">Date Selection</label>
+            <DateRangePicker
+              value={dateRange}
+              onChange={setDateRange}
+              className="w-full"
+            />
           </div>
 
           {role === "super-admin" && (
             <div className="space-y-3 mt-4">
               <h4 className="text-sm text-slate-700">Assign Evaluating Team</h4>
-              
+
               {/* Principal Evaluator Card */}
-              <div 
+              <div
                 className={cn(
                   "border rounded-sm p-3 w-full transition-colors cursor-pointer group",
                   assignedScheduledPrincipal ? "border-[var(--primary)] bg-blue-50/10" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
@@ -141,7 +130,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                     <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
                   </div>
                 </div>
-                
+
                 {assignedScheduledPrincipalStatus === 'accepted' && (
                   <div className="mt-3 pt-3 border-t border-slate-100">
                     <div className="flex items-center justify-between mb-1">
@@ -154,7 +143,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               </div>
 
               {/* Secondary Evaluator 1 Card */}
-              <div 
+              <div
                 className={cn(
                   "border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group",
                   assignedScheduledSecondary1 ? "border-solid border-[var(--primary)] bg-blue-50/10" : "border-slate-200 hover:bg-slate-50"
@@ -199,7 +188,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               </div>
 
               {/* Secondary Evaluator 2 Card */}
-              <div 
+              <div
                 className={cn(
                   "border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group",
                   assignedScheduledSecondary2 ? "border-solid border-[var(--primary)] bg-blue-50/10" : "border-slate-200 hover:bg-slate-50"
@@ -231,7 +220,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
                 </div>
-                
+
                 {assignedScheduledSecondary2Status === 'accepted' && (
                   <div className="mt-3 pt-3 border-t border-slate-100">
                     <div className="flex items-center justify-between mb-1">

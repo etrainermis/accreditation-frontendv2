@@ -34,30 +34,25 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
     <div className="w-full py-8 px-0 flex flex-col items-start">
       <div className="w-full flex gap-12 text-left">
         {/* Left Column: Date, Hour, Evaluator, Notes */}
-        <div className="w-[450px] shrink-0 flex flex-col gap-8">
-          <div className="flex gap-4">
-            <div className="flex-1 space-y-3">
-              <label className="text-sm text-slate-700">Date Selection</label>
-              <div className="relative w-full">
-                <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
-              </div>
-            </div>
+        <div className="w-[450px] shrink-0 flex flex-col gap-4">
+     <div className="flex gap-2">
+           <div className="space-y-3">
+            <label className="text-sm text-slate-700">Date Selection</label>
+            <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full mt-5" />
+          </div>
 
-            <div className="flex-1 space-y-3">
-              <label className="text-sm text-slate-700">Visit Hour</label>
-              <div className="relative">
-                <input 
-                  className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" 
-                  defaultValue="09:00 AM" 
-                />
-              </div>
+          <div className="space-y-3">
+            <label className="text-sm text-slate-700">Visit Hour</label>
+            <div className="relative">
+              <input defaultValue="Western" className="w-full mt-5 px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" />
             </div>
           </div>
+     </div>
 
           {role === "super-admin" && (
             <div className="space-y-4">
               <h4 className="text-sm text-slate-700">Due Diligence Consensus</h4>
-              
+
               <div className="border border-slate-200 rounded-sm p-4 flex w-full flex-col gap-3 bg-white">
                 <div className="flex items-start gap-3 w-full">
                   <div className="h-10 w-10 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-200">
@@ -104,23 +99,56 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
               </div>
             </div>
           )}
-
-          <div className="space-y-4">
-            <h4 className="text-sm text-slate-700">Addition Evaluation Note?</h4>
-            <div className="relative">
-              <textarea
-                placeholder="Text..."
-                value={evaluationNote}
-                onChange={(e) => setEvaluationNote(e.target.value)}
-                className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar"
-              />
-              <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">{275 - evaluationNote.length} characters left</div>
+          {role !== "super-admin" && (
+            <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
+              <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
+                <UserPlus className="h-5 w-5 text-slate-400" />
+              </div>
+              <div className="text-left">
+                <h4 className="text-sm text-slate-900">Assign Evaluator</h4>
+                <p className="text-[11px] text-slate-400">Click to select evaluator</p>
+              </div>
             </div>
-            <button className="flex items-center gap-2 px-8 py-3 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-all cursor-pointer">
-              Add Note
-              <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
-            </button>
-          </div>
+          )}
+
+          {role !== "super-admin" && (
+            <div className="space-y-4">
+              <h4 className="text-sm text-slate-700">Addition Evaluation Note?</h4>
+              <div className="relative">
+                <textarea
+                  placeholder="Text..."
+                  value={evaluationNote}
+                  onChange={(e) => setEvaluationNote(e.target.value)}
+                  className="w-full border border-slate-200 rounded-sm p-4 min-h-[140px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar"
+                />
+                <div className="absolute bottom-4 right-4 text-[11px] text-slate-400">{275 - evaluationNote.length} characters left</div>
+              </div>
+              <button className="flex items-center gap-2 px-8 py-3 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-all cursor-pointer">
+                Add Note
+                <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
+              </button>
+            </div>
+          )}
+                {/* Footer Actions */}
+      <div className="flex items-center gap-4 w-full">
+        <button
+          onClick={() => setActiveMajorStep(1)}
+          className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+        >
+          Back
+        </button>
+        <button
+          onClick={() => {
+            setActiveMajorStep(3);
+            setActiveInternalStep(0);
+            setActiveTab("General");
+            setIsEvaluating(false);
+          }}
+          className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer"
+        >
+          Complete Due Diligence
+        </button>
+      </div>
         </div>
 
         {/* Right Column: Equipment Verification */}
@@ -162,26 +190,7 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
         </div>
       </div>
 
-      {/* Footer Actions */}
-      <div className="flex items-center gap-4 mt-12 w-full max-w-sm">
-        <button
-          onClick={() => setActiveMajorStep(1)}
-          className="flex-1 py-3 px-4 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
-        >
-          Back
-        </button>
-        <button
-          onClick={() => {
-            setActiveMajorStep(3);
-            setActiveInternalStep(0);
-            setActiveTab("General");
-            setIsEvaluating(false);
-          }}
-          className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Complete Due Diligence
-        </button>
-      </div>
+
     </div>
   );
 };
