@@ -61,45 +61,52 @@ export const mockEvaluators: Evaluator[] = [
   },
 ];
 
-export const getEvaluatorColumns = (): Column<Evaluator>[] => [
-  {
-    header: "Name",
-    sortable: true,
-    accessor: (item) => (
-      <div className="flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 overflow-hidden">
-          <img 
-            src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${item.name}`} 
-            alt={item.name}
-            className="h-full w-full object-cover"
-          />
+export const getEvaluatorColumns = (isReadOnly: boolean = false): Column<Evaluator>[] => {
+  const columns: Column<Evaluator>[] = [
+    {
+      header: "Name",
+      sortable: true,
+      accessor: (item) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 overflow-hidden">
+            <img 
+              src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${item.name}`} 
+              alt={item.name}
+              className="h-full w-full object-cover"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm text-[#101828]">{item.name}</span>
+            <span className="text-xs text-[#475467]">{item.email}</span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-sm text-[#101828]">{item.name}</span>
-          <span className="text-xs text-[#475467]">{item.email}</span>
+      ),
+    },
+    {
+      header: "Status",
+      accessor: (item) => <StatusBadge status={item.status} />,
+    },
+    {
+      header: "Date added",
+      accessor: (item) => <span className="text-sm text-[#475467]">{item.dateAdded}</span>,
+    },
+    {
+      header: "Last active",
+      accessor: (item) => <span className="text-sm text-[#475467]">{item.lastActive}</span>,
+    },
+  ];
+
+  if (!isReadOnly) {
+    columns.push({
+      header: "Actions",
+      accessor: () => (
+        <div className="flex items-center justify-start gap-3">
+          <Trash2 className="h-4 w-4 text-[#475467] cursor-pointer hover:text-red-500 transition-colors" />
+          <Pencil className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9] transition-colors" />
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "Status",
-    accessor: (item) => <StatusBadge status={item.status} />,
-  },
-  {
-    header: "Date added",
-    accessor: (item) => <span className="text-sm text-[#475467]">{item.dateAdded}</span>,
-  },
-  {
-    header: "Last active",
-    accessor: (item) => <span className="text-sm text-[#475467]">{item.lastActive}</span>,
-  },
-  {
-    header: "Actions",
-    accessor: () => (
-      <div className="flex items-center justify-start gap-3">
-        <Trash2 className="h-4 w-4 text-[#475467] cursor-pointer hover:text-red-500 transition-colors" />
-        <Pencil className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9] transition-colors" />
-      </div>
-    ),
-  },
-];
+      ),
+    });
+  }
+
+  return columns;
+};

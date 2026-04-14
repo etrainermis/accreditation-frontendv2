@@ -1,18 +1,19 @@
 "use client";
 
+import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 import { CriteriaContent } from "@/features/evaluations/components/criteria-content";
 
-export default function SuperAdminCriteriaPage() {
+export default function SupervisorCriteriaPage() {
   return (
     <PageContainer
-      role="super-admin"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      role="supervisor"
+      title="Evaluation Criteria Files"
+      description="View evaluation criteria"
     >
-      <EvaluationsSubNav role="super-admin" />
-      <CriteriaContent role="super-admin" />
+      <EvaluationsSubNav role="supervisor" />
+      <CriteriaContent role="supervisor" />
     </PageContainer>
   );
 }

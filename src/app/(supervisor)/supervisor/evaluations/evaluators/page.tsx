@@ -1,18 +1,19 @@
 "use client";
 
+import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 import { EvaluatorsContent } from "@/features/evaluations/components/evaluators-content";
 
-export default function SuperAdminEvaluatorsPage() {
+export default function SupervisorEvaluatorsPage() {
   return (
     <PageContainer
-      role="super-admin"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      role="supervisor"
+      title="Evaluators"
+      description="View evaluators list"
     >
-      <EvaluationsSubNav role="super-admin" />
-      <EvaluatorsContent role="super-admin" />
+      <EvaluationsSubNav role="supervisor" />
+      <EvaluatorsContent role="supervisor" />
     </PageContainer>
   );
 }

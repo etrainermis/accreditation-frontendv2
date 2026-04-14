@@ -19,6 +19,7 @@ interface SharedApplicationsListProps {
 export function SharedApplicationsList({ role, basePath }: SharedApplicationsListProps) {
   const router = useRouter();
   const [search, setSearch] = useState("");
+  const isReadOnly = role === "supervisor";
 
   const stats = [
     { label: "Applications", value: 24, icon: NotepadText, iconColor: "#0A77FF" },
@@ -27,7 +28,7 @@ export function SharedApplicationsList({ role, basePath }: SharedApplicationsLis
     { label: "Rejected", value: 11, icon: AlertTriangle, iconColor: "#FF383C" },
   ];
 
-  const columns = getApplicationColumns();
+  const columns = getApplicationColumns(isReadOnly);
 
   const filteredData = mockApplications.filter(item => 
     item.applicant.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -42,13 +43,13 @@ export function SharedApplicationsList({ role, basePath }: SharedApplicationsLis
         data={filteredData} 
         columns={columns} 
         title="All Applications"
-        description="Manage applications by different institutions right here"
+        description={isReadOnly ? "View applications from different institutions" : "Manage applications by different institutions right here"}
         searchValue={search}
         onSearchChange={setSearch}
         showPagination={true}
         currentPage={1}
         totalPages={10}
-        onRowClick={(item) => router.push(`${basePath}/${item.id}`)}
+        onRowClick={isReadOnly ? undefined : (item) => router.push(`${basePath}/${item.id}`)}
       />
     </div>
   );

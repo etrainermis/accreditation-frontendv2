@@ -6,7 +6,7 @@ import { EvaluationsSubNav } from "@/components/navigation/evaluations-sub-nav";
 import { DateRangePicker, DateRange } from "@/components/ui/date-range-picker";
 import { ScheduleContent } from "@/features/evaluations/components/schedule-content";
 
-export default function SuperAdminSchedulePage() {
+export default function SupervisorSchedulePage() {
   const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(2024, 0, 6),
     to: new Date(2024, 0, 13),
@@ -14,14 +14,14 @@ export default function SuperAdminSchedulePage() {
 
   return (
     <PageContainer
-      role="super-admin"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      role="supervisor"
+      title="Due Diligence Schedule"
+      description="View evaluation schedules"
     >
-      <EvaluationsSubNav role="super-admin">
+      <EvaluationsSubNav role="supervisor">
         <DateRangePicker value={dateRange} onChange={setDateRange} />
       </EvaluationsSubNav>
-      <ScheduleContent role="super-admin" />
+      <ScheduleContent role="supervisor" />
     </PageContainer>
   );
 }

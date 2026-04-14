@@ -12,12 +12,11 @@ export function AddressInformationStep({ formData, setFormData }: AddressInforma
   return (
     <div className="grid gap-x-4 gap-y-4 md:grid-cols-2">
       {[
-        { label: "Province", req: true },
-        { label: "District", req: true },
-        { label: "Sector", req: true },
-        { label: "Cell", req: true },
-        { label: "Village", req: true },
-        { label: "City", req: false },
+        { label: "Province", req: true, fullWidth: false },
+        { label: "District", req: true, fullWidth: false },
+        { label: "Sector", req: true, fullWidth: false },
+        { label: "Cell", req: true, fullWidth: false },
+        { label: "Village", req: true, fullWidth: true },
       ].map((field) => (
         <FormSelect
           key={field.label}
@@ -33,6 +32,7 @@ export function AddressInformationStep({ formData, setFormData }: AddressInforma
             { label: "Nyarugenge", value: "Nyarugenge" },
             { label: "Western Province", value: "Western Province" },
           ]}
+          className={field.fullWidth ? "md:col-span-2" : ""}
         />
       ))}
       <FormInput

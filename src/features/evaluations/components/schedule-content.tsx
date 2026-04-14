@@ -8,13 +8,20 @@ import {
   AlertCircle, 
   XCircle, 
   ClipboardClock, 
-  NotepadText 
+  NotepadText,
+  Calendar
 } from "lucide-react";
 import { mockSchedule, getScheduleColumns } from "@/lib/utils/schedule-utils";
+import { UserRole } from "@/types/auth";
 
-export function ScheduleContent() {
+interface ScheduleContentProps {
+  role?: UserRole;
+}
+
+export function ScheduleContent({ role = "super-admin" }: ScheduleContentProps) {
   const [search, setSearch] = useState("");
-  const columns = getScheduleColumns();
+  const isReadOnly = role === "supervisor";
+  const columns = getScheduleColumns(isReadOnly);
 
   const stats = [
     { label: "Total scheduled visits", value: "24", icon: NotepadText, iconColor: "#0A77FF" },
@@ -37,7 +44,7 @@ export function ScheduleContent() {
         data={filteredData} 
         columns={columns} 
         title="Due Diligence Schedule"
-        description="Manage institutions schedule visits right here"
+        description={isReadOnly ? "View scheduled visits" : "Manage institutions schedule visits right here"}
         searchValue={search}
         onSearchChange={setSearch}
         showPagination={true}
