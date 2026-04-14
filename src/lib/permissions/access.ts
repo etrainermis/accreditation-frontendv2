@@ -3,6 +3,7 @@ import type { AuthSession, PortalAccess, UserRole } from "@/types/auth";
 const roleHierarchy: Record<UserRole, number> = {
   applicant: 1,
   evaluator: 2,
+  "curriculum-evaluator": 2,
   "super-admin": 3,
 };
 
