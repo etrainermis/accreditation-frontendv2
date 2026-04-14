@@ -43,7 +43,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
   return (
     <header className="bg-white">
       {/* Global Navigation Row */}
-      <div className="flex items-center justify-between px-6 py-4">
+      <div className="flex items-center justify-between px-6 py-2">
         <div className="flex items-center gap-3">
           {onOpenMobile && (
             <button
@@ -114,7 +114,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
 
       {/* Page Header Row (Integrated/Fused) with content-width border */}
       <div className="px-6">
-        <div className="flex w-full pb-5 pt-1 border-b border-[#EAECF0]">
+        <div className="flex w-full pb-2 border-b border-[#EAECF0]">
           {title ? (
             <>
               <div className="flex w-full justify-between items-center gap-10">

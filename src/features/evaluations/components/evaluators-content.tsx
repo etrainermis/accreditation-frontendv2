@@ -14,10 +14,16 @@ import {
   mockEvaluators, 
   getEvaluatorColumns 
 } from "@/lib/utils/evaluator-utils";
+import { UserRole } from "@/types/auth";
 
-export function EvaluatorsContent() {
+interface EvaluatorsContentProps {
+  role?: UserRole;
+}
+
+export function EvaluatorsContent({ role = "super-admin" }: EvaluatorsContentProps) {
   const [search, setSearch] = useState("");
-  const columns = getEvaluatorColumns();
+  const isReadOnly = role === "supervisor";
+  const columns = getEvaluatorColumns(isReadOnly);
 
   const stats = [
     { label: "Total Evaluators", value: "48", icon: Users, iconColor: "#0A77FF" },
@@ -39,7 +45,7 @@ export function EvaluatorsContent() {
         data={filteredData} 
         columns={columns} 
         title="All Evaluators"
-        description="Manage applications by different institutions right here"
+        description={isReadOnly ? "View evaluators information" : "Manage applications by different institutions right here"}
         searchValue={search}
         onSearchChange={setSearch}
         showPagination={true}

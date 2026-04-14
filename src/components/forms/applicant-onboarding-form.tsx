@@ -48,7 +48,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
   const [staffList, setStaffList] = useState<TechnicalStaffEntry[]>(globalStaffList);
-  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", position: "", status: "" });
+  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", specialization: "", status: "" });
   const [editingStaffIdx, setEditingStaffIdx] = useState<number | null>(null);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);

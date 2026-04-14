@@ -2,6 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePageHeader } from "@/lib/context/page-header-context";
+import { cn } from "@/lib/utils/cn";
 
 export function PageContainer({
   title,
@@ -9,6 +10,8 @@ export function PageContainer({
   action,
   breadcrumbs,
   hideSidebar,
+  noPadding,
+  noScroll,
   children,
 }: {
   role: string;
@@ -17,6 +20,8 @@ export function PageContainer({
   action?: ReactNode;
   breadcrumbs?: { label: string; href: string }[];
   hideSidebar?: boolean;
+  noPadding?: boolean;
+  noScroll?: boolean;
   children: ReactNode;
 }) {
   const { setHeader } = usePageHeader();
@@ -28,12 +33,17 @@ export function PageContainer({
       action: action || null,
       breadcrumbs,
       hideSidebar,
+      noPadding,
+      noScroll,
     });
-  }, [title, description, action, breadcrumbs, hideSidebar, setHeader]);
+  }, [title, description, action, breadcrumbs, hideSidebar, noPadding, noScroll, setHeader]);
 
   return (
-    <div className="space-y-6">
-      <div className="py-6">
+    <div className={cn("space-y-6", noScroll && "h-full flex flex-col space-y-0")}>
+      <div className={cn(
+        noPadding ? "p-0" : "pt-2 pb-6 text-left",
+        noScroll && "flex-1 flex flex-col overflow-hidden"
+      )}>
         {children}
       </div>
     </div>

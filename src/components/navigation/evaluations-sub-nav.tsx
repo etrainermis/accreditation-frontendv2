@@ -12,13 +12,13 @@ import {
 } from "lucide-react";
 
 interface EvaluationsSubNavProps {
-  role?: "super-admin" | "evaluator";
+  role?: "super-admin" | "evaluator" | "supervisor";
   children?: React.ReactNode;
 }
 
 export function EvaluationsSubNav({ role = "super-admin", children }: EvaluationsSubNavProps) {
   const pathname = usePathname();
-  const basePath = role === "super-admin" ? "/super-admin/evaluations" : "/evaluator";
+  const basePath = role === "super-admin" ? "/super-admin/evaluations" : role === "supervisor" ? "/supervisor/evaluations" : "/evaluator";
 
   const allNavItems = [
     {

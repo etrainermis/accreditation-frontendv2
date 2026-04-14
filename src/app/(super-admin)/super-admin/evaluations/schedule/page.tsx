@@ -21,7 +21,7 @@ export default function SuperAdminSchedulePage() {
       <EvaluationsSubNav role="super-admin">
         <DateRangePicker value={dateRange} onChange={setDateRange} />
       </EvaluationsSubNav>
-      <ScheduleContent />
+      <ScheduleContent role="super-admin" />
     </PageContainer>
   );
 }
