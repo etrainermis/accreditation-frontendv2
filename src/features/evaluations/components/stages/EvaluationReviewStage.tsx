@@ -538,15 +538,25 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
           )}
 
           {activeInternalStep === 4 && (
-            <div className="space-y-8">
-              <div className="flex items-center justify-between">
-                <h2 className="text-xl text-slate-900">Staff Allocation</h2>
+            <div className="max-w-4xl mx-auto flex flex-col items-center w-full">
+              <div className="h-12 w-12 rounded-sm border border-slate-100 flex items-center justify-center mb-6">
+                <Users className="h-6 w-6 text-slate-400" />
               </div>
+              <h2 className="text-xl text-slate-900 mb-2">Staff Allocation</h2>
+              <p className="text-sm text-slate-500 mb-8 text-center px-4">Review the staff allocated for this accreditation program.</p>
 
               <div className="flex items-center gap-4 w-full mb-10">
-                <button onClick={() => setActiveInternalStep(3)} className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm text-slate-600 hover:bg-slate-50 transition-colors">Back</button>
-                <button onClick={handleNext} className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm hover:opacity-90 transition-opacity">
-                  {activeMajorStep === 3 ? "Proceed to Decision" : "Continue"}
+                <button 
+                  onClick={() => setActiveInternalStep(3)} 
+                  className="flex-1 py-3 border border-slate-200 rounded-sm cursor-pointer text-sm text-slate-600 hover:bg-slate-50 transition-colors"
+                >
+                  Back
+                </button>
+                <button 
+                  onClick={handleNext} 
+                  className="flex-1 py-3 bg-[#0A77FF] text-white rounded-sm cursor-pointer text-sm hover:opacity-90 transition-opacity"
+                >
+                  Finish Evaluation
                 </button>
               </div>
 
@@ -563,7 +573,7 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {staffAllocationList.map((item) => (
+                    {staffAllocationList.map((item: any) => (
                       <tr key={item.id} className="hover:bg-slate-50/30 transition-colors group">
                         <td className="w-10 p-4 text-center">
                           <div className="h-4 w-4 border border-slate-200 rounded-[3px] mx-auto" />

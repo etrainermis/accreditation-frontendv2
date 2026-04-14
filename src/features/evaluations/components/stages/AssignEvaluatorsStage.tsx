@@ -71,14 +71,7 @@ export const AssignEvaluatorsStage: React.FC<AssignEvaluatorsStageProps> = ({
               <div className="text-left flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-sm text-slate-900">{assignedInitialPrincipal || "Principal Evaluator"}</h4>
-                  {assignedInitialPrincipalStatus && (
-                    <span className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                      assignedInitialPrincipalStatus === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                    )}>
-                      {assignedInitialPrincipalStatus}
-                    </span>
-                  )}
+                
                 </div>
                 <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
               </div>
@@ -116,14 +109,7 @@ export const AssignEvaluatorsStage: React.FC<AssignEvaluatorsStageProps> = ({
               <div className="text-left flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-[13px] text-slate-900">{assignedInitialSecondary1 || "Secondary Evaluator 1"}</h4>
-                  {assignedInitialSecondary1Status && (
-                    <span className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                      assignedInitialSecondary1Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                    )}>
-                      {assignedInitialSecondary1Status}
-                    </span>
-                  )}
+
                 </div>
                 <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
               </div>
@@ -161,14 +147,7 @@ export const AssignEvaluatorsStage: React.FC<AssignEvaluatorsStageProps> = ({
               <div className="text-left flex-1">
                 <div className="flex items-center gap-2">
                   <h4 className="text-[13px] text-slate-900">{assignedInitialSecondary2 || "Secondary Evaluator 2"}</h4>
-                  {assignedInitialSecondary2Status && (
-                    <span className={cn(
-                      "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                      assignedInitialSecondary2Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                    )}>
-                      {assignedInitialSecondary2Status}
-                    </span>
-                  )}
+             
                 </div>
                 <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
               </div>

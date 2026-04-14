@@ -118,14 +118,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-sm text-slate-900">{assignedScheduledPrincipal || "Principal Evaluator"}</h4>
-                      {assignedScheduledPrincipalStatus && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledPrincipalStatus === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledPrincipalStatus}
-                        </span>
-                      )}
+                 
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
                   </div>
@@ -163,14 +156,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary1 || "Secondary Evaluator 1"}</h4>
-                      {assignedScheduledSecondary1Status && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledSecondary1Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledSecondary1Status}
-                        </span>
-                      )}
+                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
@@ -208,14 +194,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary2 || "Secondary Evaluator 2"}</h4>
-                      {assignedScheduledSecondary2Status && (
-                        <span className={cn(
-                          "text-[10px] px-1.5 py-0.5 rounded-full capitalize",
-                          assignedScheduledSecondary2Status === 'accepted' ? "bg-emerald-50 text-emerald-600" : "bg-amber-50 text-amber-600"
-                        )}>
-                          {assignedScheduledSecondary2Status}
-                        </span>
-                      )}
+                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>

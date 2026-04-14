@@ -1,7 +1,6 @@
 "use client";
-
-import React from "react";
-import { CheckCircle2, CheckCheck, Search, X, RefreshCw, PlusSquare, User } from "lucide-react";
+import React, { useState } from "react";
+import { CheckCircle2, CheckCheck, Search, X, RefreshCw, PlusSquare, User, UserPlus, Mail } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { DateRangePicker, DateRange } from "@/components/ui/date-range-picker";
 
@@ -22,8 +21,22 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
   setDateRange,
   setActiveMajorStep,
 }) => {
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [invitationStatus, setInvitationStatus] = useState<'idle' | 'pending' | 'sent'>('idle');
+  const [email, setEmail] = useState("");
+
+  const handleInvite = (e: React.FormEvent) => {
+    e.preventDefault();
+    setInvitationStatus('pending');
+    // Simulate API call
+    setTimeout(() => {
+      setInvitationStatus('sent');
+      setShowInviteModal(false);
+    }, 1500);
+  };
+
   return (
-    <div className="w-full py-8 px-0 flex flex-col items-start">
+    <div className="w-full py-8 px-0 flex flex-col items-start relative">
       {role === "supervisor" ? (
         // Supervisor View - Certificate Granting
         <div className="w-full max-w-2xl mx-auto space-y-6">
@@ -89,41 +102,35 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
           </div>
         </div>
       ) : (
-        // Super-Admin/Evaluator View - Decision Making
+        // Super-Admin / Evaluator View
         <div className="w-full flex gap-12 text-left">
           {/* Left Column */}
           <div className="w-[450px] shrink-0 flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">24 equipment</span>
+              <span className="text-sm text-slate-500">Evaluation Decision</span>
             </div>
-            <div className="relative max-w-xl">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
-              <input placeholder="Search" className="w-full pl-11 pr-4 py-3 rounded-sm border border-slate-200 text-sm focus:outline-none focus:border-[#0A77FF]" />
-            </div>
-
-            {/* Decision Radio Badges */}
-            <div className="flex gap-4">
-              <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
-                <div className="flex items-center gap-2">
-                  <CheckCheck className="h-4 w-4 text-[#0A77FF]" />
-                  <span className="text-sm text-slate-700">Approved</span>
+            
+            <div 
+              onClick={() => setShowInviteModal(true)}
+              className="border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group border-slate-200 hover:bg-slate-50"
+            >
+              <div className="flex items-center gap-3 w-full">
+                <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
+                  <UserPlus className="h-4 w-4 text-slate-400" />
                 </div>
-                <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
-              </label>
-              <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
-                <div className="flex items-center gap-2">
-                  <X className="h-4 w-4 text-[#0A77FF]" />
-                  <span className="text-sm text-slate-700">Rejected</span>
+                <div className="text-left flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-[13px] text-slate-900">Supervisor</h4>
+                    {invitationStatus === 'sent' && (
+                      <span className="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">Invited</span>
+                    )}
+                    {invitationStatus === 'pending' && (
+                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded-full">Pending</span>
+                    )}
+                  </div>
+                  <p className="text-[11px] text-slate-400 leading-tight">Final reviewer & decision maker</p>
                 </div>
-                <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
-              </label>
-              <label className="flex-1 flex items-center justify-between p-3 border border-slate-200 rounded-sm cursor-pointer hover:border-[#0A77FF] group transition-colors">
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 text-[#0A77FF]" />
-                  <span className="text-sm text-slate-700">Reverted</span>
-                </div>
-                <input type="radio" name="decision" className="h-4 w-4 text-[#0A77FF] focus:ring-[#0A77FF] cursor-pointer" />
-              </label>
+              </div>
             </div>
 
             {/* Confirm / Cancel Buttons */}
@@ -132,49 +139,44 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
               <button onClick={() => alert("Confirm decision")} className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer">Confirm</button>
             </div>
 
-            {/* Comment Box */}
-            <div className="space-y-4 mt-2">
-              <h4 className="text-sm text-slate-700">Any addition comment?</h4>
-              <div className="relative">
-                <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[100px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
-                <div className="absolute bottom-[-24px] left-0 text-[11px] text-slate-400">275 characters left</div>
+               <div className="grid grid-cols-2 gap-4 mt-2">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
+                  <img src={`https://ui-avatars.com/api/?name=${application.institution.name}&background=FF8A65&color=fff&rounded=true`} alt="logo" className="h-full w-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[13px] text-slate-900 leading-tight">{application.institution.name}</span>
+                  <span className="text-[11px] text-slate-500">{application.institution.email}</span>
+                </div>
               </div>
-              <button className="flex items-center gap-2 px-6 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-all cursor-pointer mt-8">
-                Add Note
-                <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
-              </button>
+     
+     
             </div>
+
+        
           </div>
 
           {/* Right Column */}
           <div className="flex-1 flex flex-col gap-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <label className="text-[13px] text-slate-700">Date Selection</label>
-                <div className="relative">
-                  <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
-                </div>
+  
+
+         
+
+
+    {/* Comment Box */}
+            <div className="space-y-4 mt-2">
+              <h4 className="text-sm text-slate-700">Any addition comment?</h4>
+              <div className="relative">
+                <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[70px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
+                <div className="absolute bottom-[-14px] left-0 text-[11px] text-slate-400">275 characters left</div>
               </div>
-              <div className="space-y-3">
-                <label className="text-[13px] text-slate-700">Visit Hour</label>
-                <div className="relative">
-                  <input defaultValue="Western" className="w-full px-4 py-[10px] rounded-sm border border-slate-200 text-[13px] text-slate-700 bg-white focus:outline-none focus:border-[#0A77FF]" />
-                </div>
-              </div>
+              <button className="flex items-center gap-2 px-6 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-all cursor-pointer mt-7">
+                Add Note
+                <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
+              </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
-                  <img src="https://ui-avatars.com/api/?name=Command+R&background=FF8A65&color=fff&rounded=true" alt="logo" className="h-full w-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[13px] text-slate-900 leading-tight">Command+R</span>
-                  <span className="text-[11px] text-slate-500">cmdr.ai</span>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3">
+                     <div className="flex items-center gap-3">
                 <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200">
                   <User className="h-4 w-4 text-slate-400 stroke-2" />
                 </div>
@@ -183,7 +185,65 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
                   <span className="text-[13px] text-slate-900 leading-tight">John Smith</span>
                 </div>
               </div>
+          </div>
+        </div>
+      )}
+
+      {/* Invite Modal */}
+      {showInviteModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 p-4 transition-opacity font-sans">
+          <div className="w-full max-w-lg bg-white rounded-sm overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="flex items-start justify-between p-6 border-b border-slate-100">
+              <div className="flex items-start gap-4">
+                <div className="h-10 w-13 mt-2 rounded-sm border border-slate-100 flex items-center justify-center p-2">
+                  <UserPlus className="h-5 w-5 text-[#0A77FF]" />
+                </div>
+                <div>
+                  <h3 className="text-lg text-[#323539]">Assign Supervisor</h3>
+                  <p className="text-sm text-[#858C95] w-full">The assigned supervisor will receive access to review evaluation results and grant certificate access.</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setShowInviteModal(false)}
+                className="p-2 cursor-pointer h-10 mt-2 hover:bg-slate-100 rounded-sm transition-colors text-slate-400 hover:text-slate-600"
+              >
+                <X className="h-5 w-5" />
+              </button>
             </div>
+            <form onSubmit={handleInvite} className="p-6 space-y-6">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm text-slate-700">Email</label>
+                <div className="relative">
+                  <input 
+                    id="email" 
+                    placeholder="Enter your email" 
+                    required 
+                    type="email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full pl-4 pr-12 py-3 bg-white border mt-2 border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
+                  />
+                  <Mail className="absolute right-4 top-1/2 mt-1 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                </div>
+                <p className="text-xs text-slate-400 italic">He/she will receive an invitation email</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setShowInviteModal(false)}
+                  className="flex-1 py-2.5 text-sm cursor-pointer text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors"
+                >
+                  Exit
+                </button>
+                <button 
+                  type="submit" 
+                  disabled={invitationStatus === 'pending'}
+                  className="flex-1 py-2.5 text-sm cursor-pointer text-white bg-[#0A77FF] rounded-sm hover:bg-[#0966ff] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-50"
+                >
+                  {invitationStatus === 'pending' ? 'Inviting...' : 'Invite'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
