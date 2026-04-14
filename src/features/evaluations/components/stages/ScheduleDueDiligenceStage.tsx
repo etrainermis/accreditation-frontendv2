@@ -38,59 +38,70 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
     <div className="w-full py-8 px-0 flex flex-col items-start">
       <div className="w-full flex gap-12 px-6 text-left">
         {/* Left Column: Institution Location */}
-        <div className="flex-1 max-w-lg">
+        <div className="flex-1">
           <div className="mb-6">
             <h2 className="text-md text-slate-900">Institution Location</h2>
             <p className="text-sm text-slate-500">Consider the location while scheduling the Due Diligence</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid mt-10 grid-cols-1 gap-6">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Province</label>
+                <label className="text-[13px] mt-2 text-slate-700">Province</label>
                 <input readOnly defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">District</label>
+                <label className="text-[13px] mt-2 text-slate-700">District</label>
                 <input readOnly defaultValue="Nyabihu" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Sector</label>
+                <label className="text-[13px] mt-2 text-slate-700">Sector</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Cell</label>
+                <label className="text-[13px] mt-2 text-slate-700">Cell</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">Village</label>
+                <label className="text-[13px] mt-2 text-slate-700">Village</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
               <div className="space-y-1.5">
-                <label className="text-[13px] text-slate-700">City</label>
+                <label className="text-[13px] mt-2 text-slate-700">City</label>
                 <input readOnly defaultValue="Mukamira" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
               </div>
             </div>
             <div className="space-y-1.5">
-              <label className="text-[13px] text-slate-700">Address Line</label>
+              <label className="text-[13px] mt-2 text-slate-700">Address Line</label>
               <input readOnly defaultValue="Mukamira Road" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white cursor-default" />
             </div>
           </div>
         </div>
 
         {/* Right Column: Date Selection and Evaluator Assignment */}
-        <div className="flex-1 flex flex-col w-full">
-          <div className="space-y-3">
-            <label className="text-sm text-slate-700">Date Selection</label>
-            <DateRangePicker
-              value={dateRange}
-              onChange={setDateRange}
-              className="w-full"
-            />
+        <div className="w-[450px] shrink-0 flex flex-col gap-8">
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-3">
+              <label className="text-sm text-slate-700">Date Selection</label>
+              <DateRangePicker
+                value={dateRange}
+                onChange={setDateRange}
+                className="w-full"
+              />
+            </div>
+            <div className="flex-1 space-y-3">
+              <label className="text-sm text-slate-700">Visit Hour</label>
+              <div className="relative">
+                <input 
+                  className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" 
+                  defaultValue="09:00 AM" 
+                />
+              </div>
+            </div>
           </div>
 
           {role === "super-admin" && (
@@ -100,7 +111,7 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               {/* Principal Evaluator Card */}
               <div 
                 className={cn(
-                  "border rounded-sm p-4 w-full transition-colors cursor-pointer group",
+                  "border rounded-sm p-3 w-full transition-colors cursor-pointer group",
                   assignedScheduledPrincipal ? "border-[var(--primary)] bg-blue-50/10" : "border-slate-200 bg-slate-50/50 hover:border-[#0A77FF]/50"
                 )}
                 onClick={() => setPendingEvaluatorRole("Scheduled Principal")}

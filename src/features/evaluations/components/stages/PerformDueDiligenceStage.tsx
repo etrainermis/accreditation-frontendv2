@@ -35,15 +35,22 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
       <div className="w-full flex gap-12 text-left">
         {/* Left Column: Date, Hour, Evaluator, Notes */}
         <div className="w-[450px] shrink-0 flex flex-col gap-8">
-          <div className="space-y-3">
-            <label className="text-sm text-slate-700">Date Selection</label>
-            <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
-          </div>
+          <div className="flex gap-4">
+            <div className="flex-1 space-y-3">
+              <label className="text-sm text-slate-700">Date Selection</label>
+              <div className="relative w-full">
+                <DateRangePicker value={dateRange} onChange={setDateRange} className="w-full" />
+              </div>
+            </div>
 
-          <div className="space-y-3">
-            <label className="text-sm text-slate-700">Visit Hour</label>
-            <div className="relative">
-              <input defaultValue="Western" className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" />
+            <div className="flex-1 space-y-3">
+              <label className="text-sm text-slate-700">Visit Hour</label>
+              <div className="relative">
+                <input 
+                  className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 bg-white" 
+                  defaultValue="09:00 AM" 
+                />
+              </div>
             </div>
           </div>
 
@@ -94,17 +101,6 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
                     <p className="text-[11px] text-slate-500 mt-1">Building ventilation needs slight improvement.</p>
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-          {role !== "super-admin" && (
-            <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
-              <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
-                <UserPlus className="h-5 w-5 text-slate-400" />
-              </div>
-              <div className="text-left">
-                <h4 className="text-sm text-slate-900">Assign Evaluator</h4>
-                <p className="text-[11px] text-slate-400">Click to select evaluator</p>
               </div>
             </div>
           )}
