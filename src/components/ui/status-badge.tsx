@@ -4,7 +4,7 @@ import React from "react";
 import { cn } from "@/lib/utils/cn";
 import { CheckCheck, X, Clock, TriangleAlert } from "lucide-react";
 
-export type StatusType = "Pending" | "Approved" | "Rejected" | "Active" | "Deactivated" | "Completed" | "Cancelled";
+export type StatusType = "Pending" | "Approved" | "Rejected" | "Active" | "Deactivated" | "Completed" | "Cancelled" | "Expired" | "Expiring Soon";
 
 interface StatusBadgeProps {
   status: StatusType;
@@ -59,6 +59,20 @@ export function StatusBadge({ status }: StatusBadgeProps) {
       text: "text-[#B42318]",
       border: "border-[#FECDCA]",
       dot: "bg-[#F04438]",
+      icon: TriangleAlert,
+    },
+    Expired: {
+      label: "Expired",
+      text: "text-[#B42318]",
+      border: "border-[#FECDCA]",
+      dot: "bg-[#F04438]",
+      icon: X,
+    },
+    "Expiring Soon": {
+      label: "Expiring Soon",
+      text: "text-[#B54708]",
+      border: "border-[#FEDF89]",
+      dot: "bg-[#F79009]",
       icon: TriangleAlert,
     },
   };
