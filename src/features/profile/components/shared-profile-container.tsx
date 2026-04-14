@@ -13,10 +13,25 @@ interface SharedProfileContainerProps {
 
 export function SharedProfileContainer({ 
   role, 
-  userName = "System Administrator", 
-  userEmail = "admin@accreditation.gov.rw" 
+  userName, 
+  userEmail 
 }: SharedProfileContainerProps) {
   const [activeTab, setActiveTab] = useState("personal");
+
+  // Set default values based on role
+  const defaultUserName = userName || (
+    role === "super-admin" ? "System Administrator" :
+    role === "supervisor" ? "Supervisor User" :
+    role === "evaluator" ? "Evaluator User" :
+    "User"
+  );
+
+  const defaultUserEmail = userEmail || (
+    role === "super-admin" ? "admin@accreditation.gov.rw" :
+    role === "supervisor" ? "supervisor@accreditation.gov.rw" :
+    role === "evaluator" ? "evaluator@accreditation.gov.rw" :
+    "user@accreditation.gov.rw"
+  );
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
@@ -79,7 +94,7 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Full Name</label>
                 <input 
                   type="text" 
-                  defaultValue={userName}
+                  defaultValue={defaultUserName}
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-white"
                 />
               </div>
@@ -87,7 +102,7 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Email Address</label>
                 <input 
                   type="email" 
-                  defaultValue={userEmail}
+                  defaultValue={defaultUserEmail}
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-slate-50"
                   readOnly
                 />
@@ -96,7 +111,12 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Job Title / Role</label>
                 <input 
                   type="text" 
-                  defaultValue={role === "super-admin" ? "Super Administrator" : "Evaluator"}
+                  defaultValue={
+                    role === "super-admin" ? "Super Administrator" : 
+                    role === "supervisor" ? "Supervisor" : 
+                    role === "evaluator" ? "Evaluator" : 
+                    "Applicant"
+                  }
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-slate-50"
                   readOnly
                 />

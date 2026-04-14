@@ -12,7 +12,7 @@ export default function SuperAdminCriteriaPage() {
       description="View & manage active elders and requests"
     >
       <EvaluationsSubNav role="super-admin" />
-      <CriteriaContent />
+      <CriteriaContent role="super-admin" />
     </PageContainer>
   );
 }

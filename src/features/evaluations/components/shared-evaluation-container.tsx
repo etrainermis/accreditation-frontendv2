@@ -151,7 +151,7 @@ const ApplicationSidebar = ({
 
 interface SharedEvaluationContainerProps {
   id: string;
-  role: "super-admin" | "evaluator";
+  role: "super-admin" | "evaluator" | "supervisor";
 }
 
 export function SharedEvaluationContainer({ id, role }: SharedEvaluationContainerProps) {
@@ -1207,6 +1207,72 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
 
                 {activeMajorStep === 4 && (
                   <div className="w-full py-8 px-0 flex flex-col items-start">
+                    {role === "supervisor" ? (
+                      // Supervisor View - Certificate Granting
+                      <div className="w-full max-w-2xl mx-auto space-y-6">
+                        <div className="text-center mb-8">
+                          <div className="h-16 w-16 rounded-full bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-4">
+                            <CheckCircle2 className="h-8 w-8 text-blue-500" />
+                          </div>
+                          <h2 className="text-xl font-semibold text-slate-900 mb-2">Evaluation Complete</h2>
+                          <p className="text-sm text-slate-500">Review the evaluation results and grant certificate access</p>
+                        </div>
+
+                        <div className="bg-slate-50 border border-slate-200 rounded-lg p-6 space-y-4">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-slate-700">Application Status</span>
+                            <div className="flex items-center gap-2 px-3 py-1.5 bg-blue-50 border border-blue-200 rounded-full">
+                              <CheckCheck className="h-4 w-4 text-blue-600" />
+                              <span className="text-sm font-medium text-blue-600">Approved</span>
+                            </div>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4 pt-2">
+                            <div>
+                              <span className="text-xs text-slate-500">Institution</span>
+                              <p className="text-sm font-medium text-slate-900">{application.institution.name}</p>
+                            </div>
+                            <div>
+                              <span className="text-xs text-slate-500">Trade</span>
+                              <p className="text-sm font-medium text-slate-900">{application.trade.name}</p>
+                            </div>
+                            <div>
+                              <span className="text-xs text-slate-500">Evaluation Date</span>
+                              <p className="text-sm font-medium text-slate-900">{new Date().toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                              <span className="text-xs text-slate-500">Principal Evaluator</span>
+                              <p className="text-sm font-medium text-slate-900">{assignedPrincipal || "Not Assigned"}</p>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="bg-white border border-slate-200 rounded-lg p-6 space-y-4">
+                          <h3 className="text-sm font-semibold text-slate-900">Certificate Access Control</h3>
+                          <p className="text-sm text-slate-600">Grant the applicant access to download their accreditation certificate.</p>
+                          
+                          <div className="flex items-center gap-4 pt-4">
+                            <button 
+                              onClick={() => alert("Certificate access granted successfully!")}
+                              className="flex-1 py-3 bg-blue-600 text-white rounded-sm text-sm font-medium hover:bg-blue-700 transition-colors cursor-pointer flex items-center justify-center gap-2"
+                            >
+                              <CheckCircle2 className="h-4 w-4" />
+                              Grant Certificate Access
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <button 
+                            onClick={() => window.history.back()}
+                            className="flex-1 py-3 border border-slate-200 rounded-sm text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+                          >
+                            Back to Applications
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      // Super-Admin/Evaluator View - Decision Making
                     <div className="w-full flex gap-12 text-left">
                        {/* Left Column */}
                        <div className="w-[450px] shrink-0 flex flex-col gap-6">
@@ -1304,6 +1370,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                          </div>
                        </div>
                     </div>
+                    )}
                   </div>
                 )}
               </>

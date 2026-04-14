@@ -40,7 +40,7 @@ const HorizontalStepper = ({ currentStep }: { currentStep: number }) => {
 
             <div className={cn(
               "h-6 w-6 rounded-full border flex items-center justify-center mb-3 transition-all duration-300 shrink-0 relative z-10",
-              isActive ? "border-[#0A77FF] bg-[#0A77FF] shadow-[0_0_0_4px_rgba(10,119,255,0.15)]" :
+              isActive ? "border-[#0A77FF] bg-[#0A77FF]" :
                 isCompleted ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-200 bg-white"
             )}>
               {isCompleted ? (
@@ -107,7 +107,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
   return (
     <div className="flex flex-col gap-6 w-full xl:max-w-7xl lg:max-w-6xl max-w-5xl">
       {/* Application Selector */}
-      <div className="bg-white border text-left border-slate-200 p-6 rounded-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white border text-left border-slate-200 p-6 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-sm font-bold text-slate-800 uppercase tracking-widest mb-1">Selected Application</h2>
           <div className="flex items-center gap-3">
@@ -133,7 +133,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
         {/* Left Column: Timeline & Progress */}
         <div className="lg:col-span-2 flex flex-col gap-6">
           {/* Progress Card */}
-          <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
+          <div className="bg-white border border-slate-200 p-8 rounded-2xl">
             <h3 className="text-[16px] font-bold text-slate-800 mb-2">Evaluation Progress</h3>
             <p className="text-[13px] text-slate-500 mb-8">Track the status of your accreditation application through the evaluation stages.</p>
             
@@ -141,7 +141,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
           </div>
 
           {/* Feedback Timeline */}
-          <div className="bg-white border border-slate-200 p-8 rounded-2xl shadow-sm">
+          <div className="bg-white border border-slate-200 p-8 rounded-2xl">
             <h3 className="text-[16px] font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Recent Feedback & Activity</h3>
             
             <div className="relative">
@@ -151,7 +151,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
               <div className="flex flex-col gap-8 relative">
                 {mockFeedback.map((feedback) => (
                   <div key={feedback.id} className="flex gap-4">
-                    <div className={cn("relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-white ring-4 ring-white shadow-sm", feedback.bgColor)}>
+                    <div className={cn("relative z-10 w-10 h-10 rounded-full flex items-center justify-center shrink-0 border border-white ring-4 ring-white", feedback.bgColor)}>
                       <feedback.icon className={cn("h-4 w-4", feedback.iconColor)} />
                     </div>
                     <div className="flex flex-col pt-2 pb-4">
@@ -178,7 +178,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
 
         {/* Right Column: Status Summary */}
         <div className="flex flex-col gap-6">
-          <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl">
             <h3 className="text-[14px] font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Current Status</h3>
             
             <div className="flex flex-col gap-4">
