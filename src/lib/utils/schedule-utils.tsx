@@ -121,73 +121,80 @@ export const mockSchedule: ScheduleItem[] = [
   },
 ];
 
-export const getScheduleColumns = (): Column<ScheduleItem>[] => [
-  {
-    header: "Institution",
-    accessor: (item) => (
-      <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 overflow-hidden">
-          <img src={item.institution.logo} alt="logo" className="h-full w-full object-cover" />
+export const getScheduleColumns = (isReadOnly: boolean = false): Column<ScheduleItem>[] => {
+  const columns: Column<ScheduleItem>[] = [
+    {
+      header: "Institution",
+      accessor: (item) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 overflow-hidden">
+            <img src={item.institution.logo} alt="logo" className="h-full w-full object-cover" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm text-[#101828]">{item.institution.name}</span>
+            <span className="text-xs text-[#475467]">{item.institution.phone}</span>
+          </div>
         </div>
+      ),
+    },
+    {
+      header: "Assigned Evaluator",
+      accessor: (item) => (
+        <div className="flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 overflow-hidden">
+            <img src={item.evaluator.avatar} alt="avatar" className="h-full w-full object-cover" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-sm text-[#101828]">{item.evaluator.name}</span>
+            <span className="text-xs text-[#475467]">{item.evaluator.email}</span>
+          </div>
+        </div>
+      ),
+    },
+    {
+      header: "Trade",
+      accessor: (item) => (
         <div className="flex flex-col">
-          <span className="text-sm text-[#101828]">{item.institution.name}</span>
-          <span className="text-xs text-[#475467]">{item.institution.phone}</span>
+          <span className="text-sm text-[#101828]">{item.trade}</span>
+          <span className="text-xs text-[#475467]">{item.spe}</span>
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "Assigned Evaluator",
-    accessor: (item) => (
-      <div className="flex items-center gap-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 overflow-hidden">
-          <img src={item.evaluator.avatar} alt="avatar" className="h-full w-full object-cover" />
-        </div>
+      ),
+    },
+    {
+      header: "Visit Date",
+      accessor: (item) => (
         <div className="flex flex-col">
-          <span className="text-sm text-[#101828]">{item.evaluator.name}</span>
-          <span className="text-xs text-[#475467]">{item.evaluator.email}</span>
+          <span className="text-sm text-[#101828]">{item.visitDate}</span>
+          <span className="text-xs text-[#475467]">{item.visitTime}</span>
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "Trade",
-    accessor: (item) => (
-      <div className="flex flex-col">
-        <span className="text-sm text-[#101828]">{item.trade}</span>
-        <span className="text-xs text-[#475467]">{item.spe}</span>
-      </div>
-    ),
-  },
-  {
-    header: "Visit Date",
-    accessor: (item) => (
-      <div className="flex flex-col">
-        <span className="text-sm text-[#101828]">{item.visitDate}</span>
-        <span className="text-xs text-[#475467]">{item.visitTime}</span>
-      </div>
-    ),
-  },
-  {
-    header: "Visit Status",
-    accessor: (item) => <StatusBadge status={item.status} />,
-  },
-  {
-    header: "Location",
-    accessor: (item) => (
-      <div className="text-xs text-[#475467] max-w-[160px] whitespace-normal leading-relaxed">
-        {item.location}
-      </div>
-    ),
-  },
-  {
-    header: "Actions",
-    accessor: () => (
-      <div className="flex items-center justify-start gap-3">
-        <CalendarRange className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9]" />
-        <Eye className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9]" />
-        <Trash2 className="h-4 w-4 text-[#475467] cursor-pointer hover:text-red-500" />
-      </div>
-    ),
-  },
-];
+      ),
+    },
+    {
+      header: "Visit Status",
+      accessor: (item) => <StatusBadge status={item.status} />,
+    },
+    {
+      header: "Location",
+      accessor: (item) => (
+        <div className="text-xs text-[#475467] max-w-[160px] whitespace-normal leading-relaxed">
+          {item.location}
+        </div>
+      ),
+    },
+  ];
+
+  if (!isReadOnly) {
+    columns.push({
+      header: "Actions",
+      accessor: () => (
+        <div className="flex items-center justify-start gap-3">
+          <CalendarRange className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9]" />
+          <Eye className="h-4 w-4 text-[#475467] cursor-pointer hover:text-[#7F56D9]" />
+          <Trash2 className="h-4 w-4 text-[#475467] cursor-pointer hover:text-red-500" />
+        </div>
+      ),
+    });
+  }
+
+  return columns;
+};

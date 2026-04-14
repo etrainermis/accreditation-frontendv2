@@ -5,8 +5,14 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { FileListItem } from "@/components/ui/file-list-item";
 import { DataTable } from "@/components/ui/data-table";
 import { getCriteriaColumns, mockCriteriaAttachments } from "@/lib/utils/criteria-utils";
+import { UserRole } from "@/types/auth";
+import { FileText } from "lucide-react";
 
-export function CriteriaContent() {
+interface CriteriaContentProps {
+  role?: UserRole;
+}
+
+export function CriteriaContent({ role = "super-admin" }: CriteriaContentProps) {
   const [files, setFiles] = useState([
     { id: "1", name: "Tech design requirements.pdf", size: "200 KB", progress: 100, type: "PDF" as const },
     { id: "2", name: "Dashboard prototype.mp4", size: "16 MB", progress: 70, type: "MP4" as const },
@@ -14,32 +20,37 @@ export function CriteriaContent() {
   ]);
 
   const [search, setSearch] = useState("");
-  const columns = getCriteriaColumns();
+  const isReadOnly = role === "supervisor";
+  const columns = getCriteriaColumns(isReadOnly);
 
   return (
     <div className="space-y-6">
-      <FileUpload 
-        onFileSelect={(selectedFiles: FileList | null) => {
-           console.log("Selected files:", selectedFiles);
-        }}
-      />
+      {isReadOnly ? null : (
+        <>
+          <FileUpload 
+            onFileSelect={(selectedFiles: FileList | null) => {
+               console.log("Selected files:", selectedFiles);
+            }}
+          />
 
-      <div className="space-y-4">
-         {files.map((file: any) => (
-           <FileListItem 
-             key={file.id}
-             name={file.name}
-             size={file.size}
-             progress={file.progress}
-             type={file.type}
-           />
-         ))}
-      </div>
+          <div className="space-y-4">
+             {files.map((file: any) => (
+               <FileListItem 
+                 key={file.id}
+                 name={file.name}
+                 size={file.size}
+                 progress={file.progress}
+                 type={file.type}
+               />
+             ))}
+          </div>
+        </>
+      )}
 
       <div className="pt-4">
         <DataTable 
           title="Evaluation Criteria Attachments"
-          description="Files and assets that have been attached to this project."
+          description={isReadOnly ? "View evaluation criteria files" : "Files and assets that have been attached to this project."}
           data={mockCriteriaAttachments}
           columns={columns}
           searchPlaceholder="Search for trades"

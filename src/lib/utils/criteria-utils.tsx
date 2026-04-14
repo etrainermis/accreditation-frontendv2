@@ -84,53 +84,60 @@ export const mockCriteriaAttachments: CriteriaAttachment[] = [
   },
 ];
 
-export const getCriteriaColumns = (): Column<CriteriaAttachment>[] => [
-  {
-    header: "File name",
-    accessor: (item) => (
-      <div className="flex items-center gap-3">
-        <FileIcon type={item.type} className="h-10 w-8 shrink-0" />
-        <div className="flex flex-col">
-          <span className="text-[13px] font-medium text-[#101828]">{item.name}</span>
-          <span className="text-[11px] text-[#475467]">{item.size}</span>
+export const getCriteriaColumns = (isReadOnly: boolean = false): Column<CriteriaAttachment>[] => {
+  const columns: Column<CriteriaAttachment>[] = [
+    {
+      header: "File name",
+      accessor: (item) => (
+        <div className="flex items-center gap-3">
+          <FileIcon type={item.type} className="h-10 w-8 shrink-0" />
+          <div className="flex flex-col">
+            <span className="text-[13px] font-medium text-[#101828]">{item.name}</span>
+            <span className="text-[11px] text-[#475467]">{item.size}</span>
+          </div>
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "File size",
-    accessor: (item) => <span className="text-[13px] text-[#475467]">{item.size}</span>,
-  },
-  {
-    header: "Date uploaded",
-    accessor: (item) => <span className="text-[13px] text-[#475467]">{item.dateUploaded}</span>,
-  },
-  {
-    header: "Last updated",
-    accessor: (item) => <span className="text-[13px] text-[#475467]">{item.lastUpdated}</span>,
-  },
-  {
-    header: "Uploaded by",
-    accessor: (item) => (
-      <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
-          <img src={item.uploadedBy.avatar} alt="avatar" className="h-full w-full object-cover" />
+      ),
+    },
+    {
+      header: "File size",
+      accessor: (item) => <span className="text-[13px] text-[#475467]">{item.size}</span>,
+    },
+    {
+      header: "Date uploaded",
+      accessor: (item) => <span className="text-[13px] text-[#475467]">{item.dateUploaded}</span>,
+    },
+    {
+      header: "Last updated",
+      accessor: (item) => <span className="text-[13px] text-[#475467]">{item.lastUpdated}</span>,
+    },
+    {
+      header: "Uploaded by",
+      accessor: (item) => (
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 rounded-full overflow-hidden bg-slate-100 flex-shrink-0">
+            <img src={item.uploadedBy.avatar} alt="avatar" className="h-full w-full object-cover" />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-[13px] font-medium text-[#101828]">{item.uploadedBy.name}</span>
+            <span className="text-[11px] text-[#475467]">{item.uploadedBy.email}</span>
+          </div>
         </div>
-        <div className="flex flex-col">
-          <span className="text-[13px] font-medium text-[#101828]">{item.uploadedBy.name}</span>
-          <span className="text-[11px] text-[#475467]">{item.uploadedBy.email}</span>
+      ),
+    },
+  ];
+
+  if (!isReadOnly) {
+    columns.push({
+      header: "Action",
+      accessor: () => (
+        <div className="flex items-center gap-4">
+          <button className="text-[13px] font-medium text-[#475467] hover:text-[#101828] transition-colors">Delete</button>
+          <button className="text-[13px] font-medium text-[#6155F5] hover:text-[#4A3AFF] transition-colors">Edit</button>
         </div>
-      </div>
-    ),
-  },
-  {
-    header: "Action",
-    accessor: () => (
-      <div className="flex items-center gap-4">
-        <button className="text-[13px] font-medium text-[#475467] hover:text-[#101828] transition-colors">Delete</button>
-        <button className="text-[13px] font-medium text-[#6155F5] hover:text-[#4A3AFF] transition-colors">Edit</button>
-      </div>
-    ),
-    className: "text-right",
-  },
-];
+      ),
+      className: "text-right",
+    });
+  }
+
+  return columns;
+};
