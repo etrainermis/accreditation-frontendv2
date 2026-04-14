@@ -51,4 +51,17 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
     ],
   },
+  supervisor: {
+    role: "supervisor",
+    label: "Supervisor Portal",
+    shortLabel: "Supervisor",
+    basePath: "/supervisor",
+    items: [
+      { title: "Dashboard", href: "/supervisor/dashboard", description: "", icon: House, match: "exact" },
+      { title: "Evaluations", href: "/supervisor/evaluations", description: "", icon: BadgeCheck },
+      { title: "Certificates", href: "/supervisor/certificates", description: "", icon: ClipboardCheck },
+      { title: "Profile", href: "/supervisor/profile", description: "", icon: User },
+      { title: "Notifications", href: "/supervisor/notifications", description: "", icon: Bell },
+    ],
+  },
 };

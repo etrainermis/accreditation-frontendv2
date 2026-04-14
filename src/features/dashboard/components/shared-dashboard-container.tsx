@@ -67,7 +67,7 @@ export function SharedDashboardContainer({ role, userName = "User" }: SharedDash
 
       <StackedAnalyticsChart data={chartData} />
 
-      {role === "super-admin" && (
+      {(role === "super-admin" || role === "supervisor") && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
           <ApplicationsByTradeChart />
           <MostRequestedModules />

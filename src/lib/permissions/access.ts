@@ -3,7 +3,8 @@ import type { AuthSession, PortalAccess, UserRole } from "@/types/auth";
 const roleHierarchy: Record<UserRole, number> = {
   applicant: 1,
   evaluator: 2,
-  "super-admin": 3,
+  supervisor: 3,
+  "super-admin": 4,
 };
 
 export function canAccessPortal(session: AuthSession, portal: PortalAccess) {
