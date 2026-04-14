@@ -7,6 +7,8 @@ export default function ApplicantEvaluationsPage() {
       role="applicant"
       title="Manage Accreditation Evaluations"
       description="View & manage active applications and requests"
+      title="Manage Accreditation Evaluations"
+      description="View & manage active applications and requests"
     >
       <ApplicantEvaluationsView />
     </PageContainer>

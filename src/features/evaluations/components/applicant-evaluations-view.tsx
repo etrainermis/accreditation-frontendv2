@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { Check, Clock, MessageSquare, AlertCircle, FileText, ChevronDown, HelpCircle, Folder, Calendar } from "lucide-react";
+import { Check, Clock, MessageSquare, AlertCircle, FileText, ChevronDown, HelpCircle, Folder, Calendar } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { mockApplications } from "@/lib/utils/application-utils";
 
@@ -82,6 +83,18 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
     { id: "2", application: "Software Development", certificate: "Module A Certification", expiryDate: "15 Dec 2026" },
     { id: "3", application: "Masonry", certificate: "Compliance Certificate", expiryDate: "10 Jan 2027" },
   ];
+  const [activeTab, setActiveTab] = useState("Applications");
+
+  const tabs = [
+    { id: "Applications", label: "Applications", icon: FileText },
+    { id: "Certificates", label: "Certificates", icon: Folder }
+  ];
+
+  const mockCertifications = [
+    { id: "1", application: "Industrial Mechanic", certificate: "Level 4 Accreditation", expiryDate: "20 Nov 2026" },
+    { id: "2", application: "Software Development", certificate: "Module A Certification", expiryDate: "15 Dec 2026" },
+    { id: "3", application: "Masonry", certificate: "Compliance Certificate", expiryDate: "10 Jan 2027" },
+  ];
 
   const mockFeedback = [
     {
@@ -128,8 +141,8 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
               onClick={() => setActiveTab(tab.id)}
               className={cn(
                 "flex-1 flex items-center justify-center gap-3 px-8 py-5 text-[15px] font-medium transition-all rounded-2xl",
-                isActive 
-                  ? "text-[#0A77FF] bg-[#F4F7FF]" 
+                isActive
+                  ? "text-[#0A77FF] bg-[#F4F7FF]"
                   : "text-slate-500 hover:text-[#0A77FF] hover:bg-[#F4F7FF]"
               )}
             >
@@ -152,7 +165,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
               </div>
             </div>
             <div className="relative min-w-[200px]">
-              <select 
+              <select
                 value={selectedAppId}
                 onChange={(e) => setSelectedAppId(e.target.value)}
                 className="w-full appearance-none bg-slate-50 border border-slate-200 text-slate-700 text-[13px] font-medium py-2.5 pl-4 pr-10 rounded-xl focus:outline-none focus:border-[#0A77FF]"
@@ -172,18 +185,18 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
               <div className="bg-white border border-slate-200 p-8 rounded-2xl">
                 <h3 className="text-[16px] font-bold text-slate-800 mb-2">Evaluation Progress</h3>
                 <p className="text-[13px] text-slate-500 mb-8">Track the status of your accreditation application through the evaluation stages.</p>
-                
+
                 <HorizontalStepper currentStep={currentStep} />
               </div>
 
               {/* Feedback Timeline */}
               <div className="bg-white border border-slate-200 p-8 rounded-2xl">
                 <h3 className="text-[16px] font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Recent Feedback & Activity</h3>
-                
+
                 <div className="relative">
                   {/* Vertical line connecting timeline items */}
                   <div className="absolute left-[19px] top-4 bottom-4 w-px bg-slate-100" />
-                  
+
                   <div className="flex flex-col gap-8 relative">
                     {mockFeedback.map((feedback) => (
                       <div key={feedback.id} className="flex gap-4">
@@ -198,7 +211,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
                           <p className="text-[13px] text-slate-600 leading-relaxed font-medium bg-slate-50/50 p-4 rounded-xl border border-slate-100 mt-2">
                             {feedback.message}
                           </p>
-                          
+
                           {feedback.type === 'action_required' && (
                             <div className="mt-3">
                                <PrimaryButton label="Upload Document" icon={FileText} className="py-2 px-4 shadow-none" />
@@ -216,7 +229,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
             <div className="flex flex-col gap-6">
               <div className="bg-white border border-slate-200 p-6 rounded-2xl">
                 <h3 className="text-[14px] font-bold text-slate-800 mb-4 border-b border-slate-100 pb-3">Current Status</h3>
-                
+
                 <div className="flex flex-col gap-4">
                    <div className="flex items-start gap-3">
                      <div className="mt-0.5"><Clock className="h-4 w-4 text-[#0A77FF]" /></div>
@@ -225,7 +238,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
                        <p className="text-[13px] font-bold text-slate-800">{application.stage}</p>
                      </div>
                    </div>
-                   
+
                    <div className="flex items-start gap-3">
                      <div className="mt-0.5"><Check className="h-4 w-4 text-emerald-500" /></div>
                      <div>
@@ -234,6 +247,15 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
                      </div>
                    </div>
 
+                   <div className="flex items-start gap-3">
+                     <div className="mt-0.5"><FileText className="h-4 w-4 text-slate-400" /></div>
+                     <div>
+                       <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Submitted On</p>
+                       <p className="text-[13px] font-bold text-slate-800">{application.submittedOn}</p>
+                     </div>
+                   </div>
+                </div>
+              </div>
                    <div className="flex items-start gap-3">
                      <div className="mt-0.5"><FileText className="h-4 w-4 text-slate-400" /></div>
                      <div>
@@ -265,7 +287,7 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
             <h3 className="text-[16px] font-bold text-slate-800 mb-1">Certificates</h3>
             <p className="text-[13px] text-slate-500">View and manage certificates for your allowed applications.</p>
           </div>
-          
+
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
