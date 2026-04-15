@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils/cn";
 import { Check, Clock, MessageSquare, AlertCircle, FileText, ChevronDown, HelpCircle, Folder, Calendar } from "lucide-react";
-import { Check, Clock, MessageSquare, AlertCircle, FileText, ChevronDown, HelpCircle, Folder, Calendar } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { mockApplications } from "@/lib/utils/application-utils";
 
@@ -71,18 +70,6 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
   const application = mockApplications[1]; // Using the 2nd one which is "Due Diligence Scheduled"
   const currentStep = 1; // Maps to "Schedule Due Diligence" roughly
   const [selectedAppId, setSelectedAppId] = useState(application.id);
-  const [activeTab, setActiveTab] = useState("Applications");
-
-  const tabs = [
-    { id: "Applications", label: "Applications", icon: FileText },
-    { id: "Certificates", label: "Certificates", icon: Folder }
-  ];
-
-  const mockCertifications = [
-    { id: "1", application: "Industrial Mechanic", certificate: "Level 4 Accreditation", expiryDate: "20 Nov 2026" },
-    { id: "2", application: "Software Development", certificate: "Module A Certification", expiryDate: "15 Dec 2026" },
-    { id: "3", application: "Masonry", certificate: "Compliance Certificate", expiryDate: "10 Jan 2027" },
-  ];
   const [activeTab, setActiveTab] = useState("Applications");
 
   const tabs = [
@@ -247,15 +234,6 @@ export function ApplicantEvaluationsView({}: ApplicantEvaluationsViewProps) {
                      </div>
                    </div>
 
-                   <div className="flex items-start gap-3">
-                     <div className="mt-0.5"><FileText className="h-4 w-4 text-slate-400" /></div>
-                     <div>
-                       <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Submitted On</p>
-                       <p className="text-[13px] font-bold text-slate-800">{application.submittedOn}</p>
-                     </div>
-                   </div>
-                </div>
-              </div>
                    <div className="flex items-start gap-3">
                      <div className="mt-0.5"><FileText className="h-4 w-4 text-slate-400" /></div>
                      <div>

@@ -3,18 +3,21 @@
 import React from "react";
 import { PageContainer } from "@/components/layout/page-container";
 import { CurriculumReviewView } from "@/features/curriculum/components/curriculum-review-view";
-import { useParams } from "next/navigation";
+import { mockApplications } from "@/lib/utils/application-utils";
 
-export default function CurriculumReviewPage() {
-  const params = useParams();
-  const id = params.id as string;
+export default function CurriculumReviewPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = React.use(params);
+  const application = mockApplications.find((item) => item.id === id) || mockApplications[0];
 
   return (
     <PageContainer 
       role="curriculum-evaluator" 
-      title="Curriculum Document Review" 
-      description="Examine curriculum materials and provide accreditation feedback."
-      hideSidebar={true}
+      title={`${application.institution.name} Curriculum Review`} 
+      description="Verify curriculum completeness, standards alignment, and supporting assessment evidence."
+      breadcrumbs={[
+        { label: "Applications", href: "/curriculum-evaluator/applications" },
+        { label: application.institution.name, href: "#" },
+      ]}
     >
       <CurriculumReviewView id={id} />
     </PageContainer>
