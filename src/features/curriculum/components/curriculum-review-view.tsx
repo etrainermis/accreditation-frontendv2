@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { DocumentViewerModal } from "@/components/ui/document-viewer-modal";
 import { FileListItem } from "@/components/ui/file-list-item";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { cn } from "@/lib/utils/cn";
@@ -21,13 +22,75 @@ export function CurriculumReviewView({ id }: { id: string }) {
   const application = mockApplications.find((app) => app.id === id) || mockApplications[0];
   const [status, setStatus] = useState<"approve" | "reject" | "revert" | null>(null);
   const [comment, setComment] = useState("");
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
 
   const documents = [
-    { id: "1", name: "Trade Course Outline.pdf", size: "2.4 MB", type: "PDF" as const, note: "Maps modules to competency levels" },
-    { id: "2", name: "Syllabus_2026_Final.pdf", size: "1.8 MB", type: "PDF" as const, note: "Shows weekly delivery and outcomes" },
-    { id: "3", name: "Practical_Workshop_Manual.pdf", size: "5.6 MB", type: "PDF" as const, note: "Supports hands-on learning evidence" },
-    { id: "4", name: "Assessment_Guidelines.pdf", size: "1.2 MB", type: "PDF" as const, note: "Defines grading and verification criteria" },
+    {
+      id: "1",
+      name: "Trade Course Outline.pdf",
+      size: "2.4 MB",
+      type: "PDF" as const,
+      note: "Maps modules to competency levels",
+      url: "/documents/curriculum/trade-course-outline.pdf",
+      previewContent: [
+        "Institution: Sample Technical Institute",
+        "Program: Automotive Technology",
+        "Purpose: Outline curriculum structure and outcomes.",
+        "Module 1 covers workshop safety and compliance requirements before learners access equipment and supervised practice.",
+        "Module 2 introduces engine systems fundamentals with theory blocks connected to guided lab sessions and recorded competencies.",
+        "Module 3 focuses on diagnostics and maintenance, including outcome mapping for practical troubleshooting tasks.",
+        "Each module references the expected accreditation criteria and the evidence package submitted with the application.",
+      ],
+    },
+    {
+      id: "2",
+      name: "Syllabus_2026_Final.pdf",
+      size: "1.8 MB",
+      type: "PDF" as const,
+      note: "Shows weekly delivery and outcomes",
+      url: "/documents/curriculum/syllabus-2026-final.pdf",
+      previewContent: [
+        "Semester duration: 16 weeks.",
+        "Delivery mode: blended theory sessions and workshop practice.",
+        "Assessment mix: continuous assessment, applied project, and final practical evaluation.",
+        "Weeks 1 to 4 cover foundation knowledge, tool handling, and learner orientation.",
+        "Weeks 5 to 10 focus on core technical instruction with supervised laboratory and workshop activities.",
+        "Weeks 11 to 16 concentrate on applied tasks, revision, and final competency evaluation aligned to the submitted outcomes.",
+      ],
+    },
+    {
+      id: "3",
+      name: "Practical_Workshop_Manual.pdf",
+      size: "5.6 MB",
+      type: "PDF" as const,
+      note: "Supports hands-on learning evidence",
+      url: "/documents/curriculum/practical-workshop-manual.pdf",
+      previewContent: [
+        "Safety checks must be completed before each session and logged by the supervising instructor.",
+        "Learners rotate through instructor-led and supervised stations to demonstrate the required practical competencies.",
+        "The manual defines tools, equipment handling rules, and expected task completion standards per module.",
+        "Evidence includes observation sheets, task rubrics, workshop logs, and moderation notes.",
+        "All practical sessions are cross-referenced to the curriculum map so evaluators can confirm alignment between delivery and outcomes.",
+      ],
+    },
+    {
+      id: "4",
+      name: "Assessment_Guidelines.pdf",
+      size: "1.2 MB",
+      type: "PDF" as const,
+      note: "Defines grading and verification criteria",
+      url: "/documents/curriculum/assessment-guidelines.pdf",
+      previewContent: [
+        "Theory weight: 40 percent.",
+        "Practical weight: 50 percent.",
+        "Portfolio and attendance: 10 percent.",
+        "Each assessment tool references a learning outcome, competency level, and verification method.",
+        "Borderline decisions require moderation, supporting evaluator notes, and traceable approval in the results package.",
+        "Rubrics and marked evidence are retained with the final curriculum review submission.",
+      ],
+    },
   ];
+  const selectedDocument = documents.find((doc) => doc.id === selectedDocumentId) ?? null;
 
   const reviewAreas = [
     {
@@ -96,8 +159,23 @@ export function CurriculumReviewView({ id }: { id: string }) {
             <div className="space-y-4">
               {documents.map((doc) => (
                 <div key={doc.id} className="space-y-2">
-                  <FileListItem name={doc.name} size={doc.size} progress={100} type={doc.type} />
-                  <p className="pl-1 text-[11px] font-medium text-slate-500">{doc.note}</p>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDocumentId(doc.id)}
+                    className="block w-full rounded-sm text-left transition-transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/20"
+                  >
+                    <FileListItem name={doc.name} size={doc.size} progress={100} type={doc.type} />
+                  </button>
+                  <div className="flex items-center justify-between gap-3 pl-1">
+                    <p className="text-[11px] font-medium text-slate-500">{doc.note}</p>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDocumentId(doc.id)}
+                      className="text-[13px] font-medium text-[#0A77FF] transition-colors hover:text-[#085fca]"
+                    >
+                      View document
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -251,6 +329,18 @@ export function CurriculumReviewView({ id }: { id: string }) {
           </div>
         </div>
       </div>
+
+      <DocumentViewerModal
+        isOpen={Boolean(selectedDocument)}
+        onClose={() => setSelectedDocumentId(null)}
+        title={selectedDocument?.name ?? ""}
+        fileUrl={selectedDocument?.url ?? ""}
+        fileTypeLabel={selectedDocument?.type ?? "PDF"}
+        fileSize={selectedDocument?.size}
+        note={selectedDocument?.note}
+        previewContent={selectedDocument?.previewContent}
+        showDownload={true}
+      />
     </div>
   );
 }
