@@ -4,6 +4,7 @@ const roleHierarchy: Record<UserRole, number> = {
   applicant: 1,
   evaluator: 2,
   supervisor: 3,
+  "curriculum-evaluator": 2,
   "super-admin": 4,
 };
 

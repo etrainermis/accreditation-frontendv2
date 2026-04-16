@@ -3,7 +3,7 @@ import { SharedProfileContainer } from "@/features/profile/components/shared-pro
 
 export default function SuperAdminProfilePage() {
   return (
-    <PageContainer role="super-admin" title="Profile Settings" description="Manage your account preferences and security.">
+    <PageContainer role="super-admin" noScroll title="Profile Settings" description="Manage your account preferences and security.">
       <SharedProfileContainer role="super-admin" />
     </PageContainer>
   );

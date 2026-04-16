@@ -23,6 +23,7 @@ export function SharedProfileContainer({
     role === "super-admin" ? "System Administrator" :
     role === "supervisor" ? "Supervisor User" :
     role === "evaluator" ? "Evaluator User" :
+    role === "curriculum-evaluator" ? "Curriculum Evaluator" :
     "User"
   );
 
@@ -30,6 +31,7 @@ export function SharedProfileContainer({
     role === "super-admin" ? "admin@accreditation.gov.rw" :
     role === "supervisor" ? "supervisor@accreditation.gov.rw" :
     role === "evaluator" ? "evaluator@accreditation.gov.rw" :
+    role === "curriculum-evaluator" ? "curriculum.evaluator@accreditation.gov.rw" :
     "user@accreditation.gov.rw"
   );
 
@@ -115,6 +117,7 @@ export function SharedProfileContainer({
                     role === "super-admin" ? "Super Administrator" : 
                     role === "supervisor" ? "Supervisor" : 
                     role === "evaluator" ? "Evaluator" : 
+                    role === "curriculum-evaluator" ? "Curriculum Evaluator" :
                     "Applicant"
                   }
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-slate-50"
@@ -142,7 +145,6 @@ export function SharedProfileContainer({
 
         {activeTab === "security" && (
           <div className="space-y-6">
-            <h3 className="text-sm  text-slate-900 border-b border-slate-100 pb-4">Update Password</h3>
             <div className="space-y-5 max-w-md">
               <div className="space-y-1.5">
                 <label className="text-xs text-[#344054] font-medium">Current Password</label>
