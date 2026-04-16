@@ -3,7 +3,7 @@ import { SharedProfileContainer } from "@/features/profile/components/shared-pro
 
 export default function SupervisorProfilePage() {
   return (
-    <PageContainer role="supervisor" title="Profile Settings" description="Manage your account preferences and security.">
+    <PageContainer role="supervisor" noScroll title="Profile Settings" description="Manage your account preferences and security.">
       <SharedProfileContainer role="supervisor" />
     </PageContainer>
   );

@@ -5,6 +5,7 @@ export default function CurriculumEvaluatorProfilePage() {
   return (
     <PageContainer
       role="curriculum-evaluator"
+      noScroll
       title="Profile Settings"
       description="Manage your curriculum evaluator account details and security."
     >
