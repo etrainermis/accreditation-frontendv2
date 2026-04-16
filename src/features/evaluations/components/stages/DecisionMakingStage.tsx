@@ -154,33 +154,12 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
               <button onClick={() => alert("Confirm decision")} className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer">Confirm</button>
             </div>
 
-               <div className="grid grid-cols-2 gap-4 mt-2">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
-                  <img src={`https://ui-avatars.com/api/?name=${application.institution.name}&background=FF8A65&color=fff&rounded=true`} alt="logo" className="h-full w-full object-cover" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[13px] text-slate-900 leading-tight">{application.institution.name}</span>
-                  <span className="text-[11px] text-slate-500">{application.institution.email}</span>
-                </div>
-              </div>
-            </div>
+         
           </div>
 
           {/* Right Column */}
           <div className="flex-1 flex flex-col gap-6">
-    {/* Comment Box */}
-            <div className="space-y-4 mt-2">
-              <h4 className="text-sm text-slate-700">Any addition comment?</h4>
-              <div className="relative">
-                <textarea placeholder="Text..." className="w-full border border-slate-200 rounded-sm p-4 min-h-[70px] text-sm focus:outline-none focus:ring-1 focus:ring-[#0A77FF] transition-all resize-none no-scrollbar" />
-                <div className="absolute bottom-[-14px] left-0 text-[11px] text-slate-400">275 characters left</div>
-              </div>
-              <button className="flex items-center gap-2 px-6 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-all cursor-pointer mt-7">
-                Add Note
-                <PlusSquare className="h-4 w-4 text-white/70" strokeWidth={1.5} />
-              </button>
-            </div>
+  
 
                       <div className="flex items-center gap-3">
                 <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200">
@@ -191,6 +170,17 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
                   <span className="text-[13px] text-slate-900 leading-tight">John Smith</span>
                 </div>
               </div>
+                    <div className="grid grid-cols-2 gap-4 mt-2">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
+                  <img src={`https://ui-avatars.com/api/?name=${application.institution.name}&background=FF8A65&color=fff&rounded=true`} alt="logo" className="h-full w-full object-cover" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[13px] text-slate-900 leading-tight">{application.institution.name}</span>
+                  <span className="text-[11px] text-slate-500">{application.institution.email}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
