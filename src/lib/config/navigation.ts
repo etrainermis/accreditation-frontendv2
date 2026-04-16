@@ -52,6 +52,18 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
     ],
   },
+  "curriculum-evaluator": {
+    role: "curriculum-evaluator",
+    label: "Curriculum Evaluator Portal",
+    shortLabel: "Curriculum",
+    basePath: "/curriculum-evaluator",
+    items: [
+      { title: "Dashboard", href: "/curriculum-evaluator/dashboard", description: "", icon: House, match: "exact" },
+      { title: "Applications", href: "/curriculum-evaluator/applications", description: "", icon: FileSpreadsheet },
+      { title: "Profile", href: "/curriculum-evaluator/profile", description: "", icon: User },
+      { title: "Notifications", href: "/curriculum-evaluator/notifications", description: "", icon: Bell },
+    ],
+  },
   supervisor: {
     role: "supervisor",
     label: "Supervisor Portal",
