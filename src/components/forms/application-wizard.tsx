@@ -18,6 +18,7 @@ import {
   Pencil,
   Trash2,
   FolderPlus,
+  Folder,
   UserPlus,
   ChevronDown,
   CheckCheck,
@@ -29,14 +30,14 @@ import { PrimaryButton } from "@/components/ui/primary-button";
 const stepsList = [
   {
     id: 1,
-    title: "Trade Selection",
-    subtitle: "Select the trade(s) you are applying for",
+    title: "Training Program(s) Selection",
+    subtitle: "Select the training program(s) you are applying for",
     icon: Blocks,
   },
   {
     id: 2,
     title: "Competencies",
-    subtitle: "Specify the competencies offered under the selected trade",
+    subtitle: "Specify the competencies offered under the selected training program(s)",
     icon: Hexagon,
   },
   {
@@ -54,7 +55,7 @@ const stepsList = [
   {
     id: 5,
     title: "Staff Allocation",
-    subtitle: "Indicate staff availability for the selected trade",
+    subtitle: "Indicate staff availability for the selected training program(s)",
     icon: Users,
   },
 ];
@@ -94,10 +95,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
 
   // Step 3 state
   const [equipmentName, setEquipmentName] = useState("");
+  const [equipmentStatus, setEquipmentStatus] = useState("");
   const [equipmentNumber, setEquipmentNumber] = useState(1);
   const [equipmentProof, setEquipmentProof] = useState<string | null>(null);
   const [equipmentProofName, setEquipmentProofName] = useState<string | null>(null);
-  const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; proof: string | null }>>([]);
+  const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; status: string; proof: string | null; proofName: string | null }>>([]);
 
   // Step 4 state
   const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
@@ -121,7 +123,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   const handleCurriculumBack = () => { setCurrentStep(3); };
   const handleCurriculumContinue = () => { setCurrentStep(5); };
 
-  const handleProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEquipmentProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       setEquipmentProofName(file.name);
@@ -131,9 +133,17 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   };
 
   const handleAddEquipment = () => {
-    if (equipmentName.trim() && equipmentNumber > 0) {
-      setEquipments([...equipments, { id: Math.random().toString(), name: equipmentName, quantity: equipmentNumber, proof: equipmentProof }]);
+    if (equipmentName.trim() && equipmentNumber > 0 && equipmentStatus) {
+      setEquipments([...equipments, {
+        id: Math.random().toString(),
+        name: equipmentName,
+        quantity: equipmentNumber,
+        status: equipmentStatus,
+        proof: equipmentProof,
+        proofName: equipmentProofName
+      }]);
       setEquipmentName("");
+      setEquipmentStatus("");
       setEquipmentNumber(1);
       setEquipmentProof(null);
       setEquipmentProofName(null);
@@ -197,7 +207,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
     <div className="flex flex-1 overflow-hidden rounded-2xl border border-slate-100 bg-white min-h-[700px]">
       {/* Wizard Sidebar */}
       <div className="w-[300px] shrink-0 bg-[#FAFAFA] p-8 transition-colors duration-200">
-        <h2 className="mb-10 text-[15px] font-semibold text-slate-700">
+        <h2 className="mb-10 text-[15px]  text-slate-700">
           Short Course Application
         </h2>
         <button
@@ -224,7 +234,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                     <Icon className={`h-[22px] w-[22px] transition-colors ${isActive ? "text-[#0A77FF]" : ""}`} strokeWidth={1.5} />
                   </div>
                   <div className="flex flex-col justify-center pt-0.5">
-                    <p className={`text-[13px] transition-colors ${isActive ? "font-semibold text-slate-900" : "font-medium text-slate-400"}`}>
+                    <p className={`text-[13px] transition-colors ${isActive ? " text-slate-900" : "font-medium text-slate-400"}`}>
                       {step.title}
                     </p>
                     <p className={`mt-0.5 text-[11px] leading-[1.6] text-slate-400 transition-opacity ${isActive ? "" : "opacity-60"}`}>
@@ -249,14 +259,14 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <Blocks className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Trade Selection</h2>
+                <h2 className="text-[17px]  text-slate-900">Training Program(s) Selection</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">
-                  Select the trade you are applying for accreditation in.
+                  Select the training program(s) you are applying for accreditation in.
                 </p>
               </div>
 
               <div className="mt-10">
-                <p className="mb-3 text-[12px] text-slate-500">24 trades available for you to choose</p>
+                <p className="mb-3 text-[12px] text-slate-500">24 training program(s) available for you to choose</p>
                 <div className="relative mb-6">
                   <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
@@ -315,8 +325,8 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <Hexagon className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Competencies</h2>
-                <p className="mt-1.5 text-[13px] text-slate-500">Specify the competencies offered under the selected trade.</p>
+                <h2 className="text-[17px]  text-slate-900">Competencies</h2>
+                <p className="mt-1.5 text-[13px] text-slate-500">Specify the competencies offered under the selected training program(s).</p>
               </div>
               <div className="col-span-full mt-8 flex flex-col items-center">
                 <div className="mb-8 flex w-fit min-w-[140px] items-center justify-between gap-6 rounded-sm border border-[#0A77FF] bg-white px-3.5 py-2 ring-4 ring-[#0A77FF]/5">
@@ -330,7 +340,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 </div>
               </div>
               <div className="mt-2">
-                <p className="mb-3 text-[12px] text-slate-500">24 competencies under this trade</p>
+                <p className="mb-3 text-[12px] text-slate-500">24 competencies under this training program(s)</p>
                 <div className="relative mb-6">
                   <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
@@ -389,7 +399,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <Briefcase className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Equipment and Facilities</h2>
+                <h2 className="text-[17px]  text-slate-900">Equipment and Facilities</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">List available equipment and upload proof.</p>
               </div>
               <div className="mt-8 flex flex-col items-center">
@@ -415,15 +425,20 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   </div>
                 </div>
               </div>
-              <div className="mt-2 text-left">
                 <div className="mb-5 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-                  <div className="mb-5">
-                    <label className="mb-2 block text-[13px] font-medium text-slate-700 font-semibold uppercase tracking-wide text-[11px] text-slate-400">Equipment Name <span className="text-red-500">*</span></label>
-                    <input type="text" placeholder="Select ..." value={equipmentName} onChange={(e) => setEquipmentName(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Equipment Name <span className="text-red-500">*</span></label>
+                      <input type="text" placeholder="Select ..." value={equipmentName} onChange={(e) => setEquipmentName(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
+                    </div>
+                    <div>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Status <span className="text-red-500">*</span></label>
+                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={equipmentStatus} onChange={(e) => setEquipmentStatus(e.target.value)}><option value="" disabled>Select ..</option><option value="In good condition">In good condition</option><option value="Not working">Not working</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className="mb-2 block text-[13px] font-medium text-slate-700 font-semibold uppercase tracking-wide text-[11px] text-slate-400">Number <span className="text-red-500">*</span></label>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Number <span className="text-red-500">*</span></label>
                       <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2">
                         <div className="flex items-center gap-2"><Briefcase className="h-3.5 w-3.5 text-slate-400" /><span className="w-8 text-[13px] font-medium">{equipmentNumber}</span></div>
                         <div className="flex items-center gap-1">
@@ -433,12 +448,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       </div>
                     </div>
                     <div>
-                      <label className="mb-2 block text-[13px] font-medium text-slate-700 font-semibold uppercase tracking-wide text-[11px] text-slate-400">Proof <span className="text-red-500">*</span></label>
+                      <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Proof <span className="text-red-500">*</span></label>
                       <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white px-0 items-center">
                         <div className="flex-1 truncate border-r border-slate-200 px-3 py-2 text-[13px] text-slate-400 leading-tight">{equipmentProofName || "Select ..."}</div>
-                        <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100"><UploadCloud className="h-4 w-4 text-slate-500" />Upload<input type="file" accept="image/*" className="hidden" onChange={handleProofUpload} /></label>
+                        <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100"><UploadCloud className="h-4 w-4 text-slate-500" />Upload<input type="file" accept="image/*" className="hidden" onChange={handleEquipmentProofUpload} /></label>
                       </div>
-                      <p className="mt-1.5 text-[10px] uppercase font-medium text-slate-400 tracking-wider">*.png, jpeg, jpg</p>
                     </div>
                   </div>
                 </div>
@@ -454,44 +468,51 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   <PrimaryButton
                     label="Continue"
                     onClick={handleEquipmentContinue}
+                    disabled={equipments.length === 0}
                     variant="primary"
                     className="flex-1"
                     hideIcon={true}
                   />
                 </div>
-                {/* Equipment List */}
+                {/* Training Workshop Setup (Folder View) */}
                 {equipments.length > 0 && (
-                  <div className="flex flex-col gap-3">
-                    {equipments.map(eq => (
-                      <div key={eq.id} className="relative flex items-center gap-4 rounded-sm border border-slate-100 bg-white p-3 shadow-sm hover:shadow-md transition-shadow">
-                        <div className="h-16 w-24 shrink-0 overflow-hidden rounded-sm bg-slate-100">
-                          {eq.proof ? <img src={eq.proof} alt="" className="h-full w-full object-cover" /> : <div className="flex h-full w-full items-center justify-center text-xs text-slate-400 font-medium">No Image</div>}
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-[14px] font-semibold text-slate-800">{eq.name}</p>
-                          <p className="mt-0.5 text-[11px] text-slate-400 font-medium whitespace-nowrap">Quantity: {eq.quantity} Pieces</p>
-                        </div>
-                        {/* Action Icons */}
-                        <div className="absolute top-3 right-3">
-                           <button onClick={() => removeEquipment(eq.id)} className="text-slate-300 hover:text-slate-500 transition-colors">
-                            <X className="h-4 w-4" />
-                          </button>
-                        </div>
-                        <div className="absolute bottom-3 right-3 flex gap-3">
-                          <button onClick={() => {}} className="text-[#0A77FF] hover:opacity-80 transition-opacity">
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                          <button onClick={() => removeEquipment(eq.id)} className="text-red-500 hover:opacity-80 transition-opacity">
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
+                  <div className="mt-8 mb-8 w-full animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#0A77FF]/10 text-[#0A77FF]">
+                        <Folder className="h-5 w-5" />
                       </div>
-                    ))}
+                      <div>
+                        <h3 className="text-[15px] font-bold text-slate-800">Training Workshop Setup</h3>
+                        <p className="text-[12px] text-slate-500 font-medium">Photos of arrangement of tools and equipment in the workshop</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-slate-50/50 p-4">
+                      {equipments.map(eq => (
+                        <div key={eq.id} className="group relative flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-3 shadow-sm hover:shadow-md transition-all">
+                          <div className="h-16 w-20 shrink-0 overflow-hidden rounded-lg bg-slate-100 border border-slate-100">
+                            {eq.proof ? (
+                              <img src={eq.proof} alt="" className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center bg-slate-50 text-[10px] font-bold text-slate-400">NO IMAGE</div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="truncate text-[13px] font-bold text-slate-800">{eq.name}</p>
+                            <p className="mt-0.5 text-[11px] font-medium text-slate-400">Qty: {eq.quantity} • {eq.status}</p>
+                          </div>
+                          <div className="flex flex-col gap-2 shrink-0">
+                             <button onClick={() => removeEquipment(eq.id)} className="rounded-lg p-1.5 text-slate-300 hover:bg-red-50 hover:text-red-500 transition-all">
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          )}
+            )}
 
           {/* STEP 4: CURRICULUM DOCUMENTS */}
           {currentStep === 4 && (
@@ -500,7 +521,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <FileText className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Curriculum Documents</h2>
+                <h2 className="text-[17px]  text-slate-900">Curriculum Documents</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">Upload curriculum and related training documents.</p>
               </div>
               <div className="mt-8 flex flex-col items-center">
@@ -519,7 +540,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
               <div className="mt-2 mb-8 w-full text-left">
                 <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/30 py-12 transition-all hover:bg-slate-50 hover:border-[#0A77FF]/30 group">
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-transform group-hover:scale-110"><UploadCloud className="h-6 w-6 text-slate-500 group-hover:text-[#0A77FF]" strokeWidth={1.5} /></div>
-                  <p className="text-[14px] text-slate-500"><span className="font-semibold text-[#0A77FF]">Click to upload</span> or drag and drop</p>
+                  <p className="text-[14px] text-slate-500"><span className=" text-[#0A77FF]">Click to upload</span> or drag and drop</p>
                   <p className="mt-1 text-[11px] font-medium text-slate-400">PDF, DOCX, MP4 or FIG (max. 100MB)</p>
                   <input type="file" multiple className="hidden" onChange={handleCurriculumUpload} />
                 </label>
@@ -535,7 +556,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-4">
                             <div className="relative mt-0.5 flex h-10 w-8 items-center justify-center rounded-sm border border-slate-200 bg-slate-50 shadow-sm overflow-hidden"><div className={`absolute bottom-0 left-0 right-0 h-4 flex items-center justify-center ${iconBg}`}><span className="text-[8px] font-bold text-white tracking-widest">{doc.extension}</span></div></div>
-                            <div className="flex flex-col"><p className="text-[14px] font-semibold text-slate-800 line-clamp-1">{doc.name}</p><p className="text-[11px] font-medium text-slate-400">{doc.size}</p></div>
+                            <div className="flex flex-col"><p className="text-[14px]  text-slate-800 line-clamp-1">{doc.name}</p><p className="text-[11px] font-medium text-slate-400">{doc.size}</p></div>
                           </div>
                           <div>{isDone ? <input type="checkbox" checked readOnly className="h-4 w-4 rounded-sm border-slate-300 text-[#0A77FF] focus:ring-[#0A77FF]" /> : <button onClick={() => removeCurriculumDoc(doc.id)} className="text-slate-400 hover:text-red-500 transition-colors"><Trash2 className="h-5 w-5" /></button>}</div>
                         </div>
@@ -572,7 +593,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200">
                   <Users className="h-6 w-6 text-slate-500" strokeWidth={1.5} />
                 </div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Staff Allocation</h2>
+                <h2 className="text-[17px]  text-slate-900">Staff Allocation</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">Indicate staff availability by qualification and position.</p>
               </div>
               <div className="mt-8 flex flex-col items-center">
@@ -659,7 +680,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
             <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
               <div className="flex flex-col items-center text-center">
                 <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.05)] ring-1 ring-slate-200"><CheckCheck className="h-6 w-6 text-slate-500" /></div>
-                <h2 className="text-[17px] font-semibold text-slate-900">Application Review</h2>
+                <h2 className="text-[17px]  text-slate-900">Application Review</h2>
                 <p className="mt-1.5 text-[13px] text-slate-500">Review all information provided before submitting your application for evaluation.</p>
               </div>
               <div className="mt-6 flex w-full gap-3 mb-8">
@@ -680,11 +701,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
               </div>
               <div className="flex flex-col gap-3">
                 {[
-                  { id: 1, title: "Trade Selection Completed", desc: "Select the trade(s) you are applying for" },
-                  { id: 2, title: "Competencies Selected", desc: "Specify the competencies offered under the selected trade" },
+                  { id: 1, title: "Training Program(s) Selection Completed", desc: "Select the training program(s) you are applying for" },
+                  { id: 2, title: "Competencies Selected", desc: "Specify the competencies offered under the selected training program(s)" },
                   { id: 3, title: "Equipment and Facilities Added", desc: "List available equipment and upload proof" },
                   { id: 4, title: "Curriculum Documents", desc: "Upload curriculum and training materials" },
-                  { id: 5, title: "Staff Allocation", desc: "Indicate staff availability for the selected trade" },
+                  { id: 5, title: "Staff Allocation", desc: "Indicate staff availability for the selected training program(s)" },
                 ].map((section) => {
                   const isExpanded = expandedReviewSection === section.id;
                   return (
@@ -698,9 +719,30 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       </button>
                       {isExpanded && (
                         <div className="border-t border-slate-100 bg-slate-50/20 p-6 animate-in slide-in-from-top-2 duration-200">
-                          {section.id === 1 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Trade</p><p className="text-[14px] text-slate-800 font-semibold">{selectedTradeName}</p></div>)}
-                          {section.id === 2 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Competency</p><p className="text-[14px] text-slate-800 font-semibold">{selectedCompetencyName}</p></div>)}
-                          {section.id === 3 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Allocated Equipment</p>{equipments.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No equipment added.</p>) : (<ul className="space-y-3">{equipments.map(eq => (<li key={eq.id} className="flex items-center gap-4 bg-white p-2.5 rounded-xl border border-slate-100 shadow-sm"><div className="h-10 w-14 shrink-0 overflow-hidden rounded bg-slate-100">{eq.proof && <img src={eq.proof} alt="" className="h-full w-full object-cover" />}</div><div><p className="text-[13px] font-bold text-slate-800 leading-none mb-1">{eq.name}</p><p className="text-[11px] font-medium text-slate-500">Qty: {eq.quantity}</p></div></li>))}</ul>)}</div>)}
+                          {section.id === 1 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Training Program(s)</p><p className="text-[14px] text-slate-800 ">{selectedTradeName}</p></div>)}
+                          {section.id === 2 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-2">Selected Competency</p><p className="text-[14px] text-slate-800 ">{selectedCompetencyName}</p></div>)}
+                          {section.id === 3 && (
+                            <div>
+                              <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Training Workshop Setup</p>
+                              {equipments.length === 0 ? (
+                                <p className="text-[13px] text-slate-400 italic">No equipment added.</p>
+                              ) : (
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                  {equipments.map(eq => (
+                                    <div key={eq.id} className="flex items-center gap-3 bg-white p-2 rounded-xl border border-slate-100 shadow-sm">
+                                      <div className="h-10 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-50 border border-slate-100">
+                                        {eq.proof && <img src={eq.proof} alt="" className="h-full w-full object-cover" />}
+                                      </div>
+                                      <div className="min-w-0 flex-1">
+                                        <p className="text-[13px] font-bold text-slate-800 leading-tight truncate mb-0.5">{eq.name}</p>
+                                        <p className="text-[10px] font-medium text-slate-500 uppercase tracking-tight">Qty: {eq.quantity} • {eq.status}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          )}
                           {section.id === 4 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Curriculum Documents</p>{curriculumDocs.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No documents uploaded.</p>) : (<ul className="space-y-2">{curriculumDocs.map(doc => (<li key={doc.id} className="flex justify-between items-center bg-white border border-slate-100 p-3 rounded-xl shadow-sm"><span className="text-[13px] font-bold text-slate-700">{doc.name}</span><span className="text-slate-400 text-[11px] font-bold uppercase">{doc.size}</span></li>))}</ul>)}</div>)}
                           {section.id === 5 && (<div><p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-4">Staff Allocations</p>{allocations.length === 0 ? (<p className="text-[13px] text-slate-400 italic">No staff members allocated.</p>) : (<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">{allocations.map(alloc => (<div key={alloc.id} className="bg-white border border-slate-100 p-3.5 rounded-xl shadow-sm"><p className="text-[13px] font-bold text-slate-800 leading-none mb-1">{alloc.position}</p><p className="text-[11px] text-slate-500 font-medium mb-2">{alloc.qualification}</p><p className="text-[10px] font-bold text-white uppercase tracking-widest bg-[#0A77FF] w-fit px-2 py-0.5 rounded-full">{alloc.status} • {alloc.quantity}</p></div>))}</div>)}</div>)}
                         </div>

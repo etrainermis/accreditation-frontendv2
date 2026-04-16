@@ -22,7 +22,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     items: [
       { title: "Dashboard", href: "/applicant/dashboard", description: "", icon: House, match: "exact" },
       { title: "Applications", href: "/applicant/applications", description: "", icon: FileSpreadsheet },
-      { title: "Evaluations", href: "/applicant/certificates", description: "", icon: CalendarCheck },
+      { title: "Evaluations", href: "/applicant/evaluations", description: "", icon: CalendarCheck },
       { title: "Profile", href: "/applicant/profile", description: "", icon: User },
       { title: "Notifications", href: "/applicant/notifications", description: "", icon: Bell },
     ],
@@ -47,8 +47,34 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     items: [
       { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: House, match: "exact" },
       { title: "Evaluations", href: "/super-admin/evaluations", description: "", icon: BadgeCheck },
+      { title: "Users", href: "/super-admin/users", description: "", icon: Users },
       { title: "Profile", href: "/super-admin/profile", description: "", icon: User },
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
+    ],
+  },
+  "curriculum-evaluator": {
+    role: "curriculum-evaluator",
+    label: "Curriculum Evaluator Portal",
+    shortLabel: "Curriculum",
+    basePath: "/curriculum-evaluator",
+    items: [
+      { title: "Dashboard", href: "/curriculum-evaluator/dashboard", description: "", icon: House, match: "exact" },
+      { title: "Applications", href: "/curriculum-evaluator/applications", description: "", icon: FileSpreadsheet },
+      { title: "Profile", href: "/curriculum-evaluator/profile", description: "", icon: User },
+      { title: "Notifications", href: "/curriculum-evaluator/notifications", description: "", icon: Bell },
+    ],
+  },
+  supervisor: {
+    role: "supervisor",
+    label: "Supervisor Portal",
+    shortLabel: "Supervisor",
+    basePath: "/supervisor",
+    items: [
+      { title: "Dashboard", href: "/supervisor/dashboard", description: "", icon: House, match: "exact" },
+      { title: "Evaluations", href: "/supervisor/evaluations", description: "", icon: BadgeCheck },
+      { title: "Certificates", href: "/supervisor/certificates", description: "", icon: ClipboardCheck },
+      { title: "Profile", href: "/supervisor/profile", description: "", icon: User },
+      { title: "Notifications", href: "/supervisor/notifications", description: "", icon: Bell },
     ],
   },
 };

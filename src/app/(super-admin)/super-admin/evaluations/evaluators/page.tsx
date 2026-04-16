@@ -12,7 +12,7 @@ export default function SuperAdminEvaluatorsPage() {
       description="View & manage active elders and requests"
     >
       <EvaluationsSubNav role="super-admin" />
-      <EvaluatorsContent />
+      <EvaluatorsContent role="super-admin" />
     </PageContainer>
   );
 }

@@ -16,6 +16,20 @@ interface ReviewApplicationStepProps {
   staffList: TechnicalStaffEntry[];
 }
 
+const ALL_DOC_LABELS: Record<string, string> = {
+  appLetter: "Application Letter",
+  trainContent: "Training Content",
+  nesaAccred: "Accreditation from NESA",
+  mou: "Signed MOU with Partners",
+  other: "Other Necessary Documents",
+  trainContentCurric: "Training Content / Curriculum",
+  regCert: "Recognized Registration Certificate",
+  infraPhotos: "Photographs of Infrastructures",
+  equipOwnership: "Proof of ownership of training equipment",
+  premiseOwnership: "Proof of ownership/renting of training premises",
+  skillsGap: "Signed skills gap report",
+};
+
 export function ReviewApplicationStep({
   formData,
   files,
@@ -23,13 +37,18 @@ export function ReviewApplicationStep({
   aboutText,
   staffList,
 }: ReviewApplicationStepProps) {
+  const uploadedDocIds = Object.keys(certificates).filter(id => {
+    const file = certificates[id];
+    return Array.isArray(file) ? file.length > 0 : !!file;
+  });
+
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm overflow-hidden text-center">
         <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 mb-3">
           <CheckCircle className="h-6 w-6 text-blue-600" />
         </div>
-        <h3 className="text-base font-semibold text-slate-800">Ready to Submit!</h3>
+        <h3 className="text-base  text-slate-800">Ready to Submit!</h3>
         <p className="mt-1 text-sm text-slate-500 max-w-sm mx-auto">
           Please review your application details below. Once confirmed, your application will be successfully routed.
         </p>
@@ -38,7 +57,7 @@ export function ReviewApplicationStep({
       <div className="space-y-4">
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-3.5 flex items-center justify-between">
-            <h4 className="text-[13px] font-semibold text-slate-800">Institution Details</h4>
+            <h4 className="text-[13px]  text-slate-800">Institution Details</h4>
             <Link href="/applicant/onboarding/institution-details" className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition">Edit</Link>
           </div>
           <div className="p-5 grid grid-cols-2 gap-y-4 gap-x-6">
@@ -79,16 +98,17 @@ export function ReviewApplicationStep({
                     <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.mou.name}</span>
                   </div>
                 ) : (
-                  <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
+                  <p className="text-[13.5px] italic text-slate-400 col-span-2">No documents uploaded</p>
                 )}
               </div>
             </div>
+
           </div>
         </div>
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-3.5 flex items-center justify-between">
-            <h4 className="text-[13px] font-semibold text-slate-800">Address Information</h4>
+            <h4 className="text-[13px]  text-slate-800">Address Information</h4>
             <Link href="/applicant/onboarding/address-information" className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition">Edit</Link>
           </div>
           <div className="p-5 grid grid-cols-2 gap-y-4 gap-x-6">
@@ -107,7 +127,7 @@ export function ReviewApplicationStep({
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-3.5 flex items-center justify-between">
-            <h4 className="text-[13px] font-semibold text-slate-800">Legal Representatives</h4>
+            <h4 className="text-[13px]  text-slate-800">Legal Representatives</h4>
             <Link href="/applicant/onboarding/legal-representatives" className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition">Edit</Link>
           </div>
           <div className="p-5">
@@ -115,11 +135,11 @@ export function ReviewApplicationStep({
               <div className="space-y-3">
                 {legalReps.map((rep, idx) => (
                   <div key={idx} className="flex items-center gap-3 bg-slate-50 rounded-lg p-3 border border-slate-100">
-                    <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-semibold uppercase">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs  uppercase">
                       {rep.firstName?.[0] || ""}{rep.lastName?.[0] || ""}
                     </div>
                     <div>
-                      <p className="text-[13.5px] font-semibold text-slate-800">{rep.firstName} {rep.lastName}</p>
+                      <p className="text-[13.5px]  text-slate-800">{rep.firstName} {rep.lastName}</p>
                       <p className="text-[12px] text-slate-500">{rep.position} • {rep.email}</p>
                     </div>
                   </div>
@@ -133,7 +153,7 @@ export function ReviewApplicationStep({
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-3.5 flex items-center justify-between">
-            <h4 className="text-[13px] font-semibold text-slate-800">About the Institution</h4>
+            <h4 className="text-[13px]  text-slate-800">About the Institution</h4>
             <Link href="/applicant/onboarding/about-the-institution" className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition">Edit</Link>
           </div>
           <div className="p-5 space-y-4">
@@ -150,7 +170,7 @@ export function ReviewApplicationStep({
 
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-3.5 flex items-center justify-between">
-            <h4 className="text-[13px] font-semibold text-slate-800">Staff Constraints</h4>
+            <h4 className="text-[13px]  text-slate-800">Staff Constraints</h4>
             <Link href="/applicant/onboarding/technical-and-administrative-staff" className="text-[13px] font-medium text-blue-600 hover:text-blue-700 transition">Edit</Link>
           </div>
           <div className="p-5">
@@ -159,10 +179,10 @@ export function ReviewApplicationStep({
                 {staffList.map((staff, idx) => (
                   <div key={idx} className="flex items-center justify-between bg-slate-50 rounded-lg p-3 border border-slate-100">
                     <div>
-                      <p className="text-[13.5px] font-semibold text-slate-800">{staff.position}</p>
+                      <p className="text-[13.5px]  text-slate-800">{staff.specialization}</p>
                       <p className="text-[12px] text-slate-500">{staff.qualification} • {staff.status}</p>
                     </div>
-                    <div className="px-3 py-1 bg-white border border-slate-200 rounded-sm text-[12px] font-semibold text-slate-600 shadow-sm">
+                    <div className="px-3 py-1 bg-white border border-slate-200 rounded-sm text-[12px]  text-slate-600 shadow-sm">
                       {staff.number} Staffs
                     </div>
                   </div>

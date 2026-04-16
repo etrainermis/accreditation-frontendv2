@@ -13,10 +13,27 @@ interface SharedProfileContainerProps {
 
 export function SharedProfileContainer({ 
   role, 
-  userName = "System Administrator", 
-  userEmail = "admin@accreditation.gov.rw" 
+  userName, 
+  userEmail 
 }: SharedProfileContainerProps) {
   const [activeTab, setActiveTab] = useState("personal");
+
+  // Set default values based on role
+  const defaultUserName = userName || (
+    role === "super-admin" ? "System Administrator" :
+    role === "supervisor" ? "Supervisor User" :
+    role === "evaluator" ? "Evaluator User" :
+    role === "curriculum-evaluator" ? "Curriculum Evaluator" :
+    "User"
+  );
+
+  const defaultUserEmail = userEmail || (
+    role === "super-admin" ? "admin@accreditation.gov.rw" :
+    role === "supervisor" ? "supervisor@accreditation.gov.rw" :
+    role === "evaluator" ? "evaluator@accreditation.gov.rw" :
+    role === "curriculum-evaluator" ? "curriculum.evaluator@accreditation.gov.rw" :
+    "user@accreditation.gov.rw"
+  );
 
   return (
     <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
@@ -67,7 +84,7 @@ export function SharedProfileContainer({
                 </div>
               </div>
               <div>
-                <h3 className="text-sm font-semibold text-slate-900">Profile Picture</h3>
+                <h3 className="text-sm  text-slate-900">Profile Picture</h3>
                 <p className="text-xs text-slate-500 mt-1 max-w-sm">
                   Upload a high-resolution image to represent your account. Recommended size: 256x256px.
                 </p>
@@ -79,7 +96,7 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Full Name</label>
                 <input 
                   type="text" 
-                  defaultValue={userName}
+                  defaultValue={defaultUserName}
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-white"
                 />
               </div>
@@ -87,7 +104,7 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Email Address</label>
                 <input 
                   type="email" 
-                  defaultValue={userEmail}
+                  defaultValue={defaultUserEmail}
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-slate-50"
                   readOnly
                 />
@@ -96,7 +113,13 @@ export function SharedProfileContainer({
                 <label className="text-xs text-[#344054] font-medium">Job Title / Role</label>
                 <input 
                   type="text" 
-                  defaultValue={role === "super-admin" ? "Super Administrator" : "Evaluator"}
+                  defaultValue={
+                    role === "super-admin" ? "Super Administrator" : 
+                    role === "supervisor" ? "Supervisor" : 
+                    role === "evaluator" ? "Evaluator" : 
+                    role === "curriculum-evaluator" ? "Curriculum Evaluator" :
+                    "Applicant"
+                  }
                   className="w-full h-10 px-3 text-sm text-[#101828] border border-[#D0D5DD] rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] transition-all bg-slate-50"
                   readOnly
                 />
@@ -122,7 +145,6 @@ export function SharedProfileContainer({
 
         {activeTab === "security" && (
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-4">Update Password</h3>
             <div className="space-y-5 max-w-md">
               <div className="space-y-1.5">
                 <label className="text-xs text-[#344054] font-medium">Current Password</label>
@@ -156,7 +178,7 @@ export function SharedProfileContainer({
 
         {activeTab === "notifications" && (
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-slate-900 border-b border-slate-100 pb-4">Email Preferences</h3>
+            <h3 className="text-sm  text-slate-900 border-b border-slate-100 pb-4">Email Preferences</h3>
             <div className="space-y-4 max-w-xl">
               <label className="flex items-start gap-3 cursor-pointer">
                 <input type="checkbox" className="mt-0.5 rounded-sm border-slate-300 text-[var(--primary)] focus:ring-[var(--primary)] bg-white h-4 w-4" defaultChecked />

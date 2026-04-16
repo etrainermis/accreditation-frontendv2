@@ -8,7 +8,7 @@ import { PageHeaderProvider, usePageHeader } from "@/lib/context/page-header-con
 import { cn } from "@/lib/utils/cn";
 
 function PortalLayoutInner({ role, children }: { role: UserRole; children: React.ReactNode }) {
-  const { hideSidebar } = usePageHeader();
+  const { hideSidebar, noPadding, noScroll } = usePageHeader();
 
   return (
     <div className={cn(
@@ -23,11 +23,15 @@ function PortalLayoutInner({ role, children }: { role: UserRole; children: React
       )}
 
       {/* Main Content Area */}
-      <div className="flex h-full flex-col overflow-hidden">
+      <div className={cn(
+        "flex h-full flex-col",
+        noScroll ? "overflow-hidden" : "overflow-hidden" // Outer is always hidden in PortalShell to manage iç
+      )}>
         <Topbar role={role} />
         <main className={cn(
-            "flex-1 overflow-y-auto no-scrollbar",
-            hideSidebar ? "p-0" : "px-6 pb-6"
+            "flex-1 no-scrollbar",
+            noScroll ? "overflow-hidden" : "overflow-y-auto",
+            hideSidebar ? "p-0" : (noPadding ? "p-0" : "px-6 pb-6")
         )}>
           {children}
         </main>

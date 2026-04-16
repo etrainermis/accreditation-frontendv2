@@ -219,7 +219,7 @@ export function DateRangePicker({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 mt-2 cursor-pointer px-3 py-3 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors"
+        className="flex items-center gap-2 cursor-pointer px-3 py-3 rounded-sm border border-[#EAECF0] bg-white hover:bg-slate-50 transition-colors w-full"
       >
         <Calendar className="h-4 w-4 text-[#344054]" strokeWidth={1.5} />
         <span className="text-sm font-medium text-[#344054]">

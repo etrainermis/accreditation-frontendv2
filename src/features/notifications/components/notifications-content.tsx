@@ -128,7 +128,7 @@ export function NotificationsContent({ role }: NotificationsContentProps) {
               
               <div className="flex-1 pr-10">
                 <div className="flex items-start justify-between gap-4 mb-1">
-                  <h4 className={cn("text-sm font-semibold", !notification.read ? "text-slate-900" : "text-slate-700")}>
+                  <h4 className={cn("text-sm ", !notification.read ? "text-slate-900" : "text-slate-700")}>
                     {notification.title}
                   </h4>
                   <span className="shrink-0 text-xs text-slate-400 font-medium whitespace-nowrap">

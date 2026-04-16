@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Mono, Manrope, Geist, Nunito_Sans } from "next/font/google";
+import { IBM_Plex_Mono, Manrope, Geist } from "next/font/google";
+import localFont from "next/font/local";
 
 import { AppProviders } from "@/components/layout/app-providers";
 import { appConfig } from "@/lib/config/app";
@@ -14,10 +15,18 @@ const manrope = Manrope({
   subsets: ["latin"],
 });
 
-const nunitoSans = Nunito_Sans({
+const nunitoSans = localFont({
+  src: [
+    {
+      path: "../styles/fonts/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf",
+      style: "normal",
+    },
+    {
+      path: "../styles/fonts/Nunito_Sans/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf",
+      style: "italic",
+    }
+  ],
   variable: "--font-nunito-sans",
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
