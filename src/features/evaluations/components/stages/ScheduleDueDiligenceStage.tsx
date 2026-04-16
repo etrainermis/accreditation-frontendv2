@@ -34,6 +34,8 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
   setActiveMajorStep,
   setShowInitialReview,
 }) => {
+  const isProceedDisabled = role === "super-admin" && (!assignedScheduledPrincipal || !assignedScheduledSecondary1 || !assignedScheduledSecondary2);
+
   return (
     <div className="w-full py-8 px-0 flex flex-col items-start">
       <div className="w-full flex gap-12 px-6 text-left">
@@ -107,10 +109,8 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               >
                 <div className="flex items-center gap-3 w-full">
                   <div className="h-10 w-10 rounded-full bg-white border border-slate-200 flex items-center justify-center group-hover:border-[#0A77FF] transition-colors shrink-0">
-                    {assignedScheduledPrincipalStatus === 'accepted' ? (
+                    {assignedScheduledPrincipal ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    ) : assignedScheduledPrincipalStatus === 'pending' ? (
-                      <Clock className="h-4 w-4 text-amber-500" />
                     ) : (
                       <UserPlus className="h-4 w-4 text-[#0A77FF]" />
                     )}
@@ -118,21 +118,10 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-sm text-slate-900">{assignedScheduledPrincipal || "Principal Evaluator"}</h4>
-                 
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Lead evaluator & decision maker</p>
                   </div>
                 </div>
-
-                {assignedScheduledPrincipalStatus === 'accepted' && (
-                  <div className="mt-3 pt-3 border-t border-slate-100">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-slate-400 font-medium">Review Response</span>
-                      <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Accept</span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 italic">"Site visit scheduled and confirmed."</p>
-                  </div>
-                )}
               </div>
 
               {/* Secondary Evaluator 1 Card */}
@@ -145,10 +134,8 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               >
                 <div className="flex items-center gap-3 w-full">
                   <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
-                    {assignedScheduledSecondary1Status === 'accepted' ? (
+                    {assignedScheduledSecondary1 ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    ) : assignedScheduledSecondary1Status === 'pending' ? (
-                      <Clock className="h-4 w-4 text-amber-500" />
                     ) : (
                       <UserPlus className="h-4 w-4 text-slate-400" />
                     )}
@@ -156,21 +143,10 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary1 || "Secondary Evaluator 1"}</h4>
-                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
                 </div>
-
-                {assignedScheduledSecondary1Status === 'accepted' && (
-                  <div className="mt-3 pt-3 border-t border-slate-100">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-slate-400 font-medium">Review Response</span>
-                      <span className="text-[10px] text-emerald-600 font-bold uppercase tracking-wider">Accept</span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 italic">"Available for the scheduled dates."</p>
-                  </div>
-                )}
               </div>
 
               {/* Secondary Evaluator 2 Card */}
@@ -183,10 +159,8 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
               >
                 <div className="flex items-center gap-3 w-full">
                   <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
-                    {assignedScheduledSecondary2Status === 'accepted' ? (
+                    {assignedScheduledSecondary2 ? (
                       <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    ) : assignedScheduledSecondary2Status === 'pending' ? (
-                      <Clock className="h-4 w-4 text-amber-500" />
                     ) : (
                       <UserPlus className="h-4 w-4 text-slate-400" />
                     )}
@@ -194,21 +168,10 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
                   <div className="text-left flex-1">
                     <div className="flex items-center gap-2">
                       <h4 className="text-[13px] text-slate-900">{assignedScheduledSecondary2 || "Secondary Evaluator 2"}</h4>
-                
                     </div>
                     <p className="text-[11px] text-slate-400 leading-tight">Assistant & commenter</p>
                   </div>
                 </div>
-
-                {assignedScheduledSecondary2Status === 'accepted' && (
-                  <div className="mt-3 pt-3 border-t border-slate-100">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-[10px] text-slate-400 font-medium">Review Response</span>
-                      <span className="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Comment</span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 italic">"Will coordinate with the team."</p>
-                  </div>
-                )}
               </div>
             </div>
           )}
@@ -225,7 +188,11 @@ export const ScheduleDueDiligenceStage: React.FC<ScheduleDueDiligenceStageProps>
             </button>
             <button
               onClick={() => setActiveMajorStep(2)}
-              className="flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer"
+              disabled={isProceedDisabled}
+              className={cn(
+                "flex-[2] py-3 px-4 bg-[#0A77FF] text-white rounded-sm text-sm transition-all cursor-pointer shadow-sm",
+                isProceedDisabled ? "opacity-50 cursor-not-allowed" : "hover:opacity-90 active:scale-[0.98]"
+              )}
             >
               Schedule Due Diligence
             </button>

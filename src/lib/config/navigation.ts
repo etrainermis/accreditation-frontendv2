@@ -47,6 +47,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     items: [
       { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: House, match: "exact" },
       { title: "Evaluations", href: "/super-admin/evaluations", description: "", icon: BadgeCheck },
+      { title: "Users", href: "/super-admin/users", description: "", icon: Users },
       { title: "Profile", href: "/super-admin/profile", description: "", icon: User },
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
     ],
