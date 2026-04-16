@@ -38,6 +38,9 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: appConfig.name,
   description: appConfig.description,
+  icons: {
+    icon: "/images/branding/rtb-logo.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

@@ -46,7 +46,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/super-admin",
     items: [
       { title: "Dashboard", href: "/super-admin/dashboard", description: "", icon: House, match: "exact" },
-      { title: "Evaluations", href: "/super-admin/evaluations", description: "", icon: BadgeCheck },
+      { title: "Evaluations", href: "/super-admin/evaluations/applications", description: "", icon: BadgeCheck },
       { title: "Users", href: "/super-admin/users", description: "", icon: Users },
       { title: "Profile", href: "/super-admin/profile", description: "", icon: User },
       { title: "Notifications", href: "/super-admin/notifications", description: "", icon: Bell },
@@ -71,7 +71,7 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
     basePath: "/supervisor",
     items: [
       { title: "Dashboard", href: "/supervisor/dashboard", description: "", icon: House, match: "exact" },
-      { title: "Evaluations", href: "/supervisor/evaluations", description: "", icon: BadgeCheck },
+      { title: "Evaluations", href: "/supervisor/evaluations/applications", description: "", icon: BadgeCheck },
       { title: "Certificates", href: "/supervisor/certificates", description: "", icon: ClipboardCheck },
       { title: "Profile", href: "/supervisor/profile", description: "", icon: User },
       { title: "Notifications", href: "/supervisor/notifications", description: "", icon: Bell },

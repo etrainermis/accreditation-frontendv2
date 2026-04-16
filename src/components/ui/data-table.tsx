@@ -23,6 +23,7 @@ interface DataTableProps<T> {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   filters?: React.ReactNode;
+  headerAction?: React.ReactNode;
   showPagination?: boolean;
   currentPage?: number;
   totalPages?: number;
@@ -40,6 +41,7 @@ export function DataTable<T extends { id: string | number }>({
   searchValue,
   onSearchChange,
   filters,
+  headerAction,
   showPagination = false,
   currentPage = 1,
   totalPages = 10,
@@ -50,9 +52,16 @@ export function DataTable<T extends { id: string | number }>({
       {/* Table Header/Toolbar - OUTSIDE the border container */}
       {(title || description) && (
         <div className="mb-6">
-          <div className="mb-6">
-            <h2 className="text-md text-[#101828]">{title}</h2>
-            <p className="text-xs text-[#64748B]">{description}</p>
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <div>
+              <h2 className="text-md text-[#101828]">{title}</h2>
+              <p className="text-xs text-[#64748B]">{description}</p>
+            </div>
+            {headerAction && (
+              <div className="shrink-0">
+                {headerAction}
+              </div>
+            )}
           </div>
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
