@@ -8,6 +8,7 @@ export interface Evaluator {
   name: string;
   email: string;
   avatar: string;
+  role: string;
   status: StatusType;
   dateAdded: string;
   lastActive: string;
@@ -19,6 +20,7 @@ export const mockEvaluators: Evaluator[] = [
     name: "Natali Craig",
     email: "natali@gmail.com",
     avatar: "NC",
+    role: "Evaluator",
     status: "Active",
     dateAdded: "Feb 22, 2022",
     lastActive: "Mar 14, 2022",
@@ -28,6 +30,7 @@ export const mockEvaluators: Evaluator[] = [
     name: "Drew Cano",
     email: "drew@untitledui.com",
     avatar: "DC",
+    role: "Supervisor",
     status: "Pending",
     dateAdded: "Feb 22, 2022",
     lastActive: "Mar 12, 2022",
@@ -37,6 +40,7 @@ export const mockEvaluators: Evaluator[] = [
     name: "Natali Craig",
     email: "natali@gmail.com",
     avatar: "NC",
+    role: "Evaluator",
     status: "Deactivated",
     dateAdded: "Feb 22, 2022",
     lastActive: "Mar 12, 2022",
@@ -46,6 +50,7 @@ export const mockEvaluators: Evaluator[] = [
     name: "Drew Cano",
     email: "drew@untitledui.com",
     avatar: "DC",
+    role: "Supervisor",
     status: "Active",
     dateAdded: "Feb 22, 2022",
     lastActive: "Mar 14, 2022",
@@ -55,6 +60,7 @@ export const mockEvaluators: Evaluator[] = [
     name: "Natali Craig",
     email: "natali@gmail.com",
     avatar: "NC",
+    role: "Evaluator",
     status: "Pending",
     dateAdded: "Feb 22, 2022",
     lastActive: "Mar 13, 2022",
