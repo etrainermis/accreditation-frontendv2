@@ -8,22 +8,40 @@ interface InviteUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   onInvite: (userData: InviteUserData) => void;
+  defaultRole?: string;
+  variant?: "full" | "simple";
+  title?: string;
+  description?: string;
 }
 
 export interface InviteUserData {
-  firstName: string;
-  lastName: string;
+  firstName?: string;
+  lastName?: string;
   email: string;
   role: string;
 }
 
-export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalProps) {
+export function InviteUserModal({ 
+  isOpen, 
+  onClose, 
+  onInvite, 
+  defaultRole,
+  variant = "full",
+  title,
+  description
+}: InviteUserModalProps) {
   const [formData, setFormData] = useState<InviteUserData>({
     firstName: "",
     lastName: "",
     email: "",
-    role: "",
+    role: defaultRole || "",
   });
+
+  React.useEffect(() => {
+    if (defaultRole) {
+      setFormData(prev => ({ ...prev, role: defaultRole }));
+    }
+  }, [defaultRole]);
 
   if (!isOpen) return null;
 
@@ -31,13 +49,18 @@ export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalPr
     e.preventDefault();
     onInvite(formData);
     onClose();
-    setFormData({ firstName: "", lastName: "", email: "", role: "" });
+    setFormData({ firstName: "", lastName: "", email: "", role: defaultRole || "" });
   };
 
   const roleOptions = [
     { label: "Supervisor", value: "Supervisor" },
     { label: "Curriculum evaluator", value: "Curriculum evaluator" },
   ];
+
+  const defaultTitle = variant === "full" ? "Invite User" : "Invite Initial Principal";
+  const defaultDescription = variant === "full" 
+    ? "Invited users will receive access to manage applications and perform evaluations." 
+    : "Invited evaluators will receive access to evaluate applications and perform site visits.";
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 p-4 transition-opacity font-sans">
@@ -49,9 +72,9 @@ export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalPr
               <UserPlus className="h-5 w-5 text-[#0A77FF]" />
             </div>
             <div>
-              <h3 className="text-lg text-[#323539] font-medium">Invite User</h3>
+              <h3 className="text-lg text-[#323539] font-medium">{title || defaultTitle}</h3>
               <p className="text-sm text-[#858C95] w-full">
-                Invited users will receive access to manage applications and perform evaluations.
+                {description || defaultDescription}
               </p>
             </div>
           </div>
@@ -65,41 +88,61 @@ export function InviteUserModal({ isOpen, onClose, onInvite }: InviteUserModalPr
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="p-6 space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <FormInput
-              label="First Name"
-              value={formData.firstName}
-              onChange={(value) => setFormData({ ...formData, firstName: value })}
-              placeholder="First name"
-              required
-            />
-            <FormInput
-              label="Last Name"
-              value={formData.lastName}
-              onChange={(value) => setFormData({ ...formData, lastName: value })}
-              placeholder="Last name"
-              required
-            />
-          </div>
+          {variant === "full" ? (
+            <>
+              <div className="grid grid-cols-2 gap-4">
+                <FormInput
+                  label="First Name"
+                  value={formData.firstName || ""}
+                  onChange={(value) => setFormData({ ...formData, firstName: value })}
+                  placeholder="First name"
+                  required
+                />
+                <FormInput
+                  label="Last Name"
+                  value={formData.lastName || ""}
+                  onChange={(value) => setFormData({ ...formData, lastName: value })}
+                  placeholder="Last name"
+                  required
+                />
+              </div>
 
-          <FormInput
-            label="Email"
-            value={formData.email}
-            onChange={(value) => setFormData({ ...formData, email: value })}
-            placeholder="Enter his/her email"
-            type="email"
-            required
-            icon={Mail}
-          />
+              <FormInput
+                label="Email"
+                value={formData.email}
+                onChange={(value) => setFormData({ ...formData, email: value })}
+                placeholder="Enter his/her email"
+                type="email"
+                required
+                icon={Mail}
+              />
 
-          <FormSelect
-            label="Role"
-            value={formData.role}
-            onChange={(value) => setFormData({ ...formData, role: value })}
-            options={roleOptions}
-            placeholder="Select a role"
-            required
-          />
+              <FormSelect
+                label="Role"
+                value={formData.role}
+                onChange={(value) => setFormData({ ...formData, role: value })}
+                options={roleOptions}
+                placeholder="Select a role"
+                required
+              />
+            </>
+          ) : (
+            <div className="space-y-2">
+              <label htmlFor="email" className="text-sm text-slate-700 font-medium">Email</label>
+              <div className="relative">
+                <input 
+                  id="email"
+                  placeholder="Enter your email" 
+                  required
+                  className="w-full pl-4 pr-12 py-3 bg-white border mt-2 border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
+                  type="email" 
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                />
+                <Mail className="absolute right-4 top-1/2 mt-1 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              </div>
+            </div>
+          )}
 
           <p className="text-xs text-slate-400 italic">He/she will receive an invitation email</p>
 

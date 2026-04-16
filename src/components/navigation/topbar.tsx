@@ -90,7 +90,7 @@ export function Topbar({ role, onOpenMobile }: { role: UserRole, onOpenMobile?: 
                 onMouseLeave={handleClose}
               >
                 <Link
-                  href="/profile"
+                  href={`/${role}/profile`}
                   className="flex w-full items-center gap-2 rounded-sm px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                   onClick={() => setOpen(false)}
                 >

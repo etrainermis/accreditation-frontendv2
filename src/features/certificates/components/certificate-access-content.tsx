@@ -5,16 +5,16 @@ import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { DataTable } from "@/components/ui/data-table";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils/cn";
-import {
-  CheckCircle2,
-  Clock,
+import { 
+  CheckCircle2, 
+  Clock, 
   Award,
   FileCheck,
   Activity,
   AlertTriangle,
 } from "lucide-react";
-import {
-  mockCompletedApplications,
+import { 
+  mockCompletedApplications, 
   getCompletedApplicationColumns,
   GrantAccessModal,
   RevokeAccessModal,

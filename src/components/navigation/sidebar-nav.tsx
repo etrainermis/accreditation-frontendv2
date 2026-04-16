@@ -33,7 +33,7 @@ export function SidebarNav({
           alt="RTB Logo"
           width={36}
           height={36}
-          className="h-9 w-auto rounded-xl object-contain"
+          className="rounded-xl"
         />
         <div>
           <p className="text-sm font-bold text-[var(--app-text)]">
@@ -112,7 +112,7 @@ export function SidebarNav({
             <TooltipTrigger asChild>
               <button
                 type="button"
-                className="cursor-pointer text-[#475467] transition-colors hover:text-slate-900"
+                className="text-[#475467] cursor-pointer hover:text-slate-900 transition-colors"
                 aria-label="Log out"
               >
                 <LogOut className="h-4 w-4" strokeWidth={1.5} />
