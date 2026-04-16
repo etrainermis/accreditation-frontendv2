@@ -84,7 +84,7 @@ const mockUsers: UserRecord[] = [
 
 export default function SuperAdminUsersPage() {
   const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState<"curriculum-evaluator" | "supervisor">("curriculum-evaluator");
+  const [activeTab, setActiveTab] = React.useState<"curriculum-evaluator" | "supervisor" | "evaluator">("curriculum-evaluator");
 
   const handleInvite = (data: InviteUserData) => {
     console.log("Inviting user:", data);
@@ -134,19 +134,36 @@ export default function SuperAdminUsersPage() {
     },
   ];
 
-  const stats = activeTab === "curriculum-evaluator" ? [
-    { label: "Total Evaluators", value: "48", icon: Users, color: "rgb(10, 119, 255)" },
-    { label: "Active", value: "32", icon: User, color: "rgb(52, 199, 89)" },
-    { label: "Available", value: "12", icon: CheckCheck, color: "rgb(203, 48, 224)" },
-    { label: "Pending", value: "4", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
-    { label: "Deactivated", value: "2", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
-  ] : [
-    { label: "Total Supervisors", value: "24", icon: Users, color: "rgb(10, 119, 255)" },
-    { label: "Active", value: "18", icon: User, color: "rgb(52, 199, 89)" },
-    { label: "Available", value: "4", icon: CheckCheck, color: "rgb(203, 48, 224)" },
-    { label: "Pending", value: "2", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
-    { label: "Deactivated", value: "0", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
-  ];
+  const getStats = () => {
+    switch(activeTab) {
+      case "evaluator":
+        return [
+          { label: "Total Evaluators", value: "18", icon: Users, color: "rgb(10, 119, 255)" },
+          { label: "Active", value: "12", icon: User, color: "rgb(52, 199, 89)" },
+          { label: "Available", value: "4", icon: CheckCheck, color: "rgb(203, 48, 224)" },
+          { label: "Pending", value: "2", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
+          { label: "Deactivated", value: "0", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
+        ];
+      case "supervisor":
+        return [
+          { label: "Total Supervisors", value: "24", icon: Users, color: "rgb(10, 119, 255)" },
+          { label: "Active", value: "18", icon: User, color: "rgb(52, 199, 89)" },
+          { label: "Available", value: "4", icon: CheckCheck, color: "rgb(203, 48, 224)" },
+          { label: "Pending", value: "2", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
+          { label: "Deactivated", value: "0", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
+        ];
+      default:
+        return [
+          { label: "Total Curriculum Evaluators", value: "48", icon: Users, color: "rgb(10, 119, 255)" },
+          { label: "Active", value: "32", icon: User, color: "rgb(52, 199, 89)" },
+          { label: "Available", value: "12", icon: CheckCheck, color: "rgb(203, 48, 224)" },
+          { label: "Pending", value: "4", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
+          { label: "Deactivated", value: "2", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
+        ];
+    }
+  };
+
+  const stats = getStats();
 
   return (
     <PageContainer
@@ -156,7 +173,7 @@ export default function SuperAdminUsersPage() {
     >
       <div className="space-y-6">
         {/* Custom Tabs / Sub-navigation */}
-        <div className="flex w-full justify-start items-center gap-2 mb-8">
+        <div className="flex w-full justify-start items-center gap-2 mb-8 overflow-x-auto no-scrollbar pb-2">
           <button 
             onClick={() => setActiveTab("curriculum-evaluator")}
             className={cn(
@@ -171,6 +188,20 @@ export default function SuperAdminUsersPage() {
             <span className="relative z-10 text-sm font-medium transition-colors duration-200">Curriculum Evaluator</span>
           </button>
           
+          <button 
+            onClick={() => setActiveTab("evaluator")}
+            className={cn(
+              "relative group flex items-center justify-center gap-2 px-6 py-3 rounded-sm transition-all duration-200 whitespace-nowrap cursor-pointer",
+              activeTab === "evaluator" ? "text-[var(--primary)]" : "text-[#353E49] hover:bg-slate-50 hover:text-[var(--primary)]"
+            )}
+          >
+            {activeTab === "evaluator" && (
+              <div className="absolute inset-0 bg-[#F9FAFB] rounded-sm z-0" />
+            )}
+            <User className={cn("relative z-10 h-4 w-4 transition-colors duration-200", activeTab === "evaluator" ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]")} strokeWidth={1.5} />
+            <span className="relative z-10 text-sm font-medium transition-colors duration-200">Evaluators</span>
+          </button>
+
           <button 
             onClick={() => setActiveTab("supervisor")}
             className={cn(
@@ -207,10 +238,10 @@ export default function SuperAdminUsersPage() {
         <DataTable
           data={filteredUsers}
           columns={columns}
-          title={activeTab === "curriculum-evaluator" ? "All Evaluators" : "All Supervisors"}
-          description={activeTab === "curriculum-evaluator" ? "Manage curriculum evaluators right here" : "Manage supervisors right here"}
+          title={activeTab === "curriculum-evaluator" ? "All Curriculum Evaluators" : activeTab === "evaluator" ? "All Evaluators" : "All Supervisors"}
+          description={activeTab === "curriculum-evaluator" ? "Manage curriculum evaluators right here" : activeTab === "evaluator" ? "Manage evaluators right here" : "Manage supervisors right here"}
           headerAction={
-            activeTab === "curriculum-evaluator" ? (
+            activeTab !== "supervisor" ? (
               <PrimaryButton 
                 label="Invite" 
                 icon={Plus} 
