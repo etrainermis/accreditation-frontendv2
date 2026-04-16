@@ -11,30 +11,33 @@ type SetupShellProps = {
   description: string;
   children: ReactNode;
   icon?: "profile" | "password";
+  role?: "evaluator" | "curriculum-evaluator";
 };
 
-const steps = [
-  {
-    key: "password",
-    label: "Password Setting",
-    description: "Enter the basic identification details of your institution.",
-    icon: <Key className="w-5 h-5" />,
-    path: "/evaluator/setup/password",
-  },
-  {
-    key: "profile",
-    label: "Personal Details",
-    description: "Provide the official physical and postal address of the institution.",
-    icon: <User className="w-5 h-5" />,
-    path: "/evaluator/setup/profile",
-  },
-] as const;
+export function SetupShell({ step, title, description, children, icon, role = "evaluator" }: SetupShellProps) {
+  const basePath = `/${role}/setup`;
 
-export function SetupShell({ step, title, description, children, icon }: SetupShellProps) {
+  const steps = [
+    {
+      key: "password",
+      label: "Password Setting",
+      description: "Enter the basic identification details of your institution.",
+      icon: <Key className="w-5 h-5" />,
+      path: `${basePath}/password`,
+    },
+    {
+      key: "profile",
+      label: "Personal Details",
+      description: "Provide the official physical and postal address of the institution.",
+      icon: <User className="w-5 h-5" />,
+      path: `${basePath}/profile`,
+    },
+  ] as const;
+
   // Determine back link based on step
   let backHref = "/login";
   if (step === "profile") {
-    backHref = "/evaluator/setup/password";
+    backHref = `${basePath}/password`;
   } else if (step === "password") {
     backHref = "/public/login";
   }
@@ -46,8 +49,6 @@ export function SetupShell({ step, title, description, children, icon }: SetupSh
         <div className="space-y-6 lg:space-y-10">
           <div className="flex items-start gap-3 lg:gap-4">
             <div className="relative h-10 w-14 lg:h-12 lg:w-16 shrink-0">
-              {/* Use static import if available, else fallback to public path */}
-              {/* <Image src={RTBLogo} alt="RTB" fill className="object-contain" priority /> */}
               <Image src="/images/branding/rtb-logo.png" alt="RTB" fill className="object-contain" priority />
             </div>
             <div className="pt-1 lg:pt-2">

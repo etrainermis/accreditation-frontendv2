@@ -84,11 +84,15 @@ const mockUsers: UserRecord[] = [
 
 export default function SuperAdminUsersPage() {
   const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
+  const [activeTab, setActiveTab] = React.useState<"curriculum-evaluator" | "supervisor">("curriculum-evaluator");
 
   const handleInvite = (data: InviteUserData) => {
     console.log("Inviting user:", data);
-    // In a real app, this would be an API call
   };
+
+  const filteredUsers = mockUsers.filter(user => 
+    user.role.toLowerCase() === activeTab.replace("-", " ")
+  );
 
   const columns: Column<UserRecord>[] = [
     {
@@ -104,11 +108,6 @@ export default function SuperAdminUsersPage() {
           </div>
         </div>
       ),
-    },
-    {
-      header: "Role",
-      accessor: "role",
-      className: "text-[#475467] text-sm",
     },
     {
       header: "Status",
@@ -135,12 +134,18 @@ export default function SuperAdminUsersPage() {
     },
   ];
 
-  const stats = [
-    { label: "Supervisors", value: "48", icon: Users, color: "rgb(10, 119, 255)" },
-    { label: "Curriculum evaluators", value: "32", icon: User, color: "rgb(52, 199, 89)" },
+  const stats = activeTab === "curriculum-evaluator" ? [
+    { label: "Total Evaluators", value: "48", icon: Users, color: "rgb(10, 119, 255)" },
+    { label: "Active", value: "32", icon: User, color: "rgb(52, 199, 89)" },
     { label: "Available", value: "12", icon: CheckCheck, color: "rgb(203, 48, 224)" },
     { label: "Pending", value: "4", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
     { label: "Deactivated", value: "2", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
+  ] : [
+    { label: "Total Supervisors", value: "24", icon: Users, color: "rgb(10, 119, 255)" },
+    { label: "Active", value: "18", icon: User, color: "rgb(52, 199, 89)" },
+    { label: "Available", value: "4", icon: CheckCheck, color: "rgb(203, 48, 224)" },
+    { label: "Pending", value: "2", icon: ClipboardClock, color: "rgb(97, 85, 245)" },
+    { label: "Deactivated", value: "0", icon: TriangleAlert, color: "rgb(255, 56, 60)" },
   ];
 
   return (
@@ -148,22 +153,46 @@ export default function SuperAdminUsersPage() {
       role="super-admin"
       title="User Management"
       description="Manage roles and access for evaluators and supervisors."
-      action={
-        <PrimaryButton 
-          label="Add user" 
-          icon={Plus} 
-          onClick={() => setIsInviteModalOpen(true)}
-        />
-      }
     >
       <div className="space-y-6">
+        {/* Custom Tabs / Sub-navigation */}
+        <div className="flex w-full justify-start items-center gap-2 mb-8">
+          <button 
+            onClick={() => setActiveTab("curriculum-evaluator")}
+            className={cn(
+              "relative group flex items-center justify-center gap-2 px-6 py-3 rounded-sm transition-all duration-200 whitespace-nowrap cursor-pointer",
+              activeTab === "curriculum-evaluator" ? "text-[var(--primary)]" : "text-[#353E49] hover:bg-slate-50 hover:text-[var(--primary)]"
+            )}
+          >
+            {activeTab === "curriculum-evaluator" && (
+              <div className="absolute inset-0 bg-[#F9FAFB] rounded-sm z-0" />
+            )}
+            <User className={cn("relative z-10 h-4 w-4 transition-colors duration-200", activeTab === "curriculum-evaluator" ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]")} strokeWidth={1.5} />
+            <span className="relative z-10 text-sm font-medium transition-colors duration-200">Curriculum Evaluator</span>
+          </button>
+          
+          <button 
+            onClick={() => setActiveTab("supervisor")}
+            className={cn(
+              "relative group flex items-center justify-center gap-2 px-6 py-3 rounded-sm transition-all duration-200 whitespace-nowrap cursor-pointer",
+              activeTab === "supervisor" ? "text-[var(--primary)]" : "text-[#353E49] hover:bg-slate-50 hover:text-[var(--primary)]"
+            )}
+          >
+            {activeTab === "supervisor" && (
+              <div className="absolute inset-0 bg-[#F9FAFB] rounded-sm z-0" />
+            )}
+            <Users className={cn("relative z-10 h-4 w-4 transition-colors duration-200", activeTab === "supervisor" ? "text-[var(--primary)]" : "text-[#353E49] group-hover:text-[var(--primary)]")} strokeWidth={1.5} />
+            <span className="relative z-10 text-sm font-medium transition-colors duration-200">Supervisors</span>
+          </button>
+        </div>
+
         {/* Stat Cards */}
-        <div className="grid gap-4 md:grid-cols-2 mb-6 relative z-10 bg-transparent xl:grid-cols-5">
+        <div className="grid gap-4 md:grid-cols-2 mb-6 relative z-10 bg-white shadow-[0_-20px_40px_white,0_20px_40px_white] xl:grid-cols-5">
           {stats.map((stat, idx) => (
             <div key={idx} className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden animate-slide-up">
               <div className="p-5 flex flex-col gap-4">
                 <div className="w-fit p-2.5 rounded-sm border border-[#EAECF0] bg-white shadow-[0_1px_2px_0_rgba(16,24,40,0.05)]">
-                  <stat.icon className="h-5 w-5" style={{ color: stat.color }} />
+                  <stat.icon className="h-5 w-5" style={{ color: stat.color }} strokeWidth={1.5} />
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-slate-500 font-medium">{stat.label}</p>
@@ -176,10 +205,19 @@ export default function SuperAdminUsersPage() {
 
         {/* User Table */}
         <DataTable
-          data={mockUsers}
+          data={filteredUsers}
           columns={columns}
-          title="All Users"
-          description="Manage users right here"
+          title={activeTab === "curriculum-evaluator" ? "All Evaluators" : "All Supervisors"}
+          description={activeTab === "curriculum-evaluator" ? "Manage curriculum evaluators right here" : "Manage supervisors right here"}
+          headerAction={
+            activeTab === "curriculum-evaluator" ? (
+              <PrimaryButton 
+                label="Invite" 
+                icon={Plus} 
+                onClick={() => setIsInviteModalOpen(true)}
+              />
+            ) : undefined
+          }
           showPagination
           currentPage={1}
           totalPages={10}
@@ -190,6 +228,8 @@ export default function SuperAdminUsersPage() {
         isOpen={isInviteModalOpen} 
         onClose={() => setIsInviteModalOpen(false)} 
         onInvite={handleInvite}
+        variant="simple"
+        defaultRole="Curriculum evaluator"
       />
     </PageContainer>
   );

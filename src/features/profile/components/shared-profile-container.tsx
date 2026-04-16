@@ -36,9 +36,9 @@ export function SharedProfileContainer({
   );
 
   return (
-    <div className="flex flex-col md:flex-row gap-8 w-full max-w-6xl">
+    <div className="flex flex-col md:flex-row gap-8 w-full h-full min-h-0">
       {/* Sidebar Navigation */}
-      <div className="w-full md:w-64 shrink-0 space-y-1">
+      <div className="w-full md:w-64 shrink-0 space-y-1 overflow-y-auto no-scrollbar pb-8">
         <button
           onClick={() => setActiveTab("personal")}
           className={cn(
@@ -72,7 +72,7 @@ export function SharedProfileContainer({
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0">
+      <div className="flex-1 min-w-0 overflow-y-auto no-scrollbar pb-10 px-0.5">
         {activeTab === "personal" && (
           <div className="space-y-6">
             <div className="pb-4 border-b border-slate-100 flex items-center gap-6">

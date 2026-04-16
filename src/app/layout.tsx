@@ -38,11 +38,19 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: appConfig.name,
   description: appConfig.description,
+  icons: {
+    icon: "/images/branding/rtb-logo.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(manrope.variable, ibmPlexMono.variable, nunitoSans.variable, "font-sans", geist.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      data-scroll-behavior="smooth"
+      className={cn(manrope.variable, ibmPlexMono.variable, nunitoSans.variable, "font-sans", geist.variable)}
+      suppressHydrationWarning
+    >
       <body>
         <AppProviders>{children}</AppProviders>
       </body>
