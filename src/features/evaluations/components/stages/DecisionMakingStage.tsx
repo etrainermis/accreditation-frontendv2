@@ -222,11 +222,20 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
                 <input 
+                  autoFocus
                   placeholder="Search supervisors..." 
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
+                  className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+                  >
+                    <X className="h-3 w-3 text-slate-400" />
+                  </button>
+                )}
               </div>
 
               {/* List of Supervisors */}
