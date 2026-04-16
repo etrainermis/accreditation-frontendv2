@@ -55,12 +55,13 @@ export function InviteUserModal({
   const roleOptions = [
     { label: "Supervisor", value: "Supervisor" },
     { label: "Curriculum evaluator", value: "Curriculum evaluator" },
+    { label: "Evaluator", value: "Evaluator" },
   ];
 
-  const defaultTitle = variant === "full" ? "Invite User" : "Invite Initial Principal";
+  const defaultTitle = variant === "full" ? "Invite User" : "Invite User";
   const defaultDescription = variant === "full" 
     ? "Invited users will receive access to manage applications and perform evaluations." 
-    : "Invited evaluators will receive access to evaluate applications and perform site visits.";
+    : "Invited users will receive access to evaluate applications and perform site visits.";
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 p-4 transition-opacity font-sans">
@@ -127,20 +128,31 @@ export function InviteUserModal({
               />
             </>
           ) : (
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-sm text-slate-700 font-medium">Email</label>
-              <div className="relative">
-                <input 
-                  id="email"
-                  placeholder="Enter your email" 
-                  required
-                  className="w-full pl-4 pr-12 py-3 bg-white border mt-2 border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
-                  type="email" 
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                />
-                <Mail className="absolute right-4 top-1/2 mt-1 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm text-slate-700 font-medium">Email</label>
+                <div className="relative">
+                  <input 
+                    id="email"
+                    placeholder="Enter his/her email" 
+                    required
+                    className="w-full pl-4 pr-12 py-3 bg-white border mt-2 border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
+                    type="email" 
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  />
+                  <Mail className="absolute right-4 top-1/2 mt-1 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                </div>
               </div>
+
+              <FormSelect
+                label="Role"
+                value={formData.role}
+                onChange={(value) => setFormData({ ...formData, role: value })}
+                options={roleOptions}
+                placeholder="Select a role"
+                required
+              />
             </div>
           )}
 

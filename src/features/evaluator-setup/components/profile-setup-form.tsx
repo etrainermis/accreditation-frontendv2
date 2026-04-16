@@ -19,7 +19,7 @@ const initialState: ProfileFormState = {
   phone: "",
 };
 
-export function ProfileSetupForm({ role = "evaluator" }: { role?: "evaluator" | "curriculum-evaluator" }) {
+export function ProfileSetupForm() {
   const router = useRouter();
   const [form, setForm] = useState(initialState);
   const [submitted, setSubmitted] = useState(false);
@@ -34,14 +34,13 @@ export function ProfileSetupForm({ role = "evaluator" }: { role?: "evaluator" | 
     event.preventDefault();
     setSubmitted(true);
     if (!isFormValid) return;
-    router.push(`/${role}/dashboard`);
+    router.push("/dashboard");
   };
 
   return (
     <SetupShell
       step="profile"
       icon="profile"
-      role={role}
       title="Personal Details"
       description="Profile details"
     >
