@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Check } from "lucide-react";
 import { SetupShell } from "@/features/evaluator-setup/components/setup-shell";
 
-export function PasswordSetupForm({ role = "evaluator" }: { role?: "evaluator" | "curriculum-evaluator" }) {
+export function PasswordSetupForm() {
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,7 +26,7 @@ export function PasswordSetupForm({ role = "evaluator" }: { role?: "evaluator" |
     event.preventDefault();
     setSubmitted(true);
     if (isFormValid) {
-      router.push(`/${role}/setup/profile`);
+      router.push("/setup/profile");
     }
   };
 
@@ -34,7 +34,6 @@ export function PasswordSetupForm({ role = "evaluator" }: { role?: "evaluator" |
     <SetupShell
       step="password"
       icon="password"
-      role={role}
       title="Set Account Password"
       description="Basic information about your institution"
     >
