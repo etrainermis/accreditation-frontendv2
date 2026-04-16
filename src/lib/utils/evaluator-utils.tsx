@@ -89,10 +89,6 @@ export const getEvaluatorColumns = (isReadOnly: boolean = false): Column<Evaluat
       ),
     },
     {
-      header: "Role",
-      accessor: (item) => <span className="text-sm text-[#475467]">{item.role}</span>,
-    },
-    {
       header: "Status",
       accessor: (item) => <StatusBadge status={item.status} />,
     },
