@@ -109,8 +109,8 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           <ReviewApplicationStep
             formData={formData}
             files={{
-              mou: mouFile,
-              registration: regCertFile,
+              mou: (certificates["mou"] as File) || null,
+              registration: (certificates["regCert"] as File) || null,
             }}
             legalReps={legalReps}
             aboutText={aboutText}

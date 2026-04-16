@@ -37,10 +37,10 @@ export function ReviewApplicationStep({
   aboutText,
   staffList,
 }: ReviewApplicationStepProps) {
-  const uploadedDocIds = Object.keys(certificates).filter(id => {
-    const file = certificates[id];
-    return Array.isArray(file) ? file.length > 0 : !!file;
-  });
+
+
+
+
 
   return (
     <div className="space-y-6">
