@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -11,30 +11,33 @@ type SetupShellProps = {
   description: string;
   children: ReactNode;
   icon?: "profile" | "password";
+  role?: "evaluator" | "curriculum-evaluator";
 };
 
-const steps = [
-  {
-    key: "password",
-    label: "Password Setting",
-    description: "Enter the basic identification details of your institution.",
-    icon: <Key className="w-5 h-5" />,
-    path: "/evaluator/setup/password",
-  },
-  {
-    key: "profile",
-    label: "Personal Details",
-    description: "Provide the official physical and postal address of the institution.",
-    icon: <User className="w-5 h-5" />,
-    path: "/evaluator/setup/profile",
-  },
-] as const;
+export function SetupShell({ step, title, description, children, icon, role = "evaluator" }: SetupShellProps) {
+  const basePath = `/${role}/setup`;
 
-export function SetupShell({ step, title, description, children, icon }: SetupShellProps) {
+  const steps = [
+    {
+      key: "password",
+      label: "Password Setting",
+      description: "Enter the basic identification details of your institution.",
+      icon: <Key className="w-5 h-5" />,
+      path: `${basePath}/password`,
+    },
+    {
+      key: "profile",
+      label: "Personal Details",
+      description: "Provide the official physical and postal address of the institution.",
+      icon: <User className="w-5 h-5" />,
+      path: `${basePath}/profile`,
+    },
+  ] as const;
+
   // Determine back link based on step
   let backHref = "/login";
   if (step === "profile") {
-    backHref = "/evaluator/setup/password";
+    backHref = `${basePath}/password`;
   } else if (step === "password") {
     backHref = "/public/login";
   }

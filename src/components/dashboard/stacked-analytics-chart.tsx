@@ -19,6 +19,12 @@ export interface StackedAnalyticsChartProps {
 export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
   const [activeTab, setActiveTab] = useState("12 Months");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [mounted, setMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
+
   let currentData = data[activeTab] || [];
   
   // Filter for better measurement in high-density views
@@ -34,6 +40,17 @@ export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
   // Round up to nearest multiple of 4 for clean intervals
   const maxValue = Math.ceil(actualMax / 4) * 4;
   const dynamicYAxis = Array.from({ length: 6 }, (_, i) => Math.round(maxValue * (1 - i / 5)));
+
+  if (!mounted) {
+    return (
+      <Card className="rounded-md border border-slate-200 bg-white shadow-none h-[400px] flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-2">
+          <div className="h-4 w-32 bg-slate-100 rounded" />
+          <div className="h-48 w-full bg-slate-50 rounded" />
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden text-[#101828] animate-slide-up">

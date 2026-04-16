@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +19,7 @@ const initialState: ProfileFormState = {
   phone: "",
 };
 
-export function ProfileSetupForm() {
+export function ProfileSetupForm({ role = "evaluator" }: { role?: "evaluator" | "curriculum-evaluator" }) {
   const router = useRouter();
   const [form, setForm] = useState(initialState);
   const [submitted, setSubmitted] = useState(false);
@@ -34,13 +34,14 @@ export function ProfileSetupForm() {
     event.preventDefault();
     setSubmitted(true);
     if (!isFormValid) return;
-    router.push("/evaluator/dashboard");
+    router.push(`/${role}/dashboard`);
   };
 
   return (
     <SetupShell
       step="profile"
       icon="profile"
+      role={role}
       title="Personal Details"
       description="Profile details"
     >

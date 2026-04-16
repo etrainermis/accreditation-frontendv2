@@ -227,7 +227,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const [assignedScheduledSecondary1Status, setAssignedScheduledSecondary1Status] = React.useState<'pending' | 'accepted' | null>(null);
   const [assignedScheduledSecondary2Status, setAssignedScheduledSecondary2Status] = React.useState<'pending' | 'accepted' | null>(null);
 
-  const [showInitialReview, setShowInitialReview] = React.useState(false);
+  const [showInitialReview, setShowInitialReview] = React.useState(role !== "super-admin");
   const [pendingEvaluatorRole, setPendingEvaluatorRole] = React.useState<string | null>(null);
   const [showConsensus, setShowConsensus] = React.useState(false);
   const [initialReviewConsensus, setInitialReviewConsensus] = React.useState([

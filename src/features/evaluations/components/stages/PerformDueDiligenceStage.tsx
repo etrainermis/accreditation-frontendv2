@@ -99,7 +99,7 @@ export const PerformDueDiligenceStage: React.FC<PerformDueDiligenceStageProps> =
               </div>
             </div>
           )}
-          {role !== "super-admin" && (
+          {role === "super-admin" && (
             <div className="border border-dashed border-slate-200 rounded-sm p-4 h-fit flex w-full items-center justify-left gap-4 hover:bg-slate-50 transition-colors cursor-pointer group">
               <div className="h-12 w-12 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors">
                 <UserPlus className="h-5 w-5 text-slate-400" />
