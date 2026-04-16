@@ -11,11 +11,10 @@ type SetupShellProps = {
   description: string;
   children: ReactNode;
   icon?: "profile" | "password";
-  role?: "evaluator" | "curriculum-evaluator";
 };
 
-export function SetupShell({ step, title, description, children, icon, role = "evaluator" }: SetupShellProps) {
-  const basePath = `/${role}/setup`;
+export function SetupShell({ step, title, description, children, icon }: SetupShellProps) {
+  const basePath = `/setup`;
 
   const steps = [
     {
@@ -39,7 +38,7 @@ export function SetupShell({ step, title, description, children, icon, role = "e
   if (step === "profile") {
     backHref = `${basePath}/password`;
   } else if (step === "password") {
-    backHref = "/public/login";
+    backHref = "/login"; // Pointing to main login instead of public/login for generic use
   }
 
   return (
