@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function SupervisorEvaluationsRoot() {
+export default async function SupervisorEvaluationsRoot() {
   redirect("/supervisor/evaluations/applications");
 }

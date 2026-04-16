@@ -28,7 +28,6 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
           alt="RTB Logo"
           width={36}
           height={36}
-          
         />
         <div>
           <p className="text-sm font-bold text-[var(--app-text)]">RTB Accreditation</p>
@@ -78,13 +77,13 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
           </div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <button
-                type="button"
+              <Link
+                href="/login"
                 className="text-[#475467] cursor-pointer hover:text-slate-900 transition-colors"
                 aria-label="Log out"
               >
                 <LogOut className="h-4 w-4" strokeWidth={1.5} />
-              </button>
+              </Link>
             </TooltipTrigger>
             <TooltipContent>
               <p>Log out</p>

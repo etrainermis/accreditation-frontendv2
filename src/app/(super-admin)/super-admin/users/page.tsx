@@ -228,6 +228,8 @@ export default function SuperAdminUsersPage() {
         isOpen={isInviteModalOpen} 
         onClose={() => setIsInviteModalOpen(false)} 
         onInvite={handleInvite}
+        variant="simple"
+        defaultRole="Curriculum evaluator"
       />
     </PageContainer>
   );

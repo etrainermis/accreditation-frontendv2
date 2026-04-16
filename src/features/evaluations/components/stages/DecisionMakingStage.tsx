@@ -1,8 +1,9 @@
 "use client";
 import React, { useState } from "react";
-import { CheckCircle2, CheckCheck, Search, X, RefreshCw, PlusSquare, User, UserPlus, Mail } from "lucide-react";
+import { CheckCircle2, CheckCheck, User, UserPlus } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
-import { DateRangePicker, DateRange } from "@/components/ui/date-range-picker";
+import { DateRange } from "@/components/ui/date-range-picker";
+import { InviteUserModal, InviteUserData } from "@/features/users/components/InviteUserModal";
 
 interface DecisionMakingStageProps {
   role: "super-admin" | "evaluator" | "supervisor";
@@ -23,29 +24,15 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
 }) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [invitationStatus, setInvitationStatus] = useState<'idle' | 'pending' | 'sent'>('idle');
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedSupervisor, setSelectedSupervisor] = useState<string | null>(null);
 
-  const mockSupervisors = [
-    { id: "1", name: "Natali Craig", email: "natali@gmail.com" },
-    { id: "2", name: "Drew Cano", email: "drew@untitledui.com" },
-    { id: "3", name: "Orlando Diggs", email: "orlando@gmail.com" },
-    { id: "4", name: "Andi Lane", email: "andi@gmail.com" },
-  ];
-
-  const filteredSupervisors = mockSupervisors.filter(s => 
-    s.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    s.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  const handleAssign = () => {
-    if (selectedSupervisor) {
-      setInvitationStatus('pending');
-      setTimeout(() => {
-        setInvitationStatus('sent');
-        setShowInviteModal(false);
-      }, 1000);
-    }
+  const handleInviteSupervisor = (data: InviteUserData) => {
+    setInvitationStatus('pending');
+    console.log("Inviting supervisor:", data);
+    setTimeout(() => {
+      setInvitationStatus('sent');
+      setSelectedSupervisor(data.email);
+    }, 1000);
   };
 
   return (
@@ -133,14 +120,12 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
                 </div>
                 <div className="text-left flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[13px] text-slate-900">
-                      {selectedSupervisor ? mockSupervisors.find(s => s.email === selectedSupervisor)?.name : "Supervisor"}
-                    </h4>
+                    <h4 className="text-[13px] text-slate-900">Supervisor</h4>
                     {invitationStatus === 'sent' && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">Assigned</span>
+                      <span className="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">Invited</span>
                     )}
                     {invitationStatus === 'pending' && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded-full">Pending</span>
+                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded-full">Sending...</span>
                     )}
                   </div>
                   <p className="text-[11px] text-slate-400 leading-tight">Final reviewer & decision maker</p>
@@ -151,26 +136,28 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
             {/* Confirm / Cancel Buttons */}
             <div className="flex items-center gap-4 w-full mt-2">
               <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-2.5 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Cancel</button>
-              <button onClick={() => alert("Confirm decision")} className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer">Confirm</button>
+              <button 
+                onClick={() => alert("Confirm decision")} 
+                disabled={invitationStatus !== 'sent'}
+                className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Confirm
+              </button>
             </div>
-
-         
           </div>
 
           {/* Right Column */}
           <div className="flex-1 flex flex-col gap-6">
-  
-
-                      <div className="flex items-center gap-3">
-                <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200">
-                  <User className="h-4 w-4 text-slate-400 stroke-2" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-[11px] text-slate-500 leading-tight">Submitted by</span>
-                  <span className="text-[13px] text-slate-900 leading-tight">John Smith</span>
-                </div>
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 shrink-0 bg-slate-50 rounded-full flex items-center justify-center border border-slate-200">
+                <User className="h-4 w-4 text-slate-400 stroke-2" />
               </div>
-                    <div className="grid grid-cols-2 gap-4 mt-2">
+              <div className="flex flex-col">
+                <span className="text-[11px] text-slate-500 leading-tight">Submitted by</span>
+                <span className="text-[13px] text-slate-900 leading-tight">John Smith</span>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-4 mt-2">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 shrink-0 bg-transparent rounded-full flex items-center justify-center overflow-hidden border border-slate-100">
                   <img src={`https://ui-avatars.com/api/?name=${application.institution.name}&background=FF8A65&color=fff&rounded=true`} alt="logo" className="h-full w-full object-cover" />
@@ -185,101 +172,16 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
         </div>
       )}
 
-      {/* Invite Modal */}
-      {showInviteModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/80 p-4 transition-opacity font-sans">
-          <div className="w-full max-w-lg bg-white rounded-sm overflow-hidden animate-in fade-in zoom-in duration-200">
-            <div className="flex items-start justify-between p-6 border-b border-slate-100">
-              <div className="flex items-start gap-4">
-                <div className="h-10 w-13 mt-2 rounded-sm border border-slate-100 flex items-center justify-center p-2">
-                  <UserPlus className="h-5 w-5 text-[#0A77FF]" />
-                </div>
-                <div>
-                  <h3 className="text-lg text-[#323539]">Assign Supervisor</h3>
-                  <p className="text-sm text-[#858C95] w-full">Select a supervisor from the list to review evaluation results.</p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowInviteModal(false)}
-                className="p-2 cursor-pointer h-10 mt-2 hover:bg-slate-100 rounded-sm transition-colors text-slate-400 hover:text-slate-600"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            
-            <div className="p-6 space-y-4">
-              {/* Search Bar */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input 
-                  autoFocus
-                  placeholder="Search supervisors..." 
-                  className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-200 rounded-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                {searchQuery && (
-                  <button 
-                    onClick={() => setSearchQuery("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
-                  >
-                    <X className="h-3 w-3 text-slate-400" />
-                  </button>
-                )}
-              </div>
-
-              {/* List of Supervisors */}
-              <div className="max-h-[300px] overflow-y-auto no-scrollbar border border-slate-100 rounded-sm divide-y divide-slate-50">
-                {filteredSupervisors.map((supervisor) => (
-                  <div 
-                    key={supervisor.id}
-                    onClick={() => setSelectedSupervisor(supervisor.email)}
-                    className={cn(
-                      "p-3 flex items-center justify-between cursor-pointer transition-colors hover:bg-slate-50",
-                      selectedSupervisor === supervisor.email && "bg-blue-50/50"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500">
-                        {supervisor.name.split(' ').map(n => n[0]).join('')}
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm text-slate-900 font-medium">{supervisor.name}</span>
-                        <span className="text-[11px] text-slate-500">{supervisor.email}</span>
-                      </div>
-                    </div>
-                    {selectedSupervisor === supervisor.email && (
-                      <CheckCheck className="h-4 w-4 text-[#0A77FF]" />
-                    )}
-                  </div>
-                ))}
-                {filteredSupervisors.length === 0 && (
-                  <div className="p-8 text-center text-sm text-slate-400">
-                    No supervisors found
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <button 
-                  type="button" 
-                  onClick={() => setShowInviteModal(false)}
-                  className="flex-1 py-1.5 text-sm cursor-pointer text-slate-700 bg-white border border-slate-200 rounded-sm hover:bg-slate-50 transition-colors"
-                >
-                  Exit
-                </button>
-                <button 
-                  onClick={handleAssign}
-                  disabled={!selectedSupervisor || invitationStatus === 'pending'}
-                  className="flex-1 py-2.5 text-sm cursor-pointer text-white bg-[#0A77FF] rounded-sm hover:bg-[#0966ff] transition-colors shadow-sm active:scale-[0.98] disabled:opacity-50"
-                >
-                  {invitationStatus === 'pending' ? 'Assigning...' : 'Assign'}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Invite User Modal */}
+      <InviteUserModal 
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        onInvite={handleInviteSupervisor}
+        variant="simple"
+        defaultRole="Supervisor"
+        title="Invite Supervisor"
+        description="Invited supervisors will receive access to review evaluation results and grant certificates."
+      />
     </div>
   );
 };
