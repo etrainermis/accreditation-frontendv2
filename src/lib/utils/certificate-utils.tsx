@@ -80,7 +80,7 @@ export function GrantAccessModal({ isOpen, onClose, onConfirm, applicantName, tr
           <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-50 mx-auto">
             <CheckCircle2 className="h-6 w-6 text-blue-600" />
           </div>
-          
+
           <div className="text-center space-y-2">
             <h3 className="text-lg font-semibold text-slate-900">Grant Certificate Access</h3>
             <p className="text-sm text-slate-600">
@@ -132,7 +132,7 @@ export function RevokeAccessModal({ isOpen, onClose, onConfirm, applicantName, t
           <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-50 mx-auto">
             <AlertTriangle className="h-6 w-6 text-red-600" />
           </div>
-          
+
           <div className="text-center space-y-2">
             <h3 className="text-lg font-semibold text-slate-900">Revoke Certificate Access</h3>
             <p className="text-sm text-slate-600">
