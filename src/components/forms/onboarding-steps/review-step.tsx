@@ -7,7 +7,10 @@ import type { LegalRep } from "./legal-representatives-step";
 
 interface ReviewApplicationStepProps {
   formData: Record<string, string>;
-  certificates: Record<string, File | File[] | null>;
+  files: {
+    registration: File | null;
+    mou: File | null;
+  };
   legalReps: LegalRep[];
   aboutText: Record<string, string>;
   staffList: TechnicalStaffEntry[];
@@ -29,7 +32,7 @@ const ALL_DOC_LABELS: Record<string, string> = {
 
 export function ReviewApplicationStep({
   formData,
-  certificates,
+  files,
   legalReps,
   aboutText,
   staffList,
@@ -75,33 +78,25 @@ export function ReviewApplicationStep({
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
 
-            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 space-y-4">
-              <span className="text-[12px] font-bold text-slate-500 uppercase tracking-tight block">Uploaded Documents</span>
-              <div className="grid grid-cols-2 gap-4">
-                {uploadedDocIds.length > 0 ? (
-                  uploadedDocIds.map(id => {
-                    const file = certificates[id];
-                    return (
-                      <div key={id} className="space-y-1">
-                        <span className="text-[12px] text-slate-500 block">{ALL_DOC_LABELS[id] || id}</span>
-                        {Array.isArray(file) ? (
-                          <div className="space-y-1">
-                            {file.map((f, i) => (
-                              <div key={i} className="flex items-center gap-2 text-slate-700">
-                                <FileText className="h-3.5 w-3.5 text-blue-500" />
-                                <span className="text-[13px] font-medium truncate max-w-[150px]">{f.name}</span>
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="flex items-center gap-2 text-slate-700 mt-1">
-                            <FileText className="h-4 w-4 text-blue-500" />
-                            <span className="text-[13.5px] font-medium truncate max-w-[200px]">{(file && !Array.isArray(file) && file.name) || 'File'}</span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })
+            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
+              <div className="space-y-1">
+                <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
+                {files.registration ? (
+                  <div className="flex items-center gap-2 text-slate-700 mt-1">
+                    <FileText className="h-4 w-4 text-blue-500" />
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.registration.name}</span>
+                  </div>
+                ) : (
+                  <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
+                )}
+              </div>
+              <div className="space-y-1">
+                <span className="text-[12px] text-slate-500 block">MOU (Signed)</span>
+                {files.mou ? (
+                  <div className="flex items-center gap-2 text-slate-700 mt-1">
+                    <FileText className="h-4 w-4 text-emerald-500" />
+                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.mou.name}</span>
+                  </div>
                 ) : (
                   <p className="text-[13.5px] italic text-slate-400 col-span-2">No documents uploaded</p>
                 )}

@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { User, Phone, ChevronDown } from "lucide-react";
 import { SetupShell } from "@/features/evaluator-setup/components/setup-shell";
-import { FormInput } from "@/components/ui/form-field";
 
 type ProfileFormState = {
   firstName: string;
@@ -20,7 +19,7 @@ const initialState: ProfileFormState = {
   phone: "",
 };
 
-export function ProfileSetupForm() {
+export function ProfileSetupForm({ role = "evaluator" }: { role?: "evaluator" | "curriculum-evaluator" }) {
   const router = useRouter();
   const [form, setForm] = useState(initialState);
   const [submitted, setSubmitted] = useState(false);
@@ -35,68 +34,99 @@ export function ProfileSetupForm() {
     event.preventDefault();
     setSubmitted(true);
     if (!isFormValid) return;
-    router.push("/evaluator/dashboard");
+    router.push(`/${role}/dashboard`);
   };
 
   return (
     <SetupShell
       step="profile"
       icon="profile"
+      role={role}
       title="Personal Details"
       description="Profile details"
     >
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <FormInput
-            label="First Name"
-            value={form.firstName}
-            onChange={(value) => updateField("firstName", value)}
-            placeholder="e.g. John"
-            required
-            icon={User}
-          />
-          <FormInput
-            label="Last Name"
-            value={form.lastName}
-            onChange={(value) => updateField("lastName", value)}
-            placeholder="e.g. Doe"
-            required
-            icon={User}
-          />
-          <div className="col-span-1 sm:col-span-2">
-            <label className="text-xs font-medium text-slate-700 mb-1 block">Gender <span className="text-red-500">*</span></label>
+          <Field label="First Name" required>
+            <div className="relative group">
+              <input
+                type="text"
+                value={form.firstName}
+                onChange={(e) => updateField("firstName", e.target.value)}
+                placeholder="e.g. John"
+                className="w-full h-11 px-4 pr-10 rounded-lg border border-[#D0D5DD] bg-white text-[#101828] placeholder:text-[13px] placeholder:text-[#667085] focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all shadow-sm"
+              />
+              <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#98A2B3] pointer-events-none" />
+            </div>
+          </Field>
+
+          <Field label="Last Name" required>
+            <div className="relative group">
+              <input
+                type="text"
+                value={form.lastName}
+                onChange={(e) => updateField("lastName", e.target.value)}
+                placeholder="e.g. Doe"
+                className="w-full h-11 px-4 pr-10 rounded-lg border border-[#D0D5DD] bg-white text-[#101828] placeholder:text-[13px] placeholder:text-[#667085] focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all shadow-sm"
+              />
+              <User className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#98A2B3] pointer-events-none" />
+            </div>
+          </Field>
+        </div>
+
+        <Field label="Gender" required>
+          <div className="relative group">
             <select
               value={form.gender}
-              onChange={e => updateField("gender", e.target.value)}
-              className="w-full rounded-sm border border-slate-200 px-3 py-3 text-sm text-slate-700 outline-none transition focus:border-blue-500 focus:ring-1 focus:ring-blue-500/20 placeholder:text-slate-400"
-              required
+              onChange={(e) => updateField("gender", e.target.value)}
+              className="w-full h-11 px-4 appearance-none rounded-lg border border-[#D0D5DD] bg-white text-[#101828] focus:outline-none focus:ring-2 focus:ring-[#0A77FF]/10 focus:border-[#0A77FF] transition-all shadow-sm"
             >
-              <option value="" disabled>Select gender</option>
+              <option value="" disabled>Select ...</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
-              <option value="other">Other</option>
             </select>
+            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#98A2B3] pointer-events-none" />
           </div>
-          <FormInput
-            label="Phone Number"
-            value={form.phone}
-            onChange={(value) => updateField("phone", value)}
-            placeholder="e.g. 0781234567"
-            required
-            icon={Phone}
-          />
-        </div>
+        </Field>
+
+        <Field label="Phone Number" required>
+          <div className="flex h-11 rounded-lg border border-[#D0D5DD] bg-white shadow-sm overflow-hidden focus-within:ring-2 focus-within:ring-[#0A77FF]/10 focus-within:border-[#0A77FF] transition-all">
+            <div className="bg-[#F9FAFB] border-r border-[#D0D5DD] px-3 flex items-center gap-1 cursor-default">
+              <span className="text-[14px] text-[#101828] font-medium">+250</span>
+              <ChevronDown className="w-4 h-4 text-[#98A2B3]" />
+            </div>
+            <div className="relative flex-1 group">
+              <input
+                type="tel"
+                value={form.phone}
+                onChange={(e) => updateField("phone", e.target.value)}
+                placeholder="XXX-XXX-XXX"
+                className="w-full h-full px-4 pr-10 text-[#101828] placeholder:text-[13px] placeholder:text-[#667085] focus:outline-none bg-transparent"
+              />
+              <Phone className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#98A2B3] pointer-events-none" />
+            </div>
+          </div>
+        </Field>
+
         <button
           type="submit"
-          className="w-full mt-6 py-2 px-4 rounded bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50"
-          disabled={!isFormValid && submitted}
+          className="w-full h-11 bg-[#0A77FF] text-white rounded-lg text-[14px] font-semibold hover:bg-[#0862d1] active:transform active:scale-[0.98] transition-all shadow-[0px_1px_2px_rgba(16,24,40,0.05)] mt-4"
         >
-          Continue
+          Save Profile
         </button>
-        {submitted && !isFormValid && (
-          <div className="text-red-500 text-sm mt-2">Please fill in all required fields.</div>
-        )}
       </form>
     </SetupShell>
+  );
+}
+
+function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
+  return (
+    <div className="space-y-1.5 w-full text-left">
+      <label className="text-[14px] font-medium text-[#344054]">
+        {label}
+        {required && <span className="text-rose-500 ml-1 font-bold">*</span>}
+      </label>
+      {children}
+    </div>
   );
 }

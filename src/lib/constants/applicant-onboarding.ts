@@ -62,7 +62,7 @@ export const applicantOnboardingSteps = [
   {
     key: "review-application",
     title: "Review Application",
-    description: "Review the information provided before submitting the application.",
+    description: "Review the information provided before submitting your application.",
     fields: [],
   },
 ] as const;

@@ -48,8 +48,10 @@ export function InstitutionDetailsStep({
   formData,
   setFormData,
 }: InstitutionDetailsStepProps) {
-  const isSchool = formData["Institution Category"] === "School";
-  const docTypes = isSchool ? SCHOOL_DOCS : OTHER_INSTITUTION_DOCS;
+  const isOther = formData["Institution Category"] === "Other Institution";
+  const docTypes = isOther
+    ? ["MOU (Signed Memorandum)", "Registration Certificate"]
+    : ["MOU (Signed Memorandum)"];
 
   const [selectedDocId, setSelectedDocId] = useState(docTypes[0].id);
   const activeDoc = docTypes.find(d => d.id === selectedDocId) || docTypes[0];

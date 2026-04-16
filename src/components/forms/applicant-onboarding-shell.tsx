@@ -11,11 +11,9 @@ const stepIcons = [Building, MapPin, User, ClipboardList, Users, CheckCircle];
 
 export function ApplicantOnboardingShell({
   currentStep,
-  showLogo = true,
   children,
 }: {
   currentStep: string;
-  showLogo?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -23,21 +21,19 @@ export function ApplicantOnboardingShell({
       <aside className="fixed top-0 left-0 bottom-0 w-[340px] flex flex-col justify-between border-r border-slate-200 bg-[#f8fafc] px-8 pt-8 pb-4 z-10 overflow-y-auto hidden lg:flex">
         <div className="space-y-10">
           <div className="space-y-6">
-            {showLogo && (
-              <div className="flex items-center gap-3">
-                <Image 
-                  src="/images/branding/rtb-logo.png" 
-                  alt="RTB Logo" 
-                  width={55} 
-                  height={35} 
-                  className="object-contain mix-blend-multiply" 
-                />
-                <div className="flex flex-col">
-                  <span className="text-[15px] font-medium text-slate-700 leading-tight">RTB</span>
-                  <span className="text-[15px] text-slate-600 leading-tight">Accreditation</span>
-                </div>
+            <div className="flex items-center gap-3">
+              <Image 
+                src="/images/branding/rtb-logo.png" 
+                alt="RTB Logo" 
+                width={55} 
+                height={35} 
+                className="h-9 w-auto object-contain mix-blend-multiply"
+              />
+              <div className="flex flex-col">
+                <span className="text-[15px] font-medium text-slate-700 leading-tight">RTB</span>
+                <span className="text-[15px] text-slate-600 leading-tight">Accreditation</span>
               </div>
-            )}
+            </div>
 
             <Link href="/login" className="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 transition-colors hover:text-blue-700">
               <ArrowLeft className="h-3.5 w-3.5" /> Go back
@@ -54,7 +50,7 @@ export function ApplicantOnboardingShell({
                 <div key={step.key} className="flex gap-3">
                   <div className="flex flex-col items-center">
                     <span
-                      className={`flex h-9 w-9 items-center justify-center rounded-sm border transition-colors ${
+                      className={`flex h-9 w-9 items-center justify-center rounded-md border transition-colors ${
                         isActive
                           ? "border-slate-200 bg-white text-slate-800 shadow-sm"
                           : isComplete
