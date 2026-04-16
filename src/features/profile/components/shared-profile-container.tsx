@@ -145,7 +145,6 @@ export function SharedProfileContainer({
 
         {activeTab === "security" && (
           <div className="space-y-6">
-            <h3 className="text-sm  text-slate-900 border-b border-slate-100 pb-4">Update Password</h3>
             <div className="space-y-5 max-w-md">
               <div className="space-y-1.5">
                 <label className="text-xs text-[#344054] font-medium">Current Password</label>
