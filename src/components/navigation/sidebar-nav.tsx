@@ -28,7 +28,7 @@ export function SidebarNav({ role, onCloseMobile }: { role: UserRole; onCloseMob
           alt="RTB Logo"
           width={36}
           height={36}
-          className="rounded-xl"
+          
         />
         <div>
           <p className="text-sm font-bold text-[var(--app-text)]">RTB Accreditation</p>
