@@ -181,11 +181,6 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
         eqFormData.append("number", String(equipmentNumber));
         eqFormData.append("description", equipmentStatus);
         
-        // Match backend @RequestParam("equipmentOwnership") List<MultipartFile>
-        // We know equipmentProof is a blob URL, but we need the original File.
-        // For now, if proof was uploaded, we should have the file reference.
-        // Assuming proofName exists, we find the file from the input e.target.files (need to store that)
-        // ALternatively, just use the blob URL fetch if needed, but better to store File object in state.
         
         if (equipmentFile) {
            eqFormData.append("equipmentOwnership", equipmentFile);
@@ -306,8 +301,12 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
       if (selectedC) appFormData.append("competenceName", selectedC.name);
       
       // equipmentIds and staffIds as List<UUID> in DTO - use repeated keys
-      persistedEquipmentIds.forEach(id => appFormData.append("equipmentIds", id));
-      persistedStaffIds.forEach(id => appFormData.append("staffIds", id));
+      persistedEquipmentIds.forEach(id => {
+          if (id && id !== "undefined") appFormData.append("equipmentIds", id);
+      });
+      persistedStaffIds.forEach(id => {
+          if (id && id !== "undefined") appFormData.append("staffIds", id);
+      });
       
       appFormData.append("comments", "Short Course Application submitted via Wizard");
 
@@ -317,8 +316,8 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
       await createApplication(appFormData);
       toast.success("Application submitted successfully!");
       if (onSubmit) onSubmit();
-    } catch (error) {
-      toast.error("Failed to submit application");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to submit application");
     } finally {
       setIsSubmitting(false);
     }
