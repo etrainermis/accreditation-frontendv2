@@ -239,6 +239,7 @@ export function TechnicalStaffStep({
                       onClick={() => {
                         setNewStaff({
                           qualification: String(staff.qualification),
+                          position: staff.position ? String(staff.position) : "",
                           specialization: String(staff.specialization),
                           status: String(staff.status),
                           document: staff.document || null,

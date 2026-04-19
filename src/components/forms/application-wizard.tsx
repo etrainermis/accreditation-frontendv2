@@ -878,15 +878,13 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   hideIcon={true}
                 />
                 <PrimaryButton
-                  label="Submit Application"
+                  label={isSubmitting ? "Submitting..." : "Submit Application"}
                   onClick={handleFinalSubmit}
                   disabled={isSubmitting}
                   variant="primary"
                   className="flex-1"
                   hideIcon={true}
-                >
-                  {isSubmitting && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
-                </PrimaryButton>
+                />
               </div>
               <div className="flex flex-col gap-3">
                 {[
