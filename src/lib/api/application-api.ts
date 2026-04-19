@@ -68,13 +68,10 @@ export async function createTrainingEquipment(formData: FormData): Promise<ApiRe
 /**
  * Add technical staff entry
  */
-export async function addTechnicalStaff(staffData: any): Promise<ApiResponse<TechnicalStaff>> {
+export async function addTechnicalStaff(formData: FormData): Promise<ApiResponse<TechnicalStaff>> {
   return apiRequest<ApiResponse<TechnicalStaff>>("/v1/staff/add", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(staffData),
+    body: formData,
   });
 }
 

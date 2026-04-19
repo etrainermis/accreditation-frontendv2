@@ -55,7 +55,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
   const [staffList, setStaffList] = useState<TechnicalStaffEntry[]>(globalStaffList);
-  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", specialization: "", status: "" });
+  const [newStaff, setNewStaff] = useState<TechnicalStaff>({ qualification: "", position: "", specialization: "", status: "" });
   const [editingStaffIdx, setEditingStaffIdx] = useState<number | null>(null);
   const [staffToDelete, setStaffToDelete] = useState<number | null>(null);
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);
@@ -124,6 +124,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
           if (admin.staffList) {
             setStaffList(admin.staffList.map((s: any) => ({
               qualification: s.qualification,
+              position: s.position,
               specialization: s.specialization,
               number: s.numberStaff,
               status: s.availabilityStatus,
@@ -227,6 +228,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
       // Staff List
       staffList.forEach((staff, index) => {
         adminFormData.append(`staffList[${index}].qualification`, staff.qualification);
+        adminFormData.append(`staffList[${index}].position`, staff.position);
         adminFormData.append(`staffList[${index}].specialization`, staff.specialization);
         adminFormData.append(`staffList[${index}].numberStaff`, String(staff.number));
         adminFormData.append(`staffList[${index}].availabilityStatus`, staff.status);

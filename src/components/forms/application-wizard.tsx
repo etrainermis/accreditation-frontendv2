@@ -95,13 +95,17 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
 
   // Step 4 state
   const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
+  const [curriculumFiles, setCurriculumFiles] = useState<File[]>([]);
 
   // Step 5 state
   const [staffQualification, setStaffQualification] = useState("");
   const [staffPosition, setStaffPosition] = useState("");
-  const [staffNumber, setStaffNumber] = useState(1);
+  const [staffSpecialization, setStaffSpecialization] = useState("");
   const [staffStatus, setStaffStatus] = useState("");
-  const [allocations, setAllocations] = useState<Array<{ id: string; qualification: string; position: string; quantity: number; status: string }>>([]);
+  const [staffNumber, setStaffNumber] = useState(1);
+  const [staffFile, setStaffFile] = useState<File | null>(null);
+  const [staffFileName, setStaffFileName] = useState<string | null>(null);
+  const [allocations, setAllocations] = useState<Array<{ id: string; qualification: string; position: string; specialization: string; quantity: number; status: string }>>([]);
 
   // Step 6 state
   const [expandedReviewSection, setExpandedReviewSection] = useState<number | null>(null);
@@ -109,7 +113,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   // Dynamic Data State
   const [trades, setTrades] = useState<Trade[]>([]);
   const [competencies, setCompetencies] = useState<Competence[]>([]);
-  const [peristedEquipmentIds, setPersistedEquipmentIds] = useState<string[]>([]);
+  const [persistedEquipmentIds, setPersistedEquipmentIds] = useState<string[]>([]);
   const [persistedStaffIds, setPersistedStaffIds] = useState<string[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -198,7 +202,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
             proof: equipmentProof,
             proofName: equipmentProofName
           }]);
-          setPersistedEquipmentIds([...peristedEquipmentIds, newEq.id]);
+          setPersistedEquipmentIds([...persistedEquipmentIds, newEq.id]);
           
           setEquipmentName("");
           setEquipmentStatus("");
@@ -220,40 +224,27 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   const removeEquipment = (id: string) => { setEquipments(equipments.filter(eq => eq.id !== id)); };
 
   const handleAddStaff = async () => {
-    if (staffQualification && staffPosition && staffStatus) {
+    if (staffQualification && staffPosition && staffStatus && staffNumber > 0) {
       setIsDataLoading(true);
       try {
-        // UI to Enum mapping
-        const qualMap: Record<string, string> = {
-          "Bachelor's Degree": "BACHELORS",
-          "Master's Degree": "MASTERS",
-          "PhD": "PHD",
-          "Diploma": "A1",
-        };
-        const posMap: Record<string, string> = {
-          "Instructor": "INSTRUCTOR",
-          "Teaching Assistant": "TECHNICAL_COORDINATOR",
-          "Lab Technician": "LAB_ASSISTANT",
-        };
-        const statusMap: Record<string, string> = {
-          "Full-Time": "FULL_TIME",
-          "Part-Time": "PART_TIME",
-          "Contract": "CONTRACT",
-        };
+        const staffFormData = new FormData();
+        staffFormData.append("qualification", staffQualification);
+        staffFormData.append("position", staffPosition);
+        staffFormData.append("specialization", staffSpecialization);
+        staffFormData.append("numberStaff", String(staffNumber));
+        staffFormData.append("availabilityStatus", staffStatus);
+        
+        if (staffFile) {
+          staffFormData.append("document", staffFile);
+        }
 
-        const staffData = {
-          qualification: qualMap[staffQualification] || "A1",
-          position: posMap[staffPosition] || "INSTRUCTOR",
-          numberStaff: staffNumber,
-          availabilityStatus: statusMap[staffStatus] || "CONTRACT",
-        };
-
-        const res = await addTechnicalStaff(staffData);
+        const res = await addTechnicalStaff(staffFormData);
         if (res.success) {
           setAllocations([...allocations, {
             id: res.data.id,
             qualification: staffQualification,
             position: staffPosition,
+            specialization: staffSpecialization,
             quantity: staffNumber,
             status: staffStatus
           }]);
@@ -261,8 +252,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
           
           setStaffQualification("");
           setStaffPosition("");
+          setStaffSpecialization("");
           setStaffStatus("");
           setStaffNumber(1);
+          setStaffFile(null);
+          setStaffFileName(null);
           toast.success("Staff record saved");
         }
       } catch (error) {
@@ -277,7 +271,10 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
 
   const handleCurriculumUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files).map(file => {
+      const newFiles = Array.from(e.target.files);
+      setCurriculumFiles(prev => [...prev, ...newFiles]);
+
+      const newDocs = newFiles.map(file => {
         const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
         const sizeRounded = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
         return {
@@ -285,20 +282,11 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
           name: file.name,
           size: sizeRounded,
           extension: ext,
-          progress: 0
+          progress: 100
         };
       });
 
-      setCurriculumDocs(prev => [...prev, ...newFiles]);
-
-      newFiles.forEach(file => {
-        let currentProgress = 0;
-        const interval = setInterval(() => {
-          currentProgress += Math.floor(Math.random() * 20) + 10;
-          if (currentProgress >= 100) { currentProgress = 100; clearInterval(interval); }
-          setCurriculumDocs(prev => prev.map(d => d.id === file.id ? { ...d, progress: currentProgress } : d));
-        }, 400);
-      });
+      setCurriculumDocs(prev => [...prev, ...newDocs]);
       e.target.value = '';
     }
   };
@@ -317,20 +305,14 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
       if (selectedCompetency) appFormData.append("competenceId", selectedCompetency);
       if (selectedC) appFormData.append("competenceName", selectedC.name);
       
-      // equipmentIds and staffIds as List<UUID> in DTO
-      peristedEquipmentIds.forEach((id, i) => appFormData.append(`equipmentIds[${i}]`, id));
-      persistedStaffIds.forEach((id, i) => appFormData.append(`staffIds[${i}]`, id));
+      // equipmentIds and staffIds as List<UUID> in DTO - use repeated keys
+      persistedEquipmentIds.forEach(id => appFormData.append("equipmentIds", id));
+      persistedStaffIds.forEach(id => appFormData.append("staffIds", id));
       
       appFormData.append("comments", "Short Course Application submitted via Wizard");
 
-      // Curriculum files - matching backend @RequestParam("curriculumDocuments") List<MultipartFile>
-      // We need to store original Files in state to do this correctly, currently they are just descriptors.
-      // I'll grab them from the hidden input if they exist, or assuming the upload handler stores them.
-      // For this integration, I'll grab from the curriculum upload input.
-      const files = (document.getElementById("curriculum-upload") as HTMLInputElement)?.files;
-      if (files) {
-        Array.from(files).forEach(file => appFormData.append("curriculumDocuments", file));
-      }
+      // Curriculum files
+      curriculumFiles.forEach(file => appFormData.append("curriculumDocuments", file));
 
       await createApplication(appFormData);
       toast.success("Application submitted successfully!");
@@ -766,12 +748,44 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Qualification <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffQualification} onChange={(e) => setStaffQualification(e.target.value)}><option value="" disabled>Select ..</option><option value="Bachelor's Degree">Bachelor&apos;s Degree</option><option value="Master's Degree">Master&apos;s Degree</option><option value="PhD">PhD</option><option value="Diploma">Diploma</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffQualification} onChange={(e) => setStaffQualification(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="CERTIFICATE">Certificate</option>
+                          <option value="A3">A3</option>
+                          <option value="A2">A2</option>
+                          <option value="A1">A1 (Diploma)</option>
+                          <option value="A0">A0 (Bachelor's)</option>
+                          <option value="BACHELORS">Bachelor's Degree</option>
+                          <option value="MASTERS">Master's Degree</option>
+                          <option value="PHD">PhD</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
                     </div>
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Position <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffPosition} onChange={(e) => setStaffPosition(e.target.value)}><option value="" disabled>Select ..</option><option value="Instructor">Instructor</option><option value="Teaching Assistant">Teaching Assistant</option><option value="Lab Technician">Lab Technician</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffPosition} onChange={(e) => setStaffPosition(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="INSTRUCTOR">Instructor</option>
+                          <option value="LAB_ASSISTANT">Lab Assistant</option>
+                          <option value="TECHNICAL_COORDINATOR">Technical Coordinator</option>
+                          <option value="MANAGER">Manager</option>
+                          <option value="PRINCIPAL">Principal</option>
+                          <option value="HEADTEACHER">Headteacher</option>
+                          <option value="LEGAL_ADVISOR">Legal Advisor</option>
+                          <option value="CEO">CEO</option>
+                          <option value="MANAGING_DIRECTOR">Managing Director</option>
+                          <option value="DIRECTOR_GENERAL">Director General</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
                     </div>
+                  </div>
+                  <div className="mb-5">
+                    <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Specialization <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder="e.g. AI, Civil Eng, etc." value={staffSpecialization} onChange={(e) => setStaffSpecialization(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
@@ -780,7 +794,28 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                     </div>
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Availability Status <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffStatus} onChange={(e) => setStaffStatus(e.target.value)}><option value="" disabled>Select ..</option><option value="Full-Time">Full-Time</option><option value="Part-Time">Part-Time</option><option value="Contract">Contract</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffStatus} onChange={(e) => setStaffStatus(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="FULL_TIME">Full Time</option>
+                          <option value="PART_TIME">Part Time</option>
+                          <option value="VISITING">Visiting</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5">
+                    <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Supporting Training Program Document <span className="text-red-500">*</span></label>
+                    <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white px-0 items-center">
+                      <div className="flex-1 truncate border-r border-slate-200 px-3 py-2 text-[13px] text-slate-400 leading-tight">{staffFileName || "Select ..."}</div>
+                      <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100">
+                        <UploadCloud className="h-4 w-4 text-slate-500" />Upload
+                        <input id="staff-doc-upload" type="file" accept="*" className="hidden" onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) { setStaffFile(file); setStaffFileName(file.name); e.target.value = ''; }
+                        }} />
+                      </label>
                     </div>
                   </div>
                 </div>
@@ -791,7 +826,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm group hover:border-[#0A77FF] transition-colors">
                         <div className="flex justify-between items-start">
                           <div>
-                            <p className="text-[13px] font-bold text-slate-800">{alloc.position}</p>
+                            <p className="text-[13px] font-bold text-slate-800">{alloc.position} ({alloc.specialization})</p>
                             <p className="text-[11px] font-medium text-slate-500">{alloc.qualification} • {alloc.status}</p>
                           </div>
                           <PrimaryButton
