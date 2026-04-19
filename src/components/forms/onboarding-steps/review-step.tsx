@@ -38,10 +38,6 @@ export function ReviewApplicationStep({
   staffList,
 }: ReviewApplicationStepProps) {
 
-
-
-
-
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-slate-200 bg-slate-50 p-6 shadow-sm overflow-hidden text-center">
@@ -158,12 +154,16 @@ export function ReviewApplicationStep({
           </div>
           <div className="p-5 space-y-4">
             <div>
-              <span className="text-[12px] text-slate-500 block mb-1">Institution&apos;s Mission</span>
-              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution's mission"] || <span className="italic text-slate-400">Not provided</span>}</p>
+              <span className="text-[12px] text-slate-500 block mb-1">Institution Summary</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution Summary"] || <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
             <div>
-              <span className="text-[12px] text-slate-500 block mb-1">Institution&apos;s Vision</span>
-              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution's vision"] || <span className="italic text-slate-400">Not provided</span>}</p>
+              <span className="text-[12px] text-slate-500 block mb-1">Mission or Mandate</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Mission or Mandate"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">Programs Offered</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Programs Offered"] || <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
           </div>
         </div>

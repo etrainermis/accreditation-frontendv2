@@ -98,9 +98,9 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
           setFormData(prev => ({ ...prev, ...mappedFormData }));
           setAboutText({
-            institutionSummary: inst.institutionSummary || "",
-            mission: inst.mission || "",
-            programsOffered: inst.programsOffered || "",
+            "Institution Summary": inst.institutionSummary || "",
+            "Mission or Mandate": inst.mission || "",
+            "Programs Offered": inst.programsOffered || "",
           });
         }
 
@@ -178,9 +178,9 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
       instFormData.append("village", formData.village || "");
       instFormData.append("address_line", formData.address_line || "");
 
-      instFormData.append("institutionSummary", aboutText.institutionSummary || "");
-      instFormData.append("mission", aboutText.mission || "");
-      instFormData.append("programsOffered", aboutText.programsOffered || "");
+      instFormData.append("institutionSummary", aboutText["Institution Summary"] || "");
+      instFormData.append("mission", aboutText["Mission or Mandate"] || "");
+      instFormData.append("programsOffered", aboutText["Programs Offered"] || "");
 
       // Handle files - Key IDs must match InstitutionDetailsStep values
       if (certificates.regCert) instFormData.append("registrationCertificate", certificates.regCert as File);
