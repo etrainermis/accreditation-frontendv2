@@ -78,22 +78,24 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         const instRes = await getMyInstitution();
         if (instRes.success && instRes.data) {
           const inst = instRes.data;
+          
+          // Map backend keys to UI Label keys
           const mappedFormData: Record<string, string> = {
-            institutionName: inst.institutionName,
-            institutionEmail: inst.institutionEmail,
-            phoneNumber: inst.phoneNumber,
-            poBox: inst.poBox,
-            institutionType: inst.institutionType,
-            institutionCategory: inst.institutionCategory || "SCHOOL",
+            "Name of Institution": inst.institutionName || "",
+            "Email": inst.institutionEmail || "",
+            "Phone Number": inst.phoneNumber || "",
+            "P.O Box": inst.poBox || "",
+            "Institution Type": inst.institutionType || "",
+            "Institution Category": inst.institutionCategory || "SCHOOL",
           };
 
           if (inst.locationAddress) {
-            mappedFormData.province = inst.locationAddress.province;
-            mappedFormData.district = inst.locationAddress.district;
-            mappedFormData.sector = inst.locationAddress.sector;
-            mappedFormData.cell = inst.locationAddress.cell;
-            mappedFormData.village = inst.locationAddress.village;
-            mappedFormData.address_line = inst.locationAddress.address_line;
+            mappedFormData["Province"] = inst.locationAddress.province || "";
+            mappedFormData["District"] = inst.locationAddress.district || "";
+            mappedFormData["Sector"] = inst.locationAddress.sector || "";
+            mappedFormData["Cell"] = inst.locationAddress.cell || "";
+            mappedFormData["Village"] = inst.locationAddress.village || "";
+            mappedFormData["Address Line"] = inst.locationAddress.address_line || "";
           }
 
           setFormData(prev => ({ ...prev, ...mappedFormData }));
@@ -160,23 +162,23 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   async function handlePersistData(isFinalSubmit = false) {
     setIsLoading(true);
     try {
-      // 1. Prepare Institution FormData
+      // 1. Prepare Institution FormData 
+      // Mapping UI Labels back to Backend Keys with nested object syntax for Spring binding
       const instFormData = new FormData();
-      instFormData.append("institutionName", formData.institutionName || "");
-      instFormData.append("institutionEmail", formData.institutionEmail || "");
-      instFormData.append("phoneNumber", formData.phoneNumber || "");
-      instFormData.append("poBox", formData.poBox || "");
-      instFormData.append("institutionType", formData.institutionType || "PRIVATE");
-      instFormData.append("institutionCategory", formData.institutionCategory || "SCHOOL");
+      instFormData.append("institutionName", formData["Name of Institution"] || "");
+      instFormData.append("institutionEmail", formData["Email"] || "");
+      instFormData.append("phoneNumber", formData["Phone Number"] || "");
+      instFormData.append("poBox", formData["P.O Box"] || "");
+      instFormData.append("institutionType", formData["Institution Type"] || "PRIVATE");
+      instFormData.append("institutionCategory", formData["Institution Category"] || "SCHOOL");
       
-      // Address nested in Institution object in backend? Let's check DTO.
-      // Usually flattened or nested in DTO.
-      instFormData.append("province", formData.province || "");
-      instFormData.append("district", formData.district || "");
-      instFormData.append("sector", formData.sector || "");
-      instFormData.append("cell", formData.cell || "");
-      instFormData.append("village", formData.village || "");
-      instFormData.append("address_line", formData.address_line || "");
+      // Bind to nested LocationAddress object in Institution model
+      instFormData.append("locationAddress.province", formData["Province"] || "");
+      instFormData.append("locationAddress.district", formData["District"] || "");
+      instFormData.append("locationAddress.sector", formData["Sector"] || "");
+      instFormData.append("locationAddress.cell", formData["Cell"] || "");
+      instFormData.append("locationAddress.village", formData["Village"] || "");
+      instFormData.append("locationAddress.address_line", formData["Address Line"] || "");
 
       instFormData.append("institutionSummary", aboutText["Institution Summary"] || "");
       instFormData.append("mission", aboutText["Mission or Mandate"] || "");
@@ -199,6 +201,19 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
       // 2. Prepare Administrative FormData
       const adminFormData = new FormData();
       
+      // Map basic info for DTO
+      adminFormData.append("institutionName", formData["Name of Institution"] || "");
+      adminFormData.append("institutionEmail", formData["Email"] || "");
+      adminFormData.append("phoneNumber", formData["Phone Number"] || "");
+      adminFormData.append("institutionType", formData["Institution Type"] || "PRIVATE");
+      adminFormData.append("province", formData["Province"] || "");
+      adminFormData.append("district", formData["District"] || "");
+      adminFormData.append("sector", formData["Sector"] || "");
+      adminFormData.append("cell", formData["Cell"] || "");
+      adminFormData.append("village", formData["Village"] || "");
+      adminFormData.append("address_line", formData["Address Line"] || "");
+      adminFormData.append("mission", aboutText["Mission or Mandate"] || "");
+
       // Representatives
       legalReps.forEach((rep, index) => {
         adminFormData.append(`representatives[${index}].firstName`, rep.firstName);
