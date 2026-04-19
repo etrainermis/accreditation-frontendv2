@@ -47,7 +47,16 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
   });
 
   if (!response.ok) {
-    throw new Error(`API request failed for ${path}. Replace the placeholder helper with the real backend contract.`);
+    let errorMessage = `API request failed for ${path}`;
+    try {
+      const errorData = await response.json();
+      if (errorData?.message) {
+        errorMessage = errorData.message;
+      }
+    } catch (e) {
+      // Body is not JSON, use default error message
+    }
+    throw new Error(errorMessage);
   }
 
   return (await response.json()) as T;
