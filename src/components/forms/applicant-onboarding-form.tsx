@@ -182,16 +182,16 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
       instFormData.append("mission", aboutText.mission || "");
       instFormData.append("programsOffered", aboutText.programsOffered || "");
 
-      // Handle files
+      // Handle files - Key IDs must match InstitutionDetailsStep values
       if (certificates.regCert) instFormData.append("registrationCertificate", certificates.regCert as File);
       if (certificates.appLetter) instFormData.append("applicationLetter", certificates.appLetter as File);
-      if (certificates.trainingContent) instFormData.append("trainingContent", certificates.trainingContent as File);
+      if (certificates.trainContent) instFormData.append("trainingContent", certificates.trainContent as File);
       if (certificates.infraPhoto) instFormData.append("photographInfrastructure", certificates.infraPhoto as File);
       if (certificates.equipOwnership) instFormData.append("equipmentOwnership", certificates.equipOwnership as File);
-      if (certificates.premOwnership) instFormData.append("premisesOwnership", certificates.premOwnership as File);
+      if (certificates.premiseOwnership) instFormData.append("premisesOwnership", certificates.premiseOwnership as File);
       if (certificates.skillsGap) instFormData.append("skillsGapReport", certificates.skillsGap as File);
       if (certificates.mou) instFormData.append("mouWithPartners", certificates.mou as File);
-      if (certificates.otherDocs) instFormData.append("otherDocuments", certificates.otherDocs as File);
+      if (certificates.other) instFormData.append("otherDocuments", certificates.other as File);
 
       const instResult = await createInstitution(instFormData);
       if (!instResult.success) throw new Error(instResult.message || "Failed to save institution details");

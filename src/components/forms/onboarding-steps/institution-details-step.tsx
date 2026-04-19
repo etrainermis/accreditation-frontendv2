@@ -22,17 +22,21 @@ interface DocRequirement {
 
 const SCHOOL_DOCS: DocRequirement[] = [
   { id: "appLetter", label: "Application Letter", required: true },
+  { id: "regCert", label: "Registration Certificate", required: true },
   { id: "trainContent", label: "Training Content", required: true },
-  { id: "nesaAccred", label: "Accreditation from NESA", required: true },
+  { id: "infraPhoto", label: "Photographs of Infrastructures", required: true },
+  { id: "equipOwnership", label: "Proof of ownership of training equipment", required: true },
+  { id: "premiseOwnership", label: "Proof of ownership/renting of training premises", required: true },
+  { id: "skillsGap", label: "Signed skills gap report", required: false },
   { id: "mou", label: "Signed MOU with Partners", required: false },
   { id: "other", label: "Other Necessary Documents", required: false },
 ];
 
 const OTHER_INSTITUTION_DOCS: DocRequirement[] = [
   { id: "appLetter", label: "Application Letter", required: true },
+  { id: "regCert", label: "Registration Certificate", required: true },
   { id: "trainContent", label: "Training Content / Curriculum", required: true },
-  { id: "regCert", label: "Recognized Registration Certificate", required: true },
-  { id: "infraPhotos", label: "Photographs of Infrastructures", required: true, multiple: true },
+  { id: "infraPhoto", label: "Photographs of Infrastructures", required: true },
   { id: "equipOwnership", label: "Proof of ownership of training equipment", required: true },
   { id: "premiseOwnership", label: "Proof of ownership/renting of training premises", required: true },
   { id: "skillsGap", label: "Signed skills gap report", required: false },
