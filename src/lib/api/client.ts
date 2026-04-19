@@ -23,14 +23,27 @@ function buildUrl(path: string, query?: RequestOptions["query"]) {
 }
 
 export async function apiRequest<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const { query, headers, ...rest } = options;
+  const { query, headers, body, ...rest } = options;
+
+  const isFormData = body instanceof FormData;
+  const requestHeaders = new Headers(headers);
+
+  // Add Authorization header if token exists
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("accessToken");
+    if (token && !requestHeaders.has("Authorization")) {
+      requestHeaders.set("Authorization", `Bearer ${token}`);
+    }
+  }
+
+  if (!isFormData && !requestHeaders.has("Content-Type")) {
+    requestHeaders.set("Content-Type", "application/json");
+  }
 
   const response = await fetch(buildUrl(path, query), {
     ...rest,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
+    body,
+    headers: requestHeaders,
   });
 
   if (!response.ok) {

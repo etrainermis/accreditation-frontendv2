@@ -6,6 +6,14 @@ const roleHierarchy: Record<UserRole, number> = {
   supervisor: 3,
   "curriculum-evaluator": 2,
   "super-admin": 4,
+  SUPERADMIN: 4,
+  ADMIN: 4,
+  SUPERVISOR: 3,
+  EVALUATOR: 2,
+  CURRICULUM_EVALUATOR: 2,
+  RTB_STAFF_CURRICULUM: 2,
+  SCHOOL_MANAGER_PUBLIC: 1,
+  SCHOOL_MANAGER: 1,
 };
 
 export function canAccessPortal(session: AuthSession, portal: PortalAccess) {
@@ -17,11 +25,11 @@ export function canAccessPortal(session: AuthSession, portal: PortalAccess) {
     return false;
   }
 
-  return session.user.role === portal;
+  return session.user.roles.some(r => r.name === portal);
 }
 
 export function canManageEvaluators(session: AuthSession) {
-  return session.user?.role === "super-admin";
+  return session.user?.roles.some(r => r.name === "super-admin" || r.name === "SUPERADMIN");
 }
 
 export function isSameOrHigherRole(session: AuthSession, role: UserRole) {
@@ -29,5 +37,8 @@ export function isSameOrHigherRole(session: AuthSession, role: UserRole) {
     return false;
   }
 
-  return roleHierarchy[session.user.role] >= roleHierarchy[role];
+  const userRanks = session.user.roles.map(r => roleHierarchy[r.name] || 0);
+  const maxRank = Math.max(...userRanks, 0);
+  
+  return maxRank >= roleHierarchy[role];
 }
