@@ -86,7 +86,16 @@ export function ReviewApplicationStep({
                           key={i} 
                           onClick={() => {
                             const url = URL.createObjectURL(f);
-                            window.open(url, '_blank');
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = f.name; // Forces correct filename if the browser decides to download it (e.g., .docx)
+                            a.target = '_blank'; // Opens PDFs/Images in a new tab natively if supported
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            
+                            // Prevent memory leaks by revoking the blob URL after 10 seconds (gives the new tab enough time to load it)
+                            setTimeout(() => URL.revokeObjectURL(url), 10000);
                           }}
                           className="flex items-center gap-2 text-slate-700 bg-slate-50 border border-slate-100 rounded-sm px-2.5 py-1.5 w-fit hover:bg-slate-100 hover:border-slate-200 cursor-pointer transition-colors"
                           title="Click to preview document"
