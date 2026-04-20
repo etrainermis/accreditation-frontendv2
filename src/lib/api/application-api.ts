@@ -37,6 +37,23 @@ export interface TechnicalStaff {
   specialization?: string;
 }
 
+export interface ApplicantDashboardStats {
+  totalApplications: number;
+  pendingApplications: number;
+  approvedApplications: number;
+  rejectedApplications: number;
+}
+
+export interface ApplicationDTO {
+  id: string;
+  applicantName: string | null;
+  tradeName: string;
+  competenceName: string;
+  status: string;
+  submissionDate: string;
+}
+
+
 /**
  * Fetch all available RTB-approved trades
  */
@@ -82,5 +99,23 @@ export async function createApplication(formData: FormData): Promise<ApiResponse
   return apiRequest<ApiResponse>("/v1/applications", {
     method: "POST",
     body: formData,
+  });
+}
+
+/**
+ * Fetch applicant's own applications
+ */
+export async function getMyApplications(): Promise<ApiResponse<ApplicationDTO[]>> {
+  return apiRequest<ApiResponse<ApplicationDTO[]>>("/v1/applications/my-applications", {
+    method: "GET",
+  });
+}
+
+/**
+ * Fetch applicant's dashboard statistics
+ */
+export async function getApplicantDashboardStats(): Promise<ApiResponse<ApplicantDashboardStats>> {
+  return apiRequest<ApiResponse<ApplicantDashboardStats>>("/v1/applications/my-applications/stats", {
+    method: "GET",
   });
 }

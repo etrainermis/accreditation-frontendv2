@@ -9,17 +9,21 @@ import { toast } from "sonner";
 
 import { DotPatternBackground } from "@/components/layout/dot-pattern-background";
 import { getCurrentYear } from "@/lib/utils/date";
-import { signInWithPassword } from "@/lib/api/auth/auth-api";
 import { apiRequest } from "@/lib/api/client";
 import { portalNavigation } from "@/lib/config/navigation";
 import type { UserRole } from "@/types/auth";
+import { useSignInWithPassword } from "@/hooks/queries/useAuthQueries";
+import { useAppDispatch } from "@/store/hooks";
+import { setCredentials } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { mutateAsync: signIn, isPending: isLoading } = useSignInWithPassword();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,9 +32,8 @@ export default function LoginPage() {
       return;
     }
 
-    setIsLoading(true);
     try {
-      const response = await signInWithPassword({ email, password });
+      const response = await signIn({ email, password });
       
       if (!response.user || !response.accessToken) {
         throw new Error("Invalid session data received");
@@ -40,6 +43,18 @@ export default function LoginPage() {
       localStorage.setItem("accessToken", response.accessToken);
 
       const user = response.user;
+
+      // Sync user data to global Redux state
+      dispatch(setCredentials({ 
+        user: {
+          id: user.id || "",
+          email: user.email || "",
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          roles: user.roles.map((r: any) => r.name) || [],
+        }
+      }));
+
       const role = user.roles[0]?.name;
 
       if (!role) {
@@ -79,8 +94,6 @@ export default function LoginPage() {
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error instanceof Error ? error.message : "Failed to sign in. Please check your credentials.");
-    } finally {
-      setIsLoading(false);
     }
   };
 

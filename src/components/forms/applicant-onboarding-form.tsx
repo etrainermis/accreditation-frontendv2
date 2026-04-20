@@ -19,11 +19,11 @@ import { TechnicalStaffStep, type TechnicalStaff, type TechnicalStaffEntry } fro
 import { ReviewApplicationStep } from "./onboarding-steps/review-step";
 import { DeleteStaffModal } from "./onboarding-steps/delete-staff-modal";
 import { 
-  getMyInstitution, 
-  getMyAdministrativeProfile, 
-  createInstitution, 
-  createAdministrativeProfile 
-} from "@/lib/api/onboarding-api";
+  useGetMyInstitution, 
+  useGetMyAdministrativeProfile, 
+  useCreateInstitution, 
+  useCreateAdministrativeProfile 
+} from "@/hooks/queries/useOnboardingQueries";
 
 const stepIcons = [Building, MapPin, User, ClipboardList, Users, CheckCircle];
 
@@ -50,7 +50,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
   const [legalReps, setLegalReps] = useState<LegalRep[]>(globalLegalReps);
   const [isAddingRep, setIsAddingRep] = useState(false);
-  const [newRep, setNewRep] = useState<LegalRep>({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
+  const [newRep, setNewRep] = useState<LegalRep>({ firstName: "", lastName: "", position: "DIRECTOR_GENERAL", gender: "MALE", email: "", phone: "" });
   const [aboutText, setAboutText] = useState<Record<string, string>>(globalAboutText);
   const [aboutSubStep, setAboutSubStep] = useState<1 | 2 | 3>(1);
   const [staffNumber, setStaffNumber] = useState(0);
@@ -61,85 +61,80 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
   const [formData, setFormData] = useState<Record<string, string>>(globalFormData);
   
   const [isLoading, setIsLoading] = useState(false);
-  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const router = useRouter();
+
+  const { data: instRes, isFetching: isInstLoading } = useGetMyInstitution();
+  const { data: adminRes, isFetching: isAdminLoading } = useGetMyAdministrativeProfile();
+  const { mutateAsync: createInstitutionMutate } = useCreateInstitution();
+  const { mutateAsync: createAdministrativeMutate } = useCreateAdministrativeProfile();
+  const isInitialLoading = isInstLoading || isAdminLoading;
 
   // Load existing data on mount (Resume logic)
   useEffect(() => {
-    async function loadData() {
-      // Check if user is logged in
-      const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
-      if (!token) {
-        router.push("/login");
-        return;
+    const token = typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+    if (!token) {
+      router.push("/login");
+    }
+  }, [router]);
+
+  useEffect(() => {
+    if (instRes?.success && instRes.data) {
+      const inst = instRes.data;
+      
+      // Map backend keys to UI Label keys
+      const mappedFormData: Record<string, string> = {
+        "Name of Institution": inst.institutionName || "",
+        "Email": inst.institutionEmail || "",
+        "Phone Number": inst.phoneNumber || "",
+        "P.O Box": inst.poBox || "",
+        "Institution Type": inst.institutionType || "",
+        "Institution Category": inst.institutionCategory || "SCHOOL",
+      };
+
+      if (inst.locationAddress) {
+        mappedFormData["Province"] = inst.locationAddress.province || "";
+        mappedFormData["District"] = inst.locationAddress.district || "";
+        mappedFormData["Sector"] = inst.locationAddress.sector || "";
+        mappedFormData["Cell"] = inst.locationAddress.cell || "";
+        mappedFormData["Village"] = inst.locationAddress.village || "";
+        mappedFormData["Address Line"] = inst.locationAddress.address_line || "";
       }
 
-      try {
-        const instRes = await getMyInstitution();
-        if (instRes.success && instRes.data) {
-          const inst = instRes.data;
-          
-          // Map backend keys to UI Label keys
-          const mappedFormData: Record<string, string> = {
-            "Name of Institution": inst.institutionName || "",
-            "Email": inst.institutionEmail || "",
-            "Phone Number": inst.phoneNumber || "",
-            "P.O Box": inst.poBox || "",
-            "Institution Type": inst.institutionType || "",
-            "Institution Category": inst.institutionCategory || "SCHOOL",
-          };
+      setFormData(prev => ({ ...prev, ...mappedFormData }));
+      setAboutText({
+        "Institution Summary": inst.institutionSummary || "",
+        "Mission or Mandate": inst.mission || "",
+        "Programs Offered": inst.programsOffered || "",
+      });
+    }
+  }, [instRes]);
 
-          if (inst.locationAddress) {
-            mappedFormData["Province"] = inst.locationAddress.province || "";
-            mappedFormData["District"] = inst.locationAddress.district || "";
-            mappedFormData["Sector"] = inst.locationAddress.sector || "";
-            mappedFormData["Cell"] = inst.locationAddress.cell || "";
-            mappedFormData["Village"] = inst.locationAddress.village || "";
-            mappedFormData["Address Line"] = inst.locationAddress.address_line || "";
-          }
+  useEffect(() => {
+    if (adminRes?.success && adminRes.data) {
+      const admin = adminRes.data;
+      
+      if (admin.representatives) {
+        setLegalReps(admin.representatives.map((r: any) => ({
+          firstName: r.firstName,
+          lastName: r.lastName,
+          email: r.email,
+          phone: r.phoneNumber,
+          position: r.position,
+          gender: r.gender,
+        })));
+      }
 
-          setFormData(prev => ({ ...prev, ...mappedFormData }));
-          setAboutText({
-            "Institution Summary": inst.institutionSummary || "",
-            "Mission or Mandate": inst.mission || "",
-            "Programs Offered": inst.programsOffered || "",
-          });
-        }
-
-        const adminRes = await getMyAdministrativeProfile();
-        if (adminRes.success && adminRes.data) {
-          const admin = adminRes.data;
-          
-          if (admin.representatives) {
-            setLegalReps(admin.representatives.map((r: any) => ({
-              firstName: r.firstName,
-              lastName: r.lastName,
-              email: r.email,
-              phone: r.phoneNumber,
-              position: r.position,
-              gender: r.gender,
-            })));
-          }
-
-          if (admin.staffList) {
-            setStaffList(admin.staffList.map((s: any) => ({
-              qualification: s.qualification,
-              position: s.position,
-              specialization: s.specialization,
-              number: s.numberStaff,
-              status: s.availabilityStatus,
-            })));
-          }
-        }
-      } catch (error) {
-        console.error("Error loading onboarding data:", error);
-      } finally {
-        setIsInitialLoading(false);
+      if (admin.staffList) {
+        setStaffList(admin.staffList.map((s: any) => ({
+          qualification: s.qualification,
+          position: s.position,
+          specialization: s.specialization,
+          number: s.numberStaff,
+          status: s.availabilityStatus,
+        })));
       }
     }
-
-    loadData();
-  }, []);
+  }, [adminRes]);
 
   // Sync back to globals
   useEffect(() => { globalFormData = formData; }, [formData]);
@@ -187,16 +182,17 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
 
       // Handle files - Key IDs must match InstitutionDetailsStep values
       if (certificates.regCert) instFormData.append("registrationCertificate", certificates.regCert as File);
+      if (certificates.nesaCert) instFormData.append("nesaCertificate", certificates.nesaCert as File);
       if (certificates.appLetter) instFormData.append("applicationLetter", certificates.appLetter as File);
       if (certificates.trainContent) instFormData.append("trainingContent", certificates.trainContent as File);
       if (certificates.infraPhoto) instFormData.append("photographInfrastructure", certificates.infraPhoto as File);
       if (certificates.equipOwnership) instFormData.append("equipmentOwnership", certificates.equipOwnership as File);
-      if (certificates.premiseOwnership) instFormData.append("premisesOwnership", certificates.premiseOwnership as File);
+      if (certificates.premisesOwnership) instFormData.append("premisesOwnership", certificates.premisesOwnership as File);
       if (certificates.skillsGap) instFormData.append("skillsGapReport", certificates.skillsGap as File);
       if (certificates.mou) instFormData.append("mouWithPartners", certificates.mou as File);
       if (certificates.other) instFormData.append("otherDocuments", certificates.other as File);
 
-      const instResult = await createInstitution(instFormData);
+      const instResult = await createInstitutionMutate(instFormData);
       if (!instResult.success) throw new Error(instResult.message || "Failed to save institution details");
 
       // 2. Prepare Administrative FormData
@@ -234,7 +230,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         adminFormData.append(`staffList[${index}].availabilityStatus`, staff.status);
       });
 
-      const adminResult = await createAdministrativeProfile(adminFormData);
+      const adminResult = await createAdministrativeMutate(adminFormData);
       if (!adminResult.success) throw new Error(adminResult.message || "Failed to save administrative profile");
 
       if (isFinalSubmit) {
@@ -266,7 +262,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
       case "address-information":
         return <AddressInformationStep formData={formData} setFormData={setFormData} />;
       case "legal-representatives":
-        return <LegalRepresentativesStep isAddingRep={isAddingRep} legalReps={legalReps} newRep={newRep} setNewRep={setNewRep} />;
+        return <LegalRepresentativesStep isAddingRep={isAddingRep} legalReps={legalReps} newRep={newRep} setNewRep={setNewRep} onAddAnother={() => setIsAddingRep(true)} />;
       case "about-the-institution":
         return <AboutInstitutionStep fields={config.fields} subStep={aboutSubStep} aboutText={aboutText} setAboutText={setAboutText} />;
       case "technical-and-administrative-staff":
@@ -287,10 +283,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
         return (
           <ReviewApplicationStep
             formData={formData}
-            files={{
-              mou: (certificates["mou"] as File) || null,
-              registration: (certificates["regCert"] as File) || null,
-            }}
+            files={certificates}
             legalReps={legalReps}
             aboutText={aboutText}
             staffList={staffList}
@@ -376,7 +369,7 @@ export function ApplicantOnboardingForm({ step }: { step: ApplicantOnboardingSte
                 onClick={() => {
                   setLegalReps([...legalReps, newRep]);
                   setIsAddingRep(false);
-                  setNewRep({ firstName: "", lastName: "", position: "", gender: "Male", email: "", phone: "" });
+                  setNewRep({ firstName: "", lastName: "", position: "DIRECTOR_GENERAL", gender: "MALE", email: "", phone: "" });
                 }}
                 className={`flex ${primaryWidth} items-center justify-center rounded-sm bg-blue-600 px-4 py-2.5 text-sm font-semibold !text-white shadow-sm transition hover:bg-blue-700 focus:ring-4 focus:ring-blue-500/20 cursor-pointer`}
               >

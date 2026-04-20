@@ -7,6 +7,9 @@ import { useState } from "react";
 import { PageHeaderProvider } from "@/lib/context/page-header-context";
 import { LayoutGroup } from "framer-motion";
 
+import { store } from "@/store";
+import { Provider } from "react-redux";
+
 // Suppress the React 19 warning for next-themes script tag in development
 if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   const orig = console.error;
@@ -32,16 +35,18 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <TooltipProvider>
-        <PageHeaderProvider>
-          <QueryClientProvider client={queryClient}>
-            <LayoutGroup>
-              {children}
-            </LayoutGroup>
-          </QueryClientProvider>
-        </PageHeaderProvider>
-      </TooltipProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+        <TooltipProvider>
+          <PageHeaderProvider>
+            <QueryClientProvider client={queryClient}>
+              <LayoutGroup>
+                {children}
+              </LayoutGroup>
+            </QueryClientProvider>
+          </PageHeaderProvider>
+        </TooltipProvider>
+      </ThemeProvider>
+    </Provider>
   );
 }
