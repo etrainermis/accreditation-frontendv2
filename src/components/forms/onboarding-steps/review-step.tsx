@@ -7,27 +7,23 @@ import type { LegalRep } from "./legal-representatives-step";
 
 interface ReviewApplicationStepProps {
   formData: Record<string, string>;
-  files: {
-    registration: File | null;
-    mou: File | null;
-  };
+  files: Record<string, File | File[] | null>;
   legalReps: LegalRep[];
   aboutText: Record<string, string>;
   staffList: TechnicalStaffEntry[];
 }
 
 const ALL_DOC_LABELS: Record<string, string> = {
+  regCert: "Recognized Registration Certificate",
+  nesaCert: "Accreditation from NESA",
   appLetter: "Application Letter",
   trainContent: "Training Content",
-  nesaAccred: "Accreditation from NESA",
+  infraPhoto: "Photographs of Infrastructures",
+  equipOwnership: "Proof of ownership of training equipment",
+  premisesOwnership: "Proof of ownership/renting of training premises",
+  skillsGap: "Signed skills gap report",
   mou: "Signed MOU with Partners",
   other: "Other Necessary Documents",
-  trainContentCurric: "Training Content / Curriculum",
-  regCert: "Recognized Registration Certificate",
-  infraPhotos: "Photographs of Infrastructures",
-  equipOwnership: "Proof of ownership of training equipment",
-  premiseOwnership: "Proof of ownership/renting of training premises",
-  skillsGap: "Signed skills gap report",
 };
 
 export function ReviewApplicationStep({
@@ -37,10 +33,6 @@ export function ReviewApplicationStep({
   aboutText,
   staffList,
 }: ReviewApplicationStepProps) {
-
-
-
-
 
   return (
     <div className="space-y-6">
@@ -77,30 +69,58 @@ export function ReviewApplicationStep({
               <span className="text-[12px] text-slate-500 block mb-1">Phone Number</span>
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">Institution Category</span>
+              <p className="text-[13.5px] font-medium text-slate-800">{formData["Institution Category"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">P.O Box</span>
+              <p className="text-[13.5px] font-medium text-slate-800">{formData["P.O Box"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
 
-            <div className="col-span-2 pt-3 mt-1 border-t border-slate-100 flex items-center justify-between">
-              <div className="space-y-1">
-                <span className="text-[12px] text-slate-500 block">Registration Certificate</span>
-                {files.registration ? (
-                  <div className="flex items-center gap-2 text-slate-700 mt-1">
-                    <FileText className="h-4 w-4 text-blue-500" />
-                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.registration.name}</span>
+            <div className="col-span-2 pt-4 mt-2 border-t border-slate-100 grid grid-cols-2 gap-y-5 gap-x-6">
+              {Object.entries(ALL_DOC_LABELS).map(([key, label]) => {
+                const fileOrFiles = files[key];
+                if (!fileOrFiles) return null;
+
+                const fileList = Array.isArray(fileOrFiles) ? fileOrFiles : [fileOrFiles];
+
+                return (
+                  <div key={key} className="space-y-1">
+                    <span className="text-[12px] text-slate-500 block">{label}</span>
+                    <div className="space-y-1.5 mt-1">
+                      {fileList.map((f, i) => (
+                        <div 
+                          key={i} 
+                          onClick={() => {
+                            const url = URL.createObjectURL(f);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = f.name; // Forces correct filename if the browser decides to download it (e.g., .docx)
+                            a.target = '_blank'; // Opens PDFs/Images in a new tab natively if supported
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            
+                            // Prevent memory leaks by revoking the blob URL after 10 seconds (gives the new tab enough time to load it)
+                            setTimeout(() => URL.revokeObjectURL(url), 10000);
+                          }}
+                          className="flex items-center gap-2 text-slate-700 bg-slate-50 border border-slate-100 rounded-sm px-2.5 py-1.5 w-fit hover:bg-slate-100 hover:border-slate-200 cursor-pointer transition-colors"
+                          title="Click to preview document"
+                        >
+                          <FileText className="h-3.5 w-3.5 text-blue-500 shrink-0" />
+                          <span className="text-[12.5px] font-medium truncate max-w-[200px]">{f.name}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-[13.5px] italic text-slate-400 mt-0.5">No file uploaded</p>
-                )}
-              </div>
-              <div className="space-y-1">
-                <span className="text-[12px] text-slate-500 block">MOU (Signed)</span>
-                {files.mou ? (
-                  <div className="flex items-center gap-2 text-slate-700 mt-1">
-                    <FileText className="h-4 w-4 text-emerald-500" />
-                    <span className="text-[13.5px] font-medium truncate max-w-[150px]">{files.mou.name}</span>
-                  </div>
-                ) : (
-                  <p className="text-[13.5px] italic text-slate-400 col-span-2">No documents uploaded</p>
-                )}
-              </div>
+                );
+              })}
+              {Object.values(files).every(f => !f) && (
+                 <div className="col-span-2">
+                   <p className="text-[13px] italic text-slate-400">No documents uploaded.</p>
+                 </div>
+              )}
             </div>
 
           </div>
@@ -115,7 +135,7 @@ export function ReviewApplicationStep({
             <div>
               <span className="text-[12px] text-slate-500 block mb-1">Location Context</span>
               <p className="text-[13.5px] font-medium text-slate-800">
-                {[formData["Province"], formData["District"], formData["Sector"]].filter(Boolean).join(", ") || <span className="italic text-slate-400">Not provided</span>}
+                {[formData["Province"], formData["District"], formData["Sector"], formData["Cell"], formData["Village"]].filter(Boolean).join(", ") || <span className="italic text-slate-400">Not provided</span>}
               </p>
             </div>
             <div>
@@ -158,12 +178,16 @@ export function ReviewApplicationStep({
           </div>
           <div className="p-5 space-y-4">
             <div>
-              <span className="text-[12px] text-slate-500 block mb-1">Institution&apos;s Mission</span>
-              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution's mission"] || <span className="italic text-slate-400">Not provided</span>}</p>
+              <span className="text-[12px] text-slate-500 block mb-1">Institution Summary</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution Summary"] || <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
             <div>
-              <span className="text-[12px] text-slate-500 block mb-1">Institution&apos;s Vision</span>
-              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Institution's vision"] || <span className="italic text-slate-400">Not provided</span>}</p>
+              <span className="text-[12px] text-slate-500 block mb-1">Mission or Mandate</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Mission or Mandate"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">Programs Offered</span>
+              <p className="text-[13.5px] text-slate-800 leading-relaxed">{aboutText["Programs Offered"] || <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
           </div>
         </div>

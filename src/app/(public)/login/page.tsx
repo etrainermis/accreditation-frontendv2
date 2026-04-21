@@ -3,13 +3,99 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { Mail, Eye, Info, EyeClosed } from "lucide-react";
+import { Mail, Eye, Info, EyeClosed, Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 import { DotPatternBackground } from "@/components/layout/dot-pattern-background";
 import { getCurrentYear } from "@/lib/utils/date";
+import { apiRequest } from "@/lib/api/client";
+import { portalNavigation } from "@/lib/config/navigation";
+import type { UserRole } from "@/types/auth";
+import { useSignInWithPassword } from "@/hooks/queries/useAuthQueries";
+import { useAppDispatch } from "@/store/hooks";
+import { setCredentials } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const { mutateAsync: signIn, isPending: isLoading } = useSignInWithPassword();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const response = await signIn({ email, password });
+      
+      if (!response.user || !response.accessToken) {
+        throw new Error("Invalid session data received");
+      }
+
+      // Save token for subsequent requests
+      localStorage.setItem("accessToken", response.accessToken);
+
+      const user = response.user;
+
+      // Sync user data to global Redux state
+      dispatch(setCredentials({ 
+        user: {
+          id: user.id || "",
+          email: user.email || "",
+          firstName: user.firstName || "",
+          lastName: user.lastName || "",
+          roles: user.roles.map((r: any) => r.name) || [],
+        }
+      }));
+
+      const role = user.roles[0]?.name;
+
+      if (!role) {
+        throw new Error("User has no assigned roles");
+      }
+
+      toast.success(`Welcome back, ${user.firstName} ${user.lastName}!`);
+
+      // Special logic for Applicants (SCHOOL_MANAGER and SCHOOL_MANAGER_PUBLIC)
+      if (role === "SCHOOL_MANAGER" || role === "SCHOOL_MANAGER_PUBLIC") {
+        try {
+          // Check if institution is registered
+          const instResponse = await apiRequest<{ success: boolean }>("/v1/institutions/my-institution");
+          
+          if (instResponse.success === false) {
+            router.push("/applicant/onboarding");
+          } else {
+            router.push("/applicant/dashboard");
+          }
+        } catch (error) {
+          console.error("Institution check failed:", error);
+          // Fallback to onboarding if check fails (assuming no institution)
+          router.push("/applicant/onboarding");
+        }
+        return;
+      }
+
+      // Default routing for other roles
+      const navConfig = portalNavigation[role];
+      if (navConfig) {
+        router.push(navConfig.basePath);
+      } else {
+        // Fallback or unauthorized
+        toast.error("You do not have a corresponding dashboard assigned to your role.");
+        router.push("/unauthorized");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error(error instanceof Error ? error.message : "Failed to sign in. Please check your credentials.");
+    }
+  };
 
   return (
     <main className="grid min-h-screen lg:grid-cols-[1fr_480px]">
@@ -40,7 +126,7 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleLogin}>
             <div className="space-y-1.5">
               <label htmlFor="email" className="block text-xs font-medium text-slate-700">
                 Email
@@ -49,8 +135,12 @@ export default function LoginPage() {
                 <input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email"
-                  className="w-full rounded-sm border border-slate-200 px-3.5 py-2.5 pr-9 text-sm outline-none transition focus:border-[#0088FF] focus:ring-2 focus:ring-[#0088FF]/20"
+                  required
+                  disabled={isLoading}
+                  className="w-full rounded-sm border border-slate-200 px-3.5 py-2.5 pr-9 text-sm outline-none transition focus:border-[#0088FF] focus:ring-2 focus:ring-[#0088FF]/20 disabled:bg-slate-50 disabled:text-slate-500"
                 />
                 <Mail className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               </div>
@@ -64,13 +154,18 @@ export default function LoginPage() {
                 <input
                   id="password"
                   type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full rounded-sm border border-slate-200 px-3.5 py-2.5 pr-9 text-sm outline-none transition focus:border-[#0088FF] focus:ring-2 focus:ring-[#0088FF]/20"
+                  required
+                  disabled={isLoading}
+                  className="w-full rounded-sm border border-slate-200 px-3.5 py-2.5 pr-9 text-sm outline-none transition focus:border-[#0088FF] focus:ring-2 focus:ring-[#0088FF]/20 disabled:bg-slate-50 disabled:text-slate-500"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 disabled:opacity-50"
+                  disabled={isLoading}
                 >
                   {showPassword ? (
                     <Eye className="h-4 w-4" />
@@ -83,7 +178,7 @@ export default function LoginPage() {
 
             <div className="flex items-center justify-between">
               <label className="flex items-center gap-2">
-                <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-[#0088FF]" />
+                <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-[#0088FF]" disabled={isLoading} />
                 <span className="text-xs text-slate-900">Remember on this device</span>
               </label>
               <Link href="/forgot-password" className="text-xs font-medium !text-[#0088FF] hover:underline">
@@ -93,9 +188,17 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full rounded-sm bg-[#0088FF] px-5 py-2.5 text-sm text-white transition hover:bg-[#0077EE] cursor-pointer"
+              disabled={isLoading}
+              className="group relative flex w-full items-center justify-center rounded-sm bg-[#0088FF] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#0077EE] disabled:bg-blue-400 disabled:cursor-not-allowed"
             >
-              Login
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                "Login"
+              )}
             </button>
           </form>
           </div>
