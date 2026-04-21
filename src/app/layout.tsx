@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Manrope, Geist } from "next/font/google";
 import localFont from "next/font/local";
+import { Toaster } from "sonner";
 
 import { AppProviders } from "@/components/layout/app-providers";
 import { appConfig } from "@/lib/config/app";
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       <body>
         <AppProviders>{children}</AppProviders>
+        <Toaster position="top-right" expand={false} richColors />
       </body>
     </html>
   );

@@ -7,5 +7,5 @@ export async function getCurrentSession(): Promise<AuthSession> {
 }
 
 export function hasRole(session: AuthSession, role: UserRole) {
-  return session.user?.role === role;
+  return session.user?.roles.some(r => r.name === role);
 }

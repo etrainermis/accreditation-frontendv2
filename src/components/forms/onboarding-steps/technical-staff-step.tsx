@@ -6,6 +6,7 @@ import { FormCard } from "../form-card";
 
 export interface TechnicalStaff {
   qualification: string;
+  position: string;
   specialization: string;
   status: string;
   document?: File | null;
@@ -47,23 +48,43 @@ export function TechnicalStaffStep({
           onChange={(v) => setNewStaff({ ...newStaff, qualification: v })}
           required
           options={[
-            { label: "Certificate", value: "Certificate" },
+            { label: "Certificate", value: "CERTIFICATE" },
             { label: "A3", value: "A3" },
             { label: "A2", value: "A2" },
-            { label: "A1", value: "A1" },
-            { label: "A0", value: "A0" },
-            { label: "Bachelors", value: "Bachelors" },
-            { label: "Masters", value: "Masters" },
-            { label: "PhD", value: "PhD" },
+            { label: "A1 (Diploma)", value: "A1" },
+            { label: "A0 (Bachelor's)", value: "A0" },
+            { label: "Bachelor's Degree", value: "BACHELORS" },
+            { label: "Master's Degree", value: "MASTERS" },
+            { label: "PhD", value: "PHD" },
           ]}
         />
-        <FormInput
-          label="Specialization"
-          value={newStaff.specialization}
-          onChange={(v) => setNewStaff({ ...newStaff, specialization: v })}
-          placeholder="e.g. Senior Lecturer, Technician, Administrator"
-          required
-        />
+        <div className="grid grid-cols-2 gap-4">
+          <FormSelect
+            label="Position"
+            value={newStaff.position || ""}
+            onChange={(v) => setNewStaff({ ...newStaff, position: v })}
+            required
+            options={[
+              { label: "Instructor", value: "INSTRUCTOR" },
+              { label: "Lab Assistant", value: "LAB_ASSISTANT" },
+              { label: "Technical Coordinator", value: "TECHNICAL_COORDINATOR" },
+              { label: "Manager", value: "MANAGER" },
+              { label: "Principal", value: "PRINCIPAL" },
+              { label: "Headteacher", value: "HEADTEACHER" },
+              { label: "Legal Advisor", value: "LEGAL_ADVISOR" },
+              { label: "CEO", value: "CEO" },
+              { label: "Managing Director", value: "MANAGING_DIRECTOR" },
+              { label: "Director General", value: "DIRECTOR_GENERAL" },
+            ]}
+          />
+          <FormInput
+            label="Specialization"
+            value={newStaff.specialization}
+            onChange={(v) => setNewStaff({ ...newStaff, specialization: v })}
+            placeholder="e.g. AI, Civil Eng, etc."
+            required
+          />
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <label className="space-y-2 flex flex-col">
@@ -103,9 +124,9 @@ export function TechnicalStaffStep({
             onChange={(v) => setNewStaff({ ...newStaff, status: v })}
             required
             options={[
-              { label: "Full Time", value: "Full Time" },
-              { label: "Part Time", value: "Part Time" },
-              { label: "Visiting", value: "Visiting" },
+              { label: "Full Time", value: "FULL_TIME" },
+              { label: "Part Time", value: "PART_TIME" },
+              { label: "Visiting", value: "VISITING" },
             ]}
           />
         </div>
@@ -155,7 +176,7 @@ export function TechnicalStaffStep({
         <button
           type="button"
           onClick={() => {
-            if (newStaff.qualification && newStaff.specialization && newStaff.status && staffNumber > 0) {
+            if (newStaff.qualification && newStaff.position && newStaff.specialization && newStaff.status && staffNumber > 0) {
               if (editingStaffIdx !== null) {
                 const updatedList = [...staffList];
                 updatedList[editingStaffIdx] = { ...newStaff, number: staffNumber };
@@ -164,11 +185,11 @@ export function TechnicalStaffStep({
               } else {
                 setStaffList([...staffList, { ...newStaff, number: staffNumber }]);
               }
-              setNewStaff({ qualification: "", specialization: "", status: "", document: null });
+              setNewStaff({ qualification: "", position: "", specialization: "", status: "", document: null });
               setStaffNumber(0);
             }
           }}
-          disabled={!newStaff.qualification || !newStaff.specialization || !newStaff.status || staffNumber === 0}
+          disabled={!newStaff.qualification || !newStaff.position || !newStaff.specialization || !newStaff.status || staffNumber === 0}
           className="flex items-center gap-2 rounded-md bg-[#0066FF] px-4 py-3 text-sm !text-white shadow-sm transition hover:bg-blue-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           {editingStaffIdx !== null ? "Update Staff" : "Add Staff"} <UserPlus className="h-4 w-4" />
@@ -179,7 +200,7 @@ export function TechnicalStaffStep({
             type="button"
             onClick={() => {
               setEditingStaffIdx(null);
-              setNewStaff({ qualification: "", specialization: "", status: "", document: null });
+              setNewStaff({ qualification: "", position: "", specialization: "", status: "", document: null });
               setStaffNumber(0);
             }}
             className="flex items-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm transition hover:bg-slate-50 active:scale-[0.98] cursor-pointer"
@@ -218,6 +239,7 @@ export function TechnicalStaffStep({
                       onClick={() => {
                         setNewStaff({
                           qualification: String(staff.qualification),
+                          position: staff.position ? String(staff.position) : "",
                           specialization: String(staff.specialization),
                           status: String(staff.status),
                           document: staff.document || null,

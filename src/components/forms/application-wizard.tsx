@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowLeft,
   Search,
@@ -23,9 +23,20 @@ import {
   ChevronDown,
   CheckCheck,
   CheckCircle2,
-  ChevronUp
+  ChevronUp,
+  Loader2
 } from "lucide-react";
 import { PrimaryButton } from "@/components/ui/primary-button";
+import { toast } from "sonner";
+import { 
+  getAllTrades, 
+  getCompetenciesByTrade, 
+  createTrainingEquipment, 
+  addTechnicalStaff, 
+  createApplication,
+  type Trade,
+  type Competence
+} from "@/lib/api/application-api";
 
 const stepsList = [
   {
@@ -60,26 +71,6 @@ const stepsList = [
   },
 ];
 
-const trades = [
-  { id: "1", name: "Masonry" },
-  { id: "2", name: "Plumbing" },
-  { id: "3", name: "Electrical" },
-  { id: "4", name: "Software Engineering & Embedded Systems" },
-  { id: "5", name: "Carpentry" },
-  { id: "6", name: "Welding" },
-  { id: "7", name: "HVAC" },
-];
-
-const competenciesList = [
-  { id: "1", name: "JavaScript" },
-  { id: "2", name: "Fundamentals Of Programming Using C" },
-  { id: "3", name: "Masonry" },
-  { id: "4", name: "Data Structures & Algorithms" },
-  { id: "5", name: "Software Engineering & Embedded Systems" },
-  { id: "6", name: "Carpentry Basics" },
-  { id: "7", name: "Advanced Wiring" },
-];
-
 interface ApplicationWizardProps {
   onQuit?: () => void;
   onSubmit?: () => void;
@@ -99,20 +90,68 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   const [equipmentNumber, setEquipmentNumber] = useState(1);
   const [equipmentProof, setEquipmentProof] = useState<string | null>(null);
   const [equipmentProofName, setEquipmentProofName] = useState<string | null>(null);
+  const [equipmentFile, setEquipmentFile] = useState<File | null>(null);
   const [equipments, setEquipments] = useState<Array<{ id: string; name: string; quantity: number; status: string; proof: string | null; proofName: string | null }>>([]);
 
   // Step 4 state
   const [curriculumDocs, setCurriculumDocs] = useState<Array<{ id: string; name: string; size: string; extension: string; progress: number }>>([]);
+  const [curriculumFiles, setCurriculumFiles] = useState<File[]>([]);
 
   // Step 5 state
   const [staffQualification, setStaffQualification] = useState("");
   const [staffPosition, setStaffPosition] = useState("");
-  const [staffNumber, setStaffNumber] = useState(1);
+  const [staffSpecialization, setStaffSpecialization] = useState("");
   const [staffStatus, setStaffStatus] = useState("");
-  const [allocations, setAllocations] = useState<Array<{ id: string; qualification: string; position: string; quantity: number; status: string }>>([]);
+  const [staffNumber, setStaffNumber] = useState(1);
+  const [staffFile, setStaffFile] = useState<File | null>(null);
+  const [staffFileName, setStaffFileName] = useState<string | null>(null);
+  const [allocations, setAllocations] = useState<Array<{ id: string; qualification: string; position: string; specialization: string; quantity: number; status: string }>>([]);
 
   // Step 6 state
   const [expandedReviewSection, setExpandedReviewSection] = useState<number | null>(null);
+
+  // Dynamic Data State
+  const [trades, setTrades] = useState<Trade[]>([]);
+  const [competencies, setCompetencies] = useState<Competence[]>([]);
+  const [persistedEquipmentIds, setPersistedEquipmentIds] = useState<string[]>([]);
+  const [persistedStaffIds, setPersistedStaffIds] = useState<string[]>([]);
+  const [isDataLoading, setIsDataLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Fetch Trades on mount
+  useEffect(() => {
+    async function fetchTrades() {
+      try {
+        const res = await getAllTrades();
+        if (res.success) setTrades(res.data);
+      } catch (error) {
+        console.error("Failed to fetch trades:", error);
+        toast.error("Failed to load training programs");
+      }
+    }
+    fetchTrades();
+  }, []);
+
+  // Fetch Competencies when trade changes
+  useEffect(() => {
+    async function fetchCompetencies() {
+      if (!selectedTrade) {
+        setCompetencies([]);
+        return;
+      }
+      setIsDataLoading(true);
+      try {
+        const res = await getCompetenciesByTrade(selectedTrade);
+        if (res.success) setCompetencies(res.data);
+      } catch (error) {
+        console.error("Failed to fetch competencies:", error);
+        toast.error("Failed to load competencies for selected trade");
+      } finally {
+        setIsDataLoading(false);
+      }
+    }
+    fetchCompetencies();
+  }, [selectedTrade]);
 
   // Handlers
   const handleTradeContinue = () => { if (selectedTrade) setCurrentStep(2); };
@@ -126,45 +165,100 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
   const handleEquipmentProofUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+      setEquipmentFile(file);
       setEquipmentProofName(file.name);
       setEquipmentProof(URL.createObjectURL(file));
       e.target.value = '';
     }
   };
 
-  const handleAddEquipment = () => {
-    if (equipmentName.trim() && equipmentNumber > 0 && equipmentStatus) {
-      setEquipments([...equipments, {
-        id: Math.random().toString(),
-        name: equipmentName,
-        quantity: equipmentNumber,
-        status: equipmentStatus,
-        proof: equipmentProof,
-        proofName: equipmentProofName
-      }]);
-      setEquipmentName("");
-      setEquipmentStatus("");
-      setEquipmentNumber(1);
-      setEquipmentProof(null);
-      setEquipmentProofName(null);
+  const handleAddEquipment = async () => {
+    if (equipmentName.trim() && equipmentNumber > 0 && equipmentStatus && equipmentProofName) {
+      setIsDataLoading(true);
+      try {
+        const eqFormData = new FormData();
+        eqFormData.append("name", equipmentName);
+        eqFormData.append("number", String(equipmentNumber));
+        eqFormData.append("description", equipmentStatus);
+        
+        
+        if (equipmentFile) {
+           eqFormData.append("equipmentOwnership", equipmentFile);
+        }
+
+        const res = await createTrainingEquipment(eqFormData);
+        if (res.success && res.data.length > 0) {
+          const newEq = res.data[0];
+          setEquipments([...equipments, {
+            id: newEq.id,
+            name: newEq.name,
+            quantity: newEq.number,
+            status: newEq.description || equipmentStatus, // description maps to status in DTO
+            proof: equipmentProof,
+            proofName: equipmentProofName
+          }]);
+          setPersistedEquipmentIds([...persistedEquipmentIds, newEq.id]);
+          
+          setEquipmentName("");
+          setEquipmentStatus("");
+          setEquipmentNumber(1);
+          setEquipmentProof(null);
+          setEquipmentProofName(null);
+          setEquipmentFile(null);
+          toast.success("Equipment added and saved");
+        }
+      } catch (error) {
+        toast.error("Failed to add equipment to database");
+        console.error(error);
+      } finally {
+        setIsDataLoading(false);
+      }
     }
   };
 
   const removeEquipment = (id: string) => { setEquipments(equipments.filter(eq => eq.id !== id)); };
 
-  const handleAddStaff = () => {
-    if (staffQualification && staffPosition && staffStatus) {
-      setAllocations([...allocations, {
-        id: Math.random().toString(),
-        qualification: staffQualification,
-        position: staffPosition,
-        quantity: staffNumber,
-        status: staffStatus
-      }]);
-      setStaffQualification("");
-      setStaffPosition("");
-      setStaffStatus("");
-      setStaffNumber(1);
+  const handleAddStaff = async () => {
+    if (staffQualification && staffPosition && staffStatus && staffNumber > 0) {
+      setIsDataLoading(true);
+      try {
+        const staffFormData = new FormData();
+        staffFormData.append("qualification", staffQualification);
+        staffFormData.append("position", staffPosition);
+        staffFormData.append("specialization", staffSpecialization);
+        staffFormData.append("numberStaff", String(staffNumber));
+        staffFormData.append("availabilityStatus", staffStatus);
+        
+        if (staffFile) {
+          staffFormData.append("document", staffFile);
+        }
+
+        const res = await addTechnicalStaff(staffFormData);
+        if (res.success) {
+          setAllocations([...allocations, {
+            id: res.data.id,
+            qualification: staffQualification,
+            position: staffPosition,
+            specialization: staffSpecialization,
+            quantity: staffNumber,
+            status: staffStatus
+          }]);
+          setPersistedStaffIds([...persistedStaffIds, res.data.id]);
+          
+          setStaffQualification("");
+          setStaffPosition("");
+          setStaffSpecialization("");
+          setStaffStatus("");
+          setStaffNumber(1);
+          setStaffFile(null);
+          setStaffFileName(null);
+          toast.success("Staff record saved");
+        }
+      } catch (error) {
+        toast.error("Failed to add staff to database");
+      } finally {
+        setIsDataLoading(false);
+      }
     }
   };
 
@@ -172,7 +266,10 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
 
   const handleCurriculumUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      const newFiles = Array.from(e.target.files).map(file => {
+      const newFiles = Array.from(e.target.files);
+      setCurriculumFiles(prev => [...prev, ...newFiles]);
+
+      const newDocs = newFiles.map(file => {
         const ext = file.name.split('.').pop()?.toUpperCase() || 'FILE';
         const sizeRounded = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` : `${Math.round(file.size / 1024)} KB`;
         return {
@@ -180,28 +277,54 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
           name: file.name,
           size: sizeRounded,
           extension: ext,
-          progress: 0
+          progress: 100
         };
       });
 
-      setCurriculumDocs(prev => [...prev, ...newFiles]);
-
-      newFiles.forEach(file => {
-        let currentProgress = 0;
-        const interval = setInterval(() => {
-          currentProgress += Math.floor(Math.random() * 20) + 10;
-          if (currentProgress >= 100) { currentProgress = 100; clearInterval(interval); }
-          setCurriculumDocs(prev => prev.map(d => d.id === file.id ? { ...d, progress: currentProgress } : d));
-        }, 400);
-      });
+      setCurriculumDocs(prev => [...prev, ...newDocs]);
       e.target.value = '';
     }
   };
 
   const removeCurriculumDoc = (id: string) => { setCurriculumDocs(prev => prev.filter(d => d.id !== id)); };
 
-  const selectedTradeName = trades.find(t => t.id === selectedTrade)?.name || "Unknown";
-  const selectedCompetencyName = competenciesList.find(c => c.id === selectedCompetency)?.name || "Unknown";
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+    try {
+      const selectedT = trades.find(t => t.id === selectedTrade);
+      const selectedC = competencies.find(c => c.id === selectedCompetency);
+      
+      const appFormData = new FormData();
+      if (selectedTrade) appFormData.append("tradeId", selectedTrade);
+      if (selectedT) appFormData.append("tradeName", selectedT.tradeName);
+      if (selectedCompetency) appFormData.append("competenceId", selectedCompetency);
+      if (selectedC) appFormData.append("competenceName", selectedC.name);
+      
+      // equipmentIds and staffIds as List<UUID> in DTO - use repeated keys
+      persistedEquipmentIds.forEach(id => {
+          if (id && id !== "undefined") appFormData.append("equipmentIds", id);
+      });
+      persistedStaffIds.forEach(id => {
+          if (id && id !== "undefined") appFormData.append("staffIds", id);
+      });
+      
+      appFormData.append("comments", "Short Course Application submitted via Wizard");
+
+      // Curriculum files
+      curriculumFiles.forEach(file => appFormData.append("curriculumDocuments", file));
+
+      await createApplication(appFormData);
+      toast.success("Application submitted successfully!");
+      if (onSubmit) onSubmit();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to submit application");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const selectedTradeName = trades.find(t => t.id === selectedTrade)?.tradeName || "Unknown";
+  const selectedCompetencyName = competencies.find(c => c.id === selectedCompetency)?.name || "Unknown";
 
   return (
     <div className="flex flex-1 overflow-hidden rounded-2xl border border-slate-100 bg-white min-h-[700px]">
@@ -266,7 +389,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
               </div>
 
               <div className="mt-10">
-                <p className="mb-3 text-[12px] text-slate-500">24 training program(s) available for you to choose</p>
+                <p className="mb-3 text-[12px] text-slate-500">{trades.length} training program(s) available for you to choose</p>
                 <div className="relative mb-6">
                   <Search className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
                   <input
@@ -278,7 +401,10 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   />
                 </div>
                 <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {trades.map((trade) => {
+                  {(tradeSearch 
+                    ? trades.filter(t => t.tradeName.toLowerCase().includes(tradeSearch.toLowerCase()))
+                    : trades.slice(0, 6)
+                  ).map((trade) => {
                     const isSelected = selectedTrade === trade.id;
                     return (
                       <div
@@ -288,7 +414,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       >
                         <div className="flex items-center gap-3">
                           <Blocks className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
-                          <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{trade.name}</span>
+                          <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{trade.tradeName}</span>
                         </div>
                         <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${isSelected ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-300 bg-white"}`}>
                           {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
@@ -352,24 +478,31 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   />
                 </div>
                 <div className="mb-10 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {competenciesList.map((comp) => {
-                    const isSelected = selectedCompetency === comp.id;
-                    return (
-                      <div
-                        key={comp.id}
-                        onClick={() => setSelectedCompetency(comp.id)}
-                        className={`flex cursor-pointer items-center justify-between rounded-sm border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <Hexagon className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
-                          <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{comp.name}</span>
+                  {isDataLoading ? (
+                    <div className="col-span-full flex flex-col items-center py-10 gap-2">
+                       <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                       <p className="text-slate-400 text-sm">Loading competencies...</p>
+                    </div>
+                  ) : (
+                    competencies.filter(c => c.name.toLowerCase().includes(competencySearch.toLowerCase())).map((comp) => {
+                      const isSelected = selectedCompetency === comp.id;
+                      return (
+                        <div
+                          key={comp.id}
+                          onClick={() => setSelectedCompetency(comp.id)}
+                          className={`flex cursor-pointer items-center justify-between rounded-sm border p-3.5 transition-all ${isSelected ? "border-[#0A77FF] bg-blue-50/30" : "border-slate-200 hover:border-[#0A77FF]"}`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Hexagon className="h-[15px] w-[15px] text-[#0A77FF]" strokeWidth={2} />
+                            <span className="line-clamp-1 text-[12px] font-medium text-slate-600">{comp.name}</span>
+                          </div>
+                          <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${isSelected ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-300 bg-white"}`}>
+                            {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
+                          </div>
                         </div>
-                        <div className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-full border transition-colors ${isSelected ? "border-[#0A77FF] bg-[#0A77FF]" : "border-slate-300 bg-white"}`}>
-                          {isSelected && <div className="h-1.5 w-1.5 rounded-full bg-white" />}
-                        </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })
+                  )}
                 </div>
                 <div className="flex w-full gap-3">
                   <PrimaryButton
@@ -451,12 +584,12 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                       <label className="mb-2 block text-[13px] font-medium text-slate-700  uppercase tracking-wide text-[11px] text-slate-400">Proof <span className="text-red-500">*</span></label>
                       <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white px-0 items-center">
                         <div className="flex-1 truncate border-r border-slate-200 px-3 py-2 text-[13px] text-slate-400 leading-tight">{equipmentProofName || "Select ..."}</div>
-                        <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100"><UploadCloud className="h-4 w-4 text-slate-500" />Upload<input type="file" accept="image/*" className="hidden" onChange={handleEquipmentProofUpload} /></label>
+                        <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100"><UploadCloud className="h-4 w-4 text-slate-500" />Upload<input id="equipment-upload" type="file" accept="image/*" className="hidden" onChange={handleEquipmentProofUpload} /></label>
                       </div>
                     </div>
                   </div>
                 </div>
-                <PrimaryButton label="Add Equipment" icon={FolderPlus} iconPosition="right" onClick={handleAddEquipment} className="mb-8 w-fit" />
+                <PrimaryButton label="Add Equipment" icon={FolderPlus} iconPosition="right" onClick={handleAddEquipment} className="mb-8 w-fit" disabled={isDataLoading} />
                 <div className="mb-8 flex w-full gap-3">
                   <PrimaryButton
                     label="Back"
@@ -542,7 +675,7 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white shadow-sm transition-transform group-hover:scale-110"><UploadCloud className="h-6 w-6 text-slate-500 group-hover:text-[#0A77FF]" strokeWidth={1.5} /></div>
                   <p className="text-[14px] text-slate-500"><span className=" text-[#0A77FF]">Click to upload</span> or drag and drop</p>
                   <p className="mt-1 text-[11px] font-medium text-slate-400">PDF, DOCX, MP4 or FIG (max. 100MB)</p>
-                  <input type="file" multiple className="hidden" onChange={handleCurriculumUpload} />
+                  <input id="curriculum-upload" type="file" multiple className="hidden" onChange={handleCurriculumUpload} />
                 </label>
               </div>
               {curriculumDocs.length > 0 && (
@@ -614,12 +747,44 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Qualification <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffQualification} onChange={(e) => setStaffQualification(e.target.value)}><option value="" disabled>Select ..</option><option value="Bachelor's Degree">Bachelor&apos;s Degree</option><option value="Master's Degree">Master&apos;s Degree</option><option value="PhD">PhD</option><option value="Diploma">Diploma</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffQualification} onChange={(e) => setStaffQualification(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="CERTIFICATE">Certificate</option>
+                          <option value="A3">A3</option>
+                          <option value="A2">A2</option>
+                          <option value="A1">A1 (Diploma)</option>
+                          <option value="A0">A0 (Bachelor's)</option>
+                          <option value="BACHELORS">Bachelor's Degree</option>
+                          <option value="MASTERS">Master's Degree</option>
+                          <option value="PHD">PhD</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
                     </div>
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Position <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffPosition} onChange={(e) => setStaffPosition(e.target.value)}><option value="" disabled>Select ..</option><option value="Instructor">Instructor</option><option value="Teaching Assistant">Teaching Assistant</option><option value="Lab Technician">Lab Technician</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffPosition} onChange={(e) => setStaffPosition(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="INSTRUCTOR">Instructor</option>
+                          <option value="LAB_ASSISTANT">Lab Assistant</option>
+                          <option value="TECHNICAL_COORDINATOR">Technical Coordinator</option>
+                          <option value="MANAGER">Manager</option>
+                          <option value="PRINCIPAL">Principal</option>
+                          <option value="HEADTEACHER">Headteacher</option>
+                          <option value="LEGAL_ADVISOR">Legal Advisor</option>
+                          <option value="CEO">CEO</option>
+                          <option value="MANAGING_DIRECTOR">Managing Director</option>
+                          <option value="DIRECTOR_GENERAL">Director General</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
                     </div>
+                  </div>
+                  <div className="mb-5">
+                    <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Specialization <span className="text-red-500">*</span></label>
+                    <input type="text" placeholder="e.g. AI, Civil Eng, etc." value={staffSpecialization} onChange={(e) => setStaffSpecialization(e.target.value)} className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] focus:border-[#0A77FF] focus:outline-none focus:ring-1 focus:ring-[#0A77FF]" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
@@ -628,18 +793,39 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                     </div>
                     <div>
                       <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Availability Status <span className="text-red-500">*</span></label>
-                      <div className="relative"><select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffStatus} onChange={(e) => setStaffStatus(e.target.value)}><option value="" disabled>Select ..</option><option value="Full-Time">Full-Time</option><option value="Part-Time">Part-Time</option><option value="Contract">Contract</option></select><ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" /></div>
+                      <div className="relative">
+                        <select className="w-full appearance-none rounded-xl border border-slate-200 px-4 py-2.5 text-[13px] text-slate-700 font-medium bg-white focus:border-[#0A77FF] focus:outline-none" value={staffStatus} onChange={(e) => setStaffStatus(e.target.value)}>
+                          <option value="" disabled>Select ..</option>
+                          <option value="FULL_TIME">Full Time</option>
+                          <option value="PART_TIME">Part Time</option>
+                          <option value="VISITING">Visiting</option>
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-5">
+                    <label className="mb-2 block text-[11px] font-bold uppercase text-slate-400 tracking-wider">Supporting Training Program Document <span className="text-red-500">*</span></label>
+                    <div className="flex overflow-hidden rounded-xl border border-slate-200 bg-white px-0 items-center">
+                      <div className="flex-1 truncate border-r border-slate-200 px-3 py-2 text-[13px] text-slate-400 leading-tight">{staffFileName || "Select ..."}</div>
+                      <label className="flex cursor-pointer items-center gap-2 bg-slate-50 px-4 py-2.5 text-[13px] font-medium text-slate-700 hover:bg-slate-100">
+                        <UploadCloud className="h-4 w-4 text-slate-500" />Upload
+                        <input id="staff-doc-upload" type="file" accept="*" className="hidden" onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) { setStaffFile(file); setStaffFileName(file.name); e.target.value = ''; }
+                        }} />
+                      </label>
                     </div>
                   </div>
                 </div>
-                <PrimaryButton label="Add Staff" icon={UserPlus} iconPosition="right" onClick={handleAddStaff} className="mb-8 w-fit" />
+                <PrimaryButton label="Add Staff" icon={UserPlus} iconPosition="right" onClick={handleAddStaff} className="mb-8 w-fit" disabled={isDataLoading} />
                 {allocations.length > 0 && (
                   <div className="mb-8 w-full flex flex-col gap-3">
                     {allocations.map(alloc => (
                       <div key={alloc.id} className="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm group hover:border-[#0A77FF] transition-colors">
                         <div className="flex justify-between items-start">
                           <div>
-                            <p className="text-[13px] font-bold text-slate-800">{alloc.position}</p>
+                            <p className="text-[13px] font-bold text-slate-800">{alloc.position} ({alloc.specialization})</p>
                             <p className="text-[11px] font-medium text-slate-500">{alloc.qualification} • {alloc.status}</p>
                           </div>
                           <PrimaryButton
@@ -692,8 +878,9 @@ export function ApplicationWizard({ onQuit, onSubmit }: ApplicationWizardProps) 
                   hideIcon={true}
                 />
                 <PrimaryButton
-                  label="Submit Application"
-                  onClick={onSubmit}
+                  label={isSubmitting ? "Submitting..." : "Submit Application"}
+                  onClick={handleFinalSubmit}
+                  disabled={isSubmitting}
                   variant="primary"
                   className="flex-1"
                   hideIcon={true}

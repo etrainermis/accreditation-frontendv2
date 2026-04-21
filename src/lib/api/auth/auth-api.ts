@@ -3,11 +3,11 @@ import type { ApiSingleResponse, AuthSession } from "@/types";
 import { apiRequest } from "@/lib/api/client";
 
 export function getSessionQuery() {
-  return apiRequest<ApiSingleResponse<AuthSession>>("/auth/session");
+  return apiRequest<AuthSession>("/v1/auth/session");
 }
 
 export function signInWithPassword(payload: { email: string; password: string }) {
-  return apiRequest<ApiSingleResponse<AuthSession>>("/auth/login", {
+  return apiRequest<AuthSession>("/v1/auth/signin", {
     method: "POST",
     body: JSON.stringify(payload),
   });

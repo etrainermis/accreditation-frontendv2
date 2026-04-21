@@ -12,8 +12,9 @@ import {
 } from "lucide-react";
 
 import type { PortalNavigation } from "@/types/navigation";
+import type { UserRole } from "@/types/auth";
 
-export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation> = {
+export const portalNavigation = {
   applicant: {
     role: "applicant",
     label: "Applicant Portal",
@@ -77,4 +78,14 @@ export const portalNavigation: Record<PortalNavigation["role"], PortalNavigation
       { title: "Notifications", href: "/supervisor/notifications", description: "", icon: Bell },
     ],
   },
-};
+} as unknown as Record<UserRole, PortalNavigation>;
+
+// Map backend roles to portal navigation configurations
+portalNavigation["SUPERADMIN"] = portalNavigation["super-admin"];
+portalNavigation["ADMIN"] = portalNavigation["super-admin"];
+portalNavigation["SUPERVISOR"] = portalNavigation["supervisor"];
+portalNavigation["EVALUATOR"] = portalNavigation["evaluator"];
+portalNavigation["CURRICULUM_EVALUATOR"] = portalNavigation["curriculum-evaluator"];
+portalNavigation["RTB_STAFF_CURRICULUM"] = portalNavigation["curriculum-evaluator"];
+portalNavigation["SCHOOL_MANAGER_PUBLIC"] = portalNavigation["applicant"];
+portalNavigation["SCHOOL_MANAGER"] = portalNavigation["applicant"];

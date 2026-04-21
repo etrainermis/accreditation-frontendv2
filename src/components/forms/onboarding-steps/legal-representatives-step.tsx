@@ -18,6 +18,7 @@ interface LegalRepresentativesStepProps {
   legalReps: LegalRep[];
   newRep: LegalRep;
   setNewRep: (rep: LegalRep | ((prev: LegalRep) => LegalRep)) => void;
+  onAddAnother?: () => void;
 }
 
 export function LegalRepresentativesStep({
@@ -25,6 +26,7 @@ export function LegalRepresentativesStep({
   legalReps,
   newRep,
   setNewRep,
+  onAddAnother,
 }: LegalRepresentativesStepProps) {
   if (isAddingRep || legalReps.length === 0) {
     return (
@@ -51,10 +53,10 @@ export function LegalRepresentativesStep({
           onChange={(v) => setNewRep({ ...newRep, position: v })}
           required
           options={[
-            { label: "Director General", value: "Director General" },
-            { label: "Principal", value: "Principal" },
-            { label: "Legal Advisor", value: "Legal Advisor" },
-            { label: "Manager", value: "Manager" },
+            { label: "Director General", value: "DIRECTOR_GENERAL" },
+            { label: "Principal", value: "PRINCIPAL" },
+            { label: "Legal Advisor", value: "LEGAL_ADVISOR" },
+            { label: "Manager", value: "MANAGER" },
           ]}
         />
         <FormSelect
@@ -63,8 +65,8 @@ export function LegalRepresentativesStep({
           onChange={(v) => setNewRep({ ...newRep, gender: v })}
           required
           options={[
-            { label: "Male", value: "Male" },
-            { label: "Female", value: "Female" },
+            { label: "Male", value: "MALE" },
+            { label: "Female", value: "FEMALE" },
           ]}
         />
         <FormInput
@@ -91,6 +93,19 @@ export function LegalRepresentativesStep({
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-col items-center gap-2 mb-2">
+        <p className="text-[13px] text-blue-400">You can add multiple representatives</p>
+        <div className="w-full flex justify-end">
+          <button 
+            type="button" 
+            onClick={onAddAnother} 
+            className="text-[#0088FF] text-sm font-medium hover:underline flex items-center"
+          >
+            Add another +
+          </button>
+        </div>
+      </div>
+      
       {legalReps.map((rep, idx) => (
         <FormCard key={idx} className="flex gap-4 items-start">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-slate-100 text-[15px] font-medium text-slate-600 uppercase">
