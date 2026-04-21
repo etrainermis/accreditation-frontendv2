@@ -21,6 +21,8 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
   };
 }
 
+import { AuthGuard } from "@/components/auth/auth-guard";
+
 export function AppProviders({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
@@ -29,6 +31,7 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
           queries: {
             staleTime: 60_000,
             refetchOnWindowFocus: false,
+            retry: false, // Don't retry auth checks too aggressively
           },
         },
       }),
@@ -40,9 +43,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
         <TooltipProvider>
           <PageHeaderProvider>
             <QueryClientProvider client={queryClient}>
-              <LayoutGroup>
-                {children}
-              </LayoutGroup>
+              <AuthGuard>
+                <LayoutGroup>
+                  {children}
+                </LayoutGroup>
+              </AuthGuard>
             </QueryClientProvider>
           </PageHeaderProvider>
         </TooltipProvider>
