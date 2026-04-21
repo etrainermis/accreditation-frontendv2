@@ -8,11 +8,11 @@ export default function EvaluatorCriteriaPage() {
   return (
     <PageContainer
       role="evaluator"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      title="Evaluation Criteria"
+      description="View the criteria and files used during accreditation review."
     >
       <EvaluationsSubNav role="evaluator" />
-      <CriteriaContent />
+      <CriteriaContent role="evaluator" />
     </PageContainer>
   );
 }

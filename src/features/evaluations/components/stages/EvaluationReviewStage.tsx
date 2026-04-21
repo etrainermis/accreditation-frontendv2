@@ -5,6 +5,7 @@ import { Users, FileText, CheckCircle2, Clock, AlertTriangle, Check, ArrowRight,
 import { cn } from "@/lib/utils/cn";
 
 interface EvaluationReviewStageProps {
+  application: any;
   activeInternalStep: number;
   setActiveInternalStep: (step: number) => void;
   activeTab: string;
@@ -22,6 +23,7 @@ interface EvaluationReviewStageProps {
 }
 
 export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
+  application,
   activeInternalStep,
   setActiveInternalStep,
   activeTab,
@@ -83,7 +85,7 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
                       readOnly
                       className="w-full px-4 py-3 pr-12 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
                       type="text"
-                      value="ETrainer Academy"
+                      value={application?.institution?.name || application?.applicantName || "N/A"}
                     />
                     <Building2 className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                   </div>
@@ -111,7 +113,7 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
                       <input
                         readOnly
                         className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
-                        value="P.O. Box 1234, Kigali"
+                        value={application?.institution?.poBox || "N/A"}
                       />
                       <Package className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                     </div>
@@ -124,7 +126,7 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
                     <input
                       readOnly
                       className="w-full px-4 py-3 rounded-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
-                      value="janesmith@example.com"
+                      value={application?.institution?.email || "N/A"}
                     />
                     <Mail className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                   </div>
@@ -147,7 +149,7 @@ export const EvaluationReviewStage: React.FC<EvaluationReviewStageProps> = ({
                       <input
                         readOnly
                         className="w-full px-4 py-3 rounded-r-sm border border-slate-200 text-sm text-slate-700 focus:outline-none bg-white cursor-default"
-                        value="791-234-567"
+                        value={application?.institution?.phone || "N/A"}
                       />
                       <Phone className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-300" />
                     </div>

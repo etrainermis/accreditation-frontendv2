@@ -1,13 +1,15 @@
 "use client";
 import React, { useState } from "react";
-import { CheckCircle2, CheckCheck, User, UserPlus } from "lucide-react";
+import { CheckCircle2, CheckCheck, User, UserPlus, Loader2, ThumbsUp, ThumbsDown } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { DateRange } from "@/components/ui/date-range-picker";
 import { InviteUserModal, InviteUserData } from "@/features/users/components/InviteUserModal";
+import { useSubmitEvaluationDecision } from "@/hooks/queries/useEvaluationQueries";
 
 interface DecisionMakingStageProps {
   role: "super-admin" | "evaluator" | "supervisor";
   application: any;
+  assignmentId?: string;
   assignedPrincipal: string | null;
   dateRange: DateRange;
   setDateRange: (range: DateRange) => void;
@@ -17,6 +19,7 @@ interface DecisionMakingStageProps {
 export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
   role,
   application,
+  assignmentId,
   assignedPrincipal,
   dateRange,
   setDateRange,
@@ -25,6 +28,10 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [invitationStatus, setInvitationStatus] = useState<'idle' | 'pending' | 'sent'>('idle');
   const [selectedSupervisor, setSelectedSupervisor] = useState<string | null>(null);
+  const [decision, setDecision] = useState<"APPROVE" | "REJECT" | "PENDING">("PENDING");
+  const [comments, setComments] = useState("");
+
+  const submitMutation = useSubmitEvaluationDecision();
 
   const handleInviteSupervisor = (data: InviteUserData) => {
     setInvitationStatus('pending');
@@ -33,6 +40,31 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
       setInvitationStatus('sent');
       setSelectedSupervisor(data.email);
     }, 1000);
+  };
+
+  const handleSubmitDecision = async () => {
+    if (decision === "PENDING") {
+      alert("Please select a decision (Approve or Reject)");
+      return;
+    }
+
+    if (!assignmentId) {
+      alert("Unable to find the evaluator assignment for this application.");
+      return;
+    }
+
+    try {
+      await submitMutation.mutateAsync({
+        assignmentId,
+        decision: decision,
+        comments: comments || "Evaluation complete."
+      });
+      alert("Decision submitted successfully!");
+      window.history.back();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to submit decision. Please try again.");
+    }
   };
 
   return (
@@ -110,9 +142,49 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
               <span className="text-sm text-slate-500">Evaluation Decision</span>
             </div>
             
+            <div className="space-y-4">
+              <label className="text-sm font-medium text-slate-700">Final Decision</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  onClick={() => setDecision("APPROVE")}
+                  className={cn(
+                    "flex items-center justify-center gap-2 px-4 py-3 rounded-sm border transition-all",
+                    decision === "APPROVE" 
+                      ? "bg-emerald-50 border-emerald-200 text-emerald-700 shadow-sm" 
+                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                  )}
+                >
+                  <ThumbsUp className={cn("h-4 w-4", decision === "APPROVE" ? "text-emerald-500" : "text-slate-400")} />
+                  <span className="text-sm font-medium">Recommend Approval</span>
+                </button>
+                <button
+                  onClick={() => setDecision("REJECT")}
+                  className={cn(
+                    "flex items-center justify-center gap-2 px-4 py-3 rounded-sm border transition-all",
+                    decision === "REJECT" 
+                      ? "bg-rose-50 border-rose-200 text-rose-700 shadow-sm" 
+                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
+                  )}
+                >
+                  <ThumbsDown className={cn("h-4 w-4", decision === "REJECT" ? "text-rose-500" : "text-slate-400")} />
+                  <span className="text-sm font-medium">Recommend Rejection</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-1.5 pt-2">
+              <label className="text-sm font-medium text-slate-700">Official Comments</label>
+              <textarea
+                placeholder="Enter your final evaluation summary and recommendations..."
+                value={comments}
+                onChange={(e) => setComments(e.target.value)}
+                className="w-full min-h-[120px] p-3 text-sm text-slate-900 border border-slate-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[var(--primary)] focus:border-[var(--primary)] resize-none"
+              />
+            </div>
+
             <div 
               onClick={() => setShowInviteModal(true)}
-              className="border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group border-slate-200 hover:bg-slate-50"
+              className="border border-dashed rounded-sm p-4 w-full transition-colors cursor-pointer group border-slate-200 hover:bg-slate-50 mt-2"
             >
               <div className="flex items-center gap-3 w-full">
                 <div className="h-10 w-10 rounded-full bg-slate-100 flex items-center justify-center group-hover:bg-slate-200 transition-colors shrink-0">
@@ -120,15 +192,12 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
                 </div>
                 <div className="text-left flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-[13px] text-slate-900">Supervisor</h4>
+                    <h4 className="text-[13px] text-slate-900">Invite Notification</h4>
                     {invitationStatus === 'sent' && (
                       <span className="text-[10px] px-1.5 py-0.5 bg-emerald-50 text-emerald-600 rounded-full">Invited</span>
                     )}
-                    {invitationStatus === 'pending' && (
-                      <span className="text-[10px] px-1.5 py-0.5 bg-amber-50 text-amber-600 rounded-full">Sending...</span>
-                    )}
                   </div>
-                  <p className="text-[11px] text-slate-400 leading-tight">Final reviewer & decision maker</p>
+                  <p className="text-[11px] text-slate-400 leading-tight">Notify supervisor of your decision</p>
                 </div>
               </div>
             </div>
@@ -137,11 +206,18 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
             <div className="flex items-center gap-4 w-full mt-2">
               <button onClick={() => setActiveMajorStep(3)} className="flex-1 py-2.5 border border-slate-200 rounded-sm text-sm text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer">Cancel</button>
               <button 
-                onClick={() => alert("Confirm decision")} 
-                disabled={invitationStatus !== 'sent'}
-                className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handleSubmitDecision} 
+                disabled={decision === "PENDING" || submitMutation.isPending}
+                className="flex-1 py-2.5 bg-[#0A77FF] text-white rounded-sm text-sm hover:opacity-90 transition-opacity cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                Confirm
+                {submitMutation.isPending ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Confirm Decision"
+                )}
               </button>
             </div>
           </div>
@@ -164,7 +240,7 @@ export const DecisionMakingStage: React.FC<DecisionMakingStageProps> = ({
                 </div>
                 <div className="flex flex-col">
                   <span className="text-[13px] text-slate-900 leading-tight">{application.institution.name}</span>
-                  <span className="text-[11px] text-slate-500">{application.institution.email}</span>
+                  <span className="text-[11px] text-slate-500">{application.institution.email || "No institution email"}</span>
                 </div>
               </div>
             </div>

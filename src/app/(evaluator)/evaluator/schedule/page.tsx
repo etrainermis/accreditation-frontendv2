@@ -15,13 +15,13 @@ export default function EvaluatorSchedulePage() {
   return (
     <PageContainer
       role="evaluator"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      title="Due Diligence Schedule"
+      description="Track scheduled accreditation site visits."
     >
       <EvaluationsSubNav role="evaluator">
         <DateRangePicker value={dateRange} onChange={setDateRange} />
       </EvaluationsSubNav>
-      <ScheduleContent />
+      <ScheduleContent role="evaluator" />
     </PageContainer>
   );
 }

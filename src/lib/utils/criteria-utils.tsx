@@ -84,7 +84,11 @@ export const mockCriteriaAttachments: CriteriaAttachment[] = [
   },
 ];
 
-export const getCriteriaColumns = (isReadOnly: boolean = false): Column<CriteriaAttachment>[] => {
+export const getCriteriaColumns = (
+  isReadOnly: boolean = false, 
+  onDelete?: (id: string) => void,
+  onView?: (item: any) => void
+): Column<CriteriaAttachment>[] => {
   const columns: Column<CriteriaAttachment>[] = [
     {
       header: "File name",
@@ -124,20 +128,32 @@ export const getCriteriaColumns = (isReadOnly: boolean = false): Column<Criteria
         </div>
       ),
     },
-  ];
-
-  if (!isReadOnly) {
-    columns.push({
+    {
       header: "Action",
-      accessor: () => (
+      accessor: (item) => (
         <div className="flex items-center gap-4">
-          <button className="text-[13px] font-medium text-[#475467] hover:text-[#101828] transition-colors">Delete</button>
-          <button className="text-[13px] font-medium text-[#6155F5] hover:text-[#4A3AFF] transition-colors">Edit</button>
+          <button 
+             onClick={() => onView?.(item)}
+             className="text-[13px] font-medium text-[#0A77FF] hover:text-[#0966DA] transition-colors cursor-pointer"
+          >
+            View
+          </button>
+          {!isReadOnly && (
+            <>
+              <button 
+                onClick={() => onDelete?.(item.id)}
+                className="text-[13px] font-medium text-[#475467] hover:text-[#101828] transition-colors cursor-pointer"
+              >
+                Delete
+              </button>
+              <button className="text-[13px] font-medium text-[#6155F5] hover:text-[#4A3AFF] transition-colors cursor-pointer">Edit</button>
+            </>
+          )}
         </div>
       ),
       className: "text-right",
-    });
-  }
+    },
+  ];
 
   return columns;
 };

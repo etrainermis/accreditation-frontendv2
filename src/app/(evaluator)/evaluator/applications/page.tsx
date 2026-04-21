@@ -9,8 +9,8 @@ export default function EvaluatorApplicationsPage() {
   return (
     <PageContainer
       role="evaluator"
-      title="Manage Accreditation Evalutions"
-      description="View & manage active elders and requests"
+      title="Applications"
+      description="Review the accreditation applications assigned to you."
     >
       <EvaluationsSubNav role="evaluator" />
       <SharedApplicationsList 

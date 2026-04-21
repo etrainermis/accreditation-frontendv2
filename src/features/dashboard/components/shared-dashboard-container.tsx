@@ -9,6 +9,9 @@ import { RecentApplicationsTable } from "@/components/dashboard/recent-applicati
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
 import { UserRole } from "@/types/auth";
+import { EvaluatorDashboardContainer } from "@/features/evaluations/components/evaluator-dashboard-container";
+
+import { useGetEvaluatorDashboardStats } from "@/hooks/queries/useApplicationQueries";
 
 interface SharedDashboardContainerProps {
   role: UserRole;
@@ -16,11 +19,34 @@ interface SharedDashboardContainerProps {
 }
 
 export function SharedDashboardContainer({ role, userName = "User" }: SharedDashboardContainerProps) {
+  const { data: evaluatorStats, isLoading: statsLoading } = useGetEvaluatorDashboardStats();
+  const legacyStats = evaluatorStats as any;
+
   const stats = [
-    { label: "Applications", value: "24", icon: NotepadText, iconColor: "#0A77FF" },
-    { label: "Pending", value: "8", icon: ClipboardClock, iconColor: "#FF8D28" },
-    { label: "Evaluated", value: "5", icon: CheckCheck, iconColor: "#34C759" },
-    { label: "Rejected", value: "11", icon: AlertTriangle, iconColor: "#FF383C" },
+    { 
+      label: "Applications", 
+      value: (legacyStats?.totalApplications ?? 0).toString(), 
+      icon: NotepadText, 
+      iconColor: "#0A77FF" 
+    },
+    { 
+      label: "Pending", 
+      value: (legacyStats?.pendingApplications ?? 0).toString(), 
+      icon: ClipboardClock, 
+      iconColor: "#FF8D28" 
+    },
+    { 
+      label: "Evaluated", 
+      value: (legacyStats?.approvedApplications ?? 0).toString(), 
+      icon: CheckCheck, 
+      iconColor: "#34C759" 
+    },
+    { 
+      label: "Rejected", 
+      value: (legacyStats?.rejectedApplications ?? 0).toString(), 
+      icon: AlertTriangle, 
+      iconColor: "#FF383C" 
+    },
   ];
 
   const chartData = {
@@ -63,20 +89,24 @@ export function SharedDashboardContainer({ role, userName = "User" }: SharedDash
 
   return (
     <div className="space-y-6">
-      <StatsGrid items={stats} />
+      {role !== "evaluator" && <StatsGrid items={stats} />}
 
-      <StackedAnalyticsChart data={chartData} />
+      {role === "evaluator" ? (
+        <EvaluatorDashboardContainer />
+      ) : (
+        <>
+          <StackedAnalyticsChart data={chartData} />
 
-      {(role === "super-admin" || role === "supervisor") && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
-          <ApplicationsByTradeChart />
-          <MostRequestedModules />
-        </div>
+          {(role === "super-admin" || role === "supervisor") && (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-2 mt-6">
+              <ApplicationsByTradeChart />
+              <MostRequestedModules />
+            </div>
+          )}
+
+          <RecentApplicationsTable />
+        </>
       )}
-
-
-
-      <RecentApplicationsTable />
     </div>
   );
 }

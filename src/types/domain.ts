@@ -47,3 +47,31 @@ export interface ActivityFeedItem {
   occurredAt: string;
   role: UserRole;
 }
+
+export type EvaluationStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "REJECTED" | "APPROVED";
+
+export interface EvaluatorAssignment {
+  id: string;
+  application: {
+    id: string;
+    institution: {
+      name: string;
+      email?: string;
+      website?: string;
+    };
+    applicantName?: string;
+    type: string;
+    tradeName?: string;
+    status: string;
+  };
+  assignedAt: string;
+  dueDate?: string;
+  status: EvaluationStatus;
+  decision: EvaluationDecision;
+  stage: string;
+  role: string;
+  active?: boolean;
+  officialComments?: string;
+}
+
+export type EvaluationDecision = "APPROVE" | "REJECT" | "PENDING";

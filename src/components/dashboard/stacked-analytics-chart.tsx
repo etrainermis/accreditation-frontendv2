@@ -14,9 +14,10 @@ export interface ChartDataItem {
 
 export interface StackedAnalyticsChartProps {
   data: Record<string, ChartDataItem[]>;
+  title?: string;
 }
 
-export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
+export function StackedAnalyticsChart({ data, title = "Applications Trend" }: StackedAnalyticsChartProps) {
   const [activeTab, setActiveTab] = useState("12 Months");
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [mounted, setMounted] = React.useState(false);
@@ -55,7 +56,7 @@ export function StackedAnalyticsChart({ data }: StackedAnalyticsChartProps) {
   return (
     <Card className="rounded-md border border-slate-200 bg-white shadow-none overflow-hidden text-[#101828] animate-slide-up">
       <div className="flex items-center justify-between px-6 py-4">
-        <h3 className="text-base ">Applications Trend</h3>
+        <h3 className="text-base ">{title}</h3>
         <MoreHorizontal className="h-5 w-5 text-slate-400 cursor-pointer" />
       </div>
 

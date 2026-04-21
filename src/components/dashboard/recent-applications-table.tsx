@@ -3,40 +3,78 @@
 import React, { useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { X, ListFilter } from "lucide-react";
-import { 
-  mockApplications, 
-  getApplicationColumns 
-} from "@/lib/utils/application-utils";
+import { getApplicationColumns } from "@/lib/utils/application-utils";
+import type { StatusType } from "@/components/ui/status-badge";
+import { useEvaluatorAssignments } from "@/hooks/queries/useEvaluationQueries";
+import { useAppSelector } from "@/store/hooks";
+import { Loader2 } from "lucide-react";
 
-export function RecentApplicationsTable() {
+import { format } from "date-fns";
+
+interface RecentApplicationsTableProps {
+  title?: string;
+  description?: string;
+}
+
+export function RecentApplicationsTable({ 
+  title = "Recent Applications", 
+  description = "Manage applications by different institutions right here" 
+}: RecentApplicationsTableProps) {
   const [search, setSearch] = useState("");
-  const [activeFilters, setActiveFilters] = useState<string[]>(["All time", "US, AU, +4"]);
+  const [activeFilters, setActiveFilters] = useState<string[]>(["All time"]);
+  
+  const user = useAppSelector((state) => state.auth.user);
+  const evaluatorId = user?.id || "";
+  
+  const { data: assignments, isLoading } = useEvaluatorAssignments(evaluatorId);
 
   const removeFilter = (filter: string) => {
     setActiveFilters(prev => prev.filter(f => f !== filter));
   };
 
-  const filteredData = mockApplications.filter(item => {
+  const filteredData = assignments?.filter(item => {
     const matchesSearch = 
-      item.applicant.name.toLowerCase().includes(search.toLowerCase()) ||
-      item.applicant.email.toLowerCase().includes(search.toLowerCase()) ||
-      item.institution.name.toLowerCase().includes(search.toLowerCase());
+      item.application.institution.name.toLowerCase().includes(search.toLowerCase()) ||
+      item.application.id.toLowerCase().includes(search.toLowerCase());
     
-    const hasLocationFilter = activeFilters.includes("US, AU, +4");
-    const matchesLocation = !hasLocationFilter || (item.location && ["US", "AU"].includes(item.location));
+    return matchesSearch;
+  }) ?? [];
 
-    return matchesSearch && matchesLocation;
-  });
+  const tableData = filteredData.map(item => ({
+    id: item.application.id,
+    applicant: { 
+      name: item.application.applicantName || item.application.institution.name || "N/A", 
+      email: item.application.institution.email || "N/A", 
+      avatar: (item.application.applicantName || item.application.institution.name || "N").substring(0, 2).toUpperCase() 
+    },
+    institution: { 
+      name: item.application.institution.name, 
+      website: item.application.institution.website || "N/A", 
+      logo: item.application.institution.name.substring(0, 2).toUpperCase() 
+    },
+    trade: { name: item.application.tradeName || item.application.type, category: item.role },
+    status: (item.status === "COMPLETED" ? "Completed" : item.status === "REJECTED" ? "Rejected" : "Pending") as StatusType,
+    stage: item.stage,
+    submittedOn: item.assignedAt ? format(new Date(item.assignedAt), "MMM dd, yyyy") : "N/A",
+  }));
+
+  if (isLoading) {
+    return (
+      <div className="flex h-48 items-center justify-center border rounded-sm bg-white mt-8">
+        <Loader2 className="h-8 w-8 animate-spin text-[#0A77FF]" />
+      </div>
+    );
+  }
 
   const columns = getApplicationColumns();
 
   return (
     <div className="mt-8 animate-slide-up">
       <DataTable 
-        data={filteredData} 
+        data={tableData} 
         columns={columns} 
-        title="Recent Applications"
-        description="Manage applications by different institutions right here"
+        title={title}
+        description={description}
         searchValue={search}
         onSearchChange={setSearch}
         showPagination={true}

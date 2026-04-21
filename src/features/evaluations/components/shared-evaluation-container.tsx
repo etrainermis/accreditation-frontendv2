@@ -42,11 +42,11 @@ import {
   Target,
   Activity,
   CheckCheck,
-  RefreshCw
+  RefreshCw,
+  Loader2
 } from "lucide-react";
 import { cn } from "@/lib/utils/cn";
 import { useRouter } from "next/navigation";
-import { mockApplications } from "@/lib/utils/application-utils";
 import { DateRangePicker, DateRange } from "@/components/ui/date-range-picker";
 import { AddEvaluatorModal } from "./add-evaluator-modal";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -57,6 +57,10 @@ import { ScheduleDueDiligenceStage } from "./stages/ScheduleDueDiligenceStage";
 import { PerformDueDiligenceStage } from "./stages/PerformDueDiligenceStage";
 import { DecisionMakingStage } from "./stages/DecisionMakingStage";
 import { EvaluationReviewStage } from "./stages/EvaluationReviewStage";
+import { useGetApplicationDetails } from "@/hooks/queries/useApplicationQueries";
+import { useEvaluatorAssignments } from "@/hooks/queries/useEvaluationQueries";
+import { useAppSelector } from "@/store/hooks";
+
 
 // --- Sub-components ---
 
@@ -207,8 +211,8 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const [activeMajorStep, setActiveMajorStep] = React.useState(0);
   const [mounted, setMounted] = React.useState(false);
   const [dateRange, setDateRange] = React.useState<DateRange>({
-    from: new Date(2024, 0, 6),
-    to: new Date(2024, 0, 13)
+    from: new Date(),
+    to: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   });
   const [evaluationNote, setEvaluationNote] = React.useState("");
   // Evaluator Assignments - Initial Review
@@ -230,6 +234,12 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   const [showInitialReview, setShowInitialReview] = React.useState(role !== "super-admin");
   const [pendingEvaluatorRole, setPendingEvaluatorRole] = React.useState<string | null>(null);
   const [showConsensus, setShowConsensus] = React.useState(false);
+  const { data: application, isLoading: applicationLoading } = useGetApplicationDetails(id);
+  const user = useAppSelector((state) => state.auth.user);
+  const { data: assignments } = useEvaluatorAssignments(user?.id || "");
+  
+
+
   const [initialReviewConsensus, setInitialReviewConsensus] = React.useState([
     { name: "Principal Evaluator", status: "Accept", comment: "Documents look correct and complete." },
     { name: "Supporting Evaluator 1", status: "Accept", comment: "No issues found in the trade modules." },
@@ -300,7 +310,34 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
   ];
 
 
-  const application = mockApplications.find(app => app.id === id) || mockApplications[0];
+  if (applicationLoading || !mounted) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="h-10 w-10 animate-spin text-[#0A77FF] mb-4" />
+        <p className="text-sm text-slate-500 font-medium">Loading application details...</p>
+      </div>
+    );
+  }
+
+  // Fallback to mock if application is not found (for legacy support during transition)
+  const assignment = assignments?.find((item) => item.application.id === id);
+  const appData = application || {
+    id,
+    applicationId: id,
+    applicantName: "Application",
+    institution: {
+      name: "Application",
+      address: {},
+      representatives: [],
+    },
+    trade: {
+      name: "Trade",
+    },
+    status: "PENDING",
+    technicalStaff: [],
+    trainingEquipments: [],
+    documents: [],
+  };
 
   return (
     <div className="flex flex-col bg-white h-full overflow-hidden">
@@ -349,6 +386,7 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                         />
                       ) : (activeMajorStep === 0 && showInitialReview) || activeMajorStep === 3 ? (
                         <EvaluationReviewStage
+                          application={appData}
                           activeInternalStep={activeInternalStep}
                           setActiveInternalStep={setActiveInternalStep}
                           activeTab={activeTab}
@@ -395,7 +433,8 @@ export function SharedEvaluationContainer({ id, role }: SharedEvaluationContaine
                       ) : activeMajorStep === 4 ? (
                         <DecisionMakingStage
                           role={role}
-                          application={application}
+                          application={appData}
+                          assignmentId={assignment?.id}
                           assignedPrincipal={assignedInitialPrincipal}
                           setActiveMajorStep={setActiveMajorStep}
                           dateRange={dateRange}
