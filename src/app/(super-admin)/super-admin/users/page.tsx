@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils/cn";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { InviteUserModal, InviteUserData } from "@/features/users/components/InviteUserModal";
 
+import { useGetUsers, useChangeUserStatus } from "@/hooks/queries/useSuperAdminQueries";
+
 interface UserRecord {
   id: string;
   name: string;
@@ -29,69 +31,32 @@ interface UserRecord {
   lastActive: string;
 }
 
-const mockUsers: UserRecord[] = [
-  {
-    id: "1",
-    name: "Natali Craig",
-    email: "natali@gmail.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Natali Craig",
-    role: "Curriculum evaluator",
-    status: "Active",
-    dateAdded: "Feb 22, 2022",
-    lastActive: "Mar 14, 2022",
-  },
-  {
-    id: "2",
-    name: "Drew Cano",
-    email: "drew@untitledui.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Drew Cano",
-    role: "Supervisor",
-    status: "Pending",
-    dateAdded: "Feb 22, 2022",
-    lastActive: "Mar 12, 2022",
-  },
-  {
-    id: "3",
-    name: "Orlando Diggs",
-    email: "orlando@gmail.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Orlando Diggs",
-    role: "Curriculum evaluator",
-    status: "Deactivated",
-    dateAdded: "Feb 22, 2022",
-    lastActive: "Mar 12, 2022",
-  },
-  {
-    id: "4",
-    name: "Andi Lane",
-    email: "andi@gmail.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Andi Lane",
-    role: "Supervisor",
-    status: "Active",
-    dateAdded: "Feb 22, 2022",
-    lastActive: "Mar 14, 2022",
-  },
-  {
-    id: "5",
-    name: "Kate Morrison",
-    email: "kate@gmail.com",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Kate Morrison",
-    role: "Curriculum evaluator",
-    status: "Pending",
-    dateAdded: "Feb 22, 2022",
-    lastActive: "Mar 13, 2022",
-  },
-];
-
 export default function SuperAdminUsersPage() {
   const [isInviteModalOpen, setIsInviteModalOpen] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState<"curriculum-evaluator" | "supervisor" | "evaluator">("curriculum-evaluator");
+
+  const { data: usersResponse, isLoading } = useGetUsers();
+  
+  const users: UserRecord[] = React.useMemo(() => {
+    if (!usersResponse?.data) return [];
+    return usersResponse.data.map(user => ({
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+      email: user.email,
+      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.firstName}%20${user.lastName}`,
+      role: user.role.replace(/_/g, " ").toLowerCase(),
+      status: (user.status.charAt(0).toUpperCase() + user.status.slice(1).toLowerCase()) as StatusType,
+      dateAdded: new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      lastActive: "Today", // Placeholder for last active
+    }));
+  }, [usersResponse]);
 
   const handleInvite = (data: InviteUserData) => {
     console.log("Inviting user:", data);
   };
 
-  const filteredUsers = mockUsers.filter(user => 
-    user.role.toLowerCase() === activeTab.replace("-", " ")
+  const filteredUsers = users.filter(user => 
+    user.role === activeTab.replace("-", " ")
   );
 
   const columns: Column<UserRecord>[] = [
