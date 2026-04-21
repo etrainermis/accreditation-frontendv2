@@ -69,6 +69,14 @@ export function ReviewApplicationStep({
               <span className="text-[12px] text-slate-500 block mb-1">Phone Number</span>
               <p className="text-[13.5px] font-medium text-slate-800">{formData["Phone Number"] ? `+250 ${formData["Phone Number"]}` : <span className="italic text-slate-400">Not provided</span>}</p>
             </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">Institution Category</span>
+              <p className="text-[13.5px] font-medium text-slate-800">{formData["Institution Category"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
+            <div>
+              <span className="text-[12px] text-slate-500 block mb-1">P.O Box</span>
+              <p className="text-[13.5px] font-medium text-slate-800">{formData["P.O Box"] || <span className="italic text-slate-400">Not provided</span>}</p>
+            </div>
 
             <div className="col-span-2 pt-4 mt-2 border-t border-slate-100 grid grid-cols-2 gap-y-5 gap-x-6">
               {Object.entries(ALL_DOC_LABELS).map(([key, label]) => {
@@ -127,7 +135,7 @@ export function ReviewApplicationStep({
             <div>
               <span className="text-[12px] text-slate-500 block mb-1">Location Context</span>
               <p className="text-[13.5px] font-medium text-slate-800">
-                {[formData["Province"], formData["District"], formData["Sector"]].filter(Boolean).join(", ") || <span className="italic text-slate-400">Not provided</span>}
+                {[formData["Province"], formData["District"], formData["Sector"], formData["Cell"], formData["Village"]].filter(Boolean).join(", ") || <span className="italic text-slate-400">Not provided</span>}
               </p>
             </div>
             <div>
