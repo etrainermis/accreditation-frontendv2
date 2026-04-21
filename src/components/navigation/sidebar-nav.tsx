@@ -15,6 +15,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logout } from "@/store/slices/authSlice";
+import { useRouter } from "next/navigation";
+
 export function SidebarNav({
   role,
   onCloseMobile,
@@ -24,6 +28,19 @@ export function SidebarNav({
 }) {
   const items = usePortalNavigation(role);
   const config = portalNavigation[role];
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { user } = useAppSelector((state) => state.auth);
+
+  const handleLogout = () => {
+    dispatch(logout());
+    router.push("/login");
+    onCloseMobile?.();
+  };
+
+  const userInitials = user 
+    ? `${user.firstName?.charAt(0) || ""}${user.lastName?.charAt(0) || ""}`.toUpperCase() 
+    : "??";
 
   return (
     <div className="flex h-full flex-col">
@@ -99,19 +116,22 @@ export function SidebarNav({
         </button>
 
         <div className="sticky bottom-0 mt-4 flex items-center gap-3 border-t border-[#EAECF0] bg-white px-1 py-4">
-          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-slate-100">
-            <span className="text-xs font-semibold text-slate-600">OR</span>
+          <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-[var(--primary-light)]">
+            <span className="text-xs font-semibold text-[var(--primary)]">
+              {userInitials}
+            </span>
           </div>
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-medium text-slate-800">
-              Olivia Rhye
+              {user ? `${user.firstName} ${user.lastName}` : "User"}
             </p>
-            <p className="truncate text-xs text-[#475467]">olivia@company.com</p>
+            <p className="truncate text-xs text-[#475467]">{user?.email || ""}</p>
           </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 type="button"
+                onClick={handleLogout}
                 className="text-[#475467] cursor-pointer hover:text-slate-900 transition-colors"
                 aria-label="Log out"
               >

@@ -8,6 +8,7 @@ import { MostRequestedModules } from "@/components/dashboard/most-requested-modu
 import { RecentApplicationsTable } from "@/components/dashboard/recent-applications-table";
 import { StatsGrid } from "@/components/dashboard/stats-grid";
 import { NotepadText, ClipboardClock, CheckCheck, AlertTriangle } from "lucide-react";
+import { useAdminDashboardStats } from "@/hooks/queries/useSuperAdminQueries";
 import { UserRole } from "@/types/auth";
 
 interface SharedDashboardContainerProps {
@@ -16,7 +17,15 @@ interface SharedDashboardContainerProps {
 }
 
 export function SharedDashboardContainer({ role, userName = "User" }: SharedDashboardContainerProps) {
-  const stats = [
+  const { data: adminStatsResponse } = useAdminDashboardStats();
+  const adminStats = adminStatsResponse?.data;
+
+  const stats = role === "super-admin" && adminStats ? [
+    { label: "Applications", value: adminStats.totalApplications.toString(), icon: NotepadText, iconColor: "#0A77FF" },
+    { label: "Pending", value: adminStats.pendingApplications.toString(), icon: ClipboardClock, iconColor: "#FF8D28" },
+    { label: "Approved", value: adminStats.approvedApplications.toString(), icon: CheckCheck, iconColor: "#34C759" },
+    { label: "Rejected", value: adminStats.rejectedApplications.toString(), icon: AlertTriangle, iconColor: "#FF383C" },
+  ] : [
     { label: "Applications", value: "24", icon: NotepadText, iconColor: "#0A77FF" },
     { label: "Pending", value: "8", icon: ClipboardClock, iconColor: "#FF8D28" },
     { label: "Evaluated", value: "5", icon: CheckCheck, iconColor: "#34C759" },
